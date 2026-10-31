@@ -35,7 +35,10 @@ class SettingsSponsorActions extends StatelessWidget {
           ? [
               ...sponsorRepository.products.map(
                 (e) => AppActionsWidgetAction(
-                  title: titles.containsKey(e.id) ? titles[e.id]! : e.title,
+                  title: t(
+                    context,
+                    titles.containsKey(e.id) ? titles[e.id]! : e.title,
+                  ),
                   color: Theme.of(context).colorScheme.primary,
                   onTap: () {
                     Navigator.pop(context);
@@ -61,7 +64,10 @@ class SettingsSponsorActions extends StatelessWidget {
           : sponsorRepository.products
                 .map(
                   (e) => AppActionsWidgetAction(
-                    title: titles.containsKey(e.id) ? titles[e.id]! : e.title,
+                    title: t(
+                      context,
+                      titles.containsKey(e.id) ? titles[e.id]! : e.title,
+                    ),
                     color: Theme.of(context).colorScheme.primary,
                     onTap: () {
                       Navigator.pop(context);

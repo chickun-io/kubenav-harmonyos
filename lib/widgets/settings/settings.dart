@@ -123,7 +123,10 @@ class Settings extends StatelessWidget {
         children: [
           Expanded(
             flex: 1,
-            child: Text('Clusters', style: primaryTextStyle(context, size: 18)),
+            child: Text(
+              t(context, 'Clusters'),
+              style: primaryTextStyle(context, size: 18),
+            ),
           ),
           InkWell(
             onTap: () {
@@ -132,7 +135,7 @@ class Settings extends StatelessWidget {
             child: Row(
               children: [
                 Text(
-                  'View all',
+                  t(context, 'View all'),
                   style: secondaryTextStyle(
                     context,
                     color: Theme.of(context).colorScheme.primary,
@@ -164,7 +167,7 @@ class Settings extends StatelessWidget {
       if (context.mounted) {
         showSnackbar(
           context,
-          'Failed to Enable Authentication',
+          t(context, 'Failed to Enable Authentication'),
           err.toString(),
         );
       }
@@ -176,7 +179,7 @@ class Settings extends StatelessWidget {
   /// [Logger] which were created during his actions in the app
   Widget buildHelp(BuildContext context) {
     return AppVerticalListSimpleWidget(
-      title: 'Help',
+      title: t(context, 'Help'),
       items: [
         AppVerticalListSimpleModel(
           onTap: () {
@@ -187,7 +190,7 @@ class Settings extends StatelessWidget {
             const SizedBox(width: Constants.spacingSmall),
             Expanded(
               flex: 1,
-              child: Text('Logs', style: normalTextStyle(context)),
+              child: Text(t(context, 'Logs'), style: normalTextStyle(context)),
             ),
             Icon(
               Icons.arrow_forward_ios,
@@ -208,7 +211,7 @@ class Settings extends StatelessWidget {
             const SizedBox(width: Constants.spacingSmall),
             Expanded(
               flex: 1,
-              child: Text('Help', style: normalTextStyle(context)),
+              child: Text(t(context, 'Help'), style: normalTextStyle(context)),
             ),
             Icon(
               Icons.arrow_forward_ios,
@@ -237,7 +240,7 @@ class Settings extends StatelessWidget {
     Provider.of<ClustersRepository>(context, listen: true);
 
     return Scaffold(
-      appBar: AppBar(centerTitle: true, title: const Text('Settings')),
+      appBar: AppBar(centerTitle: true, title: Text(t(context, 'Settings'))),
       bottomNavigationBar: const AppBottomNavigationBarWidget(),
       floatingActionButton: const AppFloatingActionButtonsWidget(),
       body: SafeArea(
@@ -249,7 +252,7 @@ class Settings extends StatelessWidget {
               _buildClusters(context),
               const SizedBox(height: Constants.spacingMiddle),
               AppVerticalListSimpleWidget(
-                title: 'Settings',
+                title: t(context, 'Settings'),
                 items: [
                   AppVerticalListSimpleModel(
                     onTap: () {
@@ -264,7 +267,7 @@ class Settings extends StatelessWidget {
                       Expanded(
                         flex: 1,
                         child: Text(
-                          'Provider',
+                          t(context, 'Provider'),
                           style: normalTextStyle(context),
                         ),
                       ),
@@ -291,7 +294,7 @@ class Settings extends StatelessWidget {
                       Expanded(
                         flex: 1,
                         child: Text(
-                          'Namespaces',
+                          t(context, 'Namespaces'),
                           style: normalTextStyle(context),
                         ),
                       ),
@@ -315,7 +318,7 @@ class Settings extends StatelessWidget {
                       Expanded(
                         flex: 1,
                         child: Text(
-                          'Authentication',
+                          t(context, 'Authentication'),
                           style: normalTextStyle(context),
                         ),
                       ),
@@ -338,7 +341,7 @@ class Settings extends StatelessWidget {
                       Expanded(
                         flex: 1,
                         child: Text(
-                          'Show Clusters on Start',
+                          t(context, 'Show Clusters on Start'),
                           style: normalTextStyle(context),
                         ),
                       ),
@@ -362,7 +365,10 @@ class Settings extends StatelessWidget {
                       const SizedBox(width: Constants.spacingSmall),
                       Expanded(
                         flex: 1,
-                        child: Text('Theme', style: normalTextStyle(context)),
+                        child: Text(
+                          t(context, 'Theme'),
+                          style: normalTextStyle(context),
+                        ),
                       ),
                       DropdownButton(
                         value: themeRepository.themeName,
@@ -401,7 +407,7 @@ class Settings extends StatelessWidget {
                       Expanded(
                         flex: 1,
                         child: Text(
-                          'Editor Format',
+                          t(context, 'Editor Format'),
                           style: normalTextStyle(context),
                         ),
                       ),
@@ -448,7 +454,7 @@ class Settings extends StatelessWidget {
                       Expanded(
                         flex: 1,
                         child: Text(
-                          'Home Page',
+                          t(context, 'Home Page'),
                           style: normalTextStyle(context),
                         ),
                       ),
@@ -479,7 +485,10 @@ class Settings extends StatelessWidget {
                       const SizedBox(width: Constants.spacingSmall),
                       Expanded(
                         flex: 1,
-                        child: Text('Proxy', style: normalTextStyle(context)),
+                        child: Text(
+                          t(context, 'Proxy'),
+                          style: normalTextStyle(context),
+                        ),
                       ),
                       Icon(
                         Icons.arrow_forward_ios,
@@ -508,7 +517,10 @@ class Settings extends StatelessWidget {
                       const SizedBox(width: Constants.spacingSmall),
                       Expanded(
                         flex: 1,
-                        child: Text('Timeout', style: normalTextStyle(context)),
+                        child: Text(
+                          t(context, 'Timeout'),
+                          style: normalTextStyle(context),
+                        ),
                       ),
                       Icon(
                         Icons.arrow_forward_ios,
@@ -538,7 +550,7 @@ class Settings extends StatelessWidget {
                       Expanded(
                         flex: 1,
                         child: Text(
-                          'Prometheus',
+                          t(context, 'Prometheus'),
                           style: normalTextStyle(context),
                         ),
                       ),

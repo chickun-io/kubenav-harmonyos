@@ -130,7 +130,9 @@ class _SettingsDigitalOceanProviderState
       closePressed: () {
         Navigator.pop(context);
       },
-      actionText: widget.provider == null ? 'Save and Add Cluster(s)' : 'Save',
+      actionText: widget.provider == null
+          ? t(context, 'Save and Add Cluster(s)')
+          : t(context, 'Save'),
       actionPressed: () {
         _saveProvider();
       },
@@ -166,9 +168,9 @@ class _SettingsDigitalOceanProviderState
                   autocorrect: false,
                   enableSuggestions: false,
                   maxLines: 1,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     border: OutlineInputBorder(),
-                    labelText: 'API Token',
+                    labelText: t(context, 'API Token'),
                   ),
                   validator: _validator,
                 ),

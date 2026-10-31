@@ -174,7 +174,9 @@ class _SettingsRancherProviderState extends State<SettingsRancherProvider> {
       closePressed: () {
         Navigator.pop(context);
       },
-      actionText: widget.provider == null ? 'Save and Add Cluster(s)' : 'Save',
+      actionText: widget.provider == null
+          ? t(context, 'Save and Add Cluster(s)')
+          : t(context, 'Save'),
       actionPressed: () {
         _saveProvider();
       },
@@ -210,9 +212,9 @@ class _SettingsRancherProviderState extends State<SettingsRancherProvider> {
                   autocorrect: false,
                   enableSuggestions: false,
                   maxLines: 1,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     border: OutlineInputBorder(),
-                    labelText: 'Server Address',
+                    labelText: t(context, 'Server Address'),
                   ),
                   validator: _validator,
                 ),
@@ -289,9 +291,9 @@ class _SettingsRancherProviderState extends State<SettingsRancherProvider> {
                   autocorrect: false,
                   enableSuggestions: false,
                   maxLines: 1,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     border: OutlineInputBorder(),
-                    labelText: 'Token (optional)',
+                    labelText: t(context, 'Token (optional)'),
                   ),
                   validator: _validator,
                 ),

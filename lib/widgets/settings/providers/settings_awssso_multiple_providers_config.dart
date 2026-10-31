@@ -57,7 +57,7 @@ class _SettingsAWSSSOMultipleProvidersState
         showSnackbar(
           context,
           t(context, 'Sing in Completed'),
-          'You can now click on the verify button',
+          t(context, 'You can now click on the verify button'),
         );
       }
     } catch (err) {
@@ -196,9 +196,9 @@ class _SettingsAWSSSOMultipleProvidersState
                   autocorrect: false,
                   enableSuggestions: false,
                   maxLines: 1,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     border: OutlineInputBorder(),
-                    labelText: 'Role ARN (optional)',
+                    labelText: t(context, 'Role ARN (optional)'),
                   ),
                 ),
                 const SizedBox(height: Constants.spacingMiddle),

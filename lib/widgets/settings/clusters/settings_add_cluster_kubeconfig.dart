@@ -196,9 +196,9 @@ class _SettingsAddClusterKubeconfigState
                   autocorrect: false,
                   enableSuggestions: false,
                   maxLines: null,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     border: OutlineInputBorder(),
-                    labelText: 'Kubeconfig',
+                    labelText: t(context, 'Kubeconfig'),
                   ),
                   validator: _validator,
                   onFieldSubmitted: (String value) {

@@ -46,11 +46,11 @@ class _SettingsPrometheusState extends State<SettingsPrometheus> {
 
     final parsedValue = int.tryParse(value);
     if (parsedValue == null) {
-      return 'The field must be a number';
+      return t(context, 'The field must be a number');
     }
 
     if (parsedValue < 0) {
-      return 'The field must be a positive number';
+      return t(context, 'The field must be a positive number');
     }
 
     return null;
@@ -127,7 +127,7 @@ class _SettingsPrometheusState extends State<SettingsPrometheus> {
   @override
   Widget build(BuildContext context) {
     return AppBottomSheetWidget(
-      title: 'Prometheus',
+      title: t(context, 'Prometheus'),
       subtitle: t(context, 'Prometheus configuration'),
       icon: 'assets/plugins/prometheus.svg',
       closePressed: () {
@@ -369,9 +369,9 @@ class _SettingsPrometheusState extends State<SettingsPrometheus> {
                   autocorrect: false,
                   enableSuggestions: false,
                   maxLines: null,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     border: OutlineInputBorder(),
-                    labelText: 'Client Certificate',
+                    labelText: t(context, 'Client Certificate'),
                   ),
                   onFieldSubmitted: (String value) {
                     _save();
@@ -384,9 +384,9 @@ class _SettingsPrometheusState extends State<SettingsPrometheus> {
                   autocorrect: false,
                   enableSuggestions: false,
                   maxLines: null,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     border: OutlineInputBorder(),
-                    labelText: 'Client Key',
+                    labelText: t(context, 'Client Key'),
                   ),
                   onFieldSubmitted: (String value) {
                     _save();

@@ -45,7 +45,7 @@ class _SettingsReauthenticateAWSSSOState
         showSnackbar(
           context,
           t(context, 'Sing in Completed'),
-          'You can now click on the verify button',
+          t(context, 'You can now click on the verify button'),
         );
       }
     } catch (err) {
@@ -122,7 +122,7 @@ class _SettingsReauthenticateAWSSSOState
         showSnackbar(
           context,
           t(context, 'Provider Configuration Saved'),
-          'Refresh the view to use the new credentials',
+          t(context, 'Refresh the view to use the new credentials'),
         );
       }
     } catch (err) {

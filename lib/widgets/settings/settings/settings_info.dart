@@ -109,7 +109,7 @@ class _SettingsInfoState extends State<SettingsInfo> {
             showSnackbar(
               context,
               t(context, 'Restore Purchases'),
-              'Your previous purchases were restored',
+              t(context, 'Your previous purchases were restored'),
             );
           },
           children: [

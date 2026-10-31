@@ -212,9 +212,9 @@ class _SettingsEditClusterState extends State<SettingsEditCluster> {
                   autocorrect: false,
                   enableSuggestions: false,
                   maxLines: 1,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     border: OutlineInputBorder(),
-                    labelText: 'TLS Server Name',
+                    labelText: t(context, 'TLS Server Name'),
                   ),
                   onFieldSubmitted: (String value) {
                     _editCluster();

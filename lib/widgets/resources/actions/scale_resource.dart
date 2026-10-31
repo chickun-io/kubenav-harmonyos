@@ -48,11 +48,11 @@ class _ScaleResourceState extends State<ScaleResource> {
 
     final parsedValue = int.tryParse(value);
     if (parsedValue == null) {
-      return 'The field must be a number';
+      return t(context, 'The field must be a number');
     }
 
     if (parsedValue < 0) {
-      return 'The field must be a positive number';
+      return t(context, 'The field must be a positive number');
     }
 
     return null;

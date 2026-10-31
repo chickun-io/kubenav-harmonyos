@@ -67,7 +67,7 @@ class _SettingsAWSSSOProviderState extends State<SettingsAWSSSOProvider> {
         showSnackbar(
           context,
           t(context, 'Sing in Completed'),
-          'You can now click on the verify button',
+          t(context, 'You can now click on the verify button'),
         );
       }
     } catch (err) {
@@ -133,7 +133,7 @@ class _SettingsAWSSSOProviderState extends State<SettingsAWSSSOProvider> {
         showSnackbar(
           context,
           t(context, 'Credentials Created'),
-          'You can now click on the save button',
+          t(context, 'You can now click on the save button'),
         );
       }
     } catch (err) {
@@ -256,7 +256,9 @@ class _SettingsAWSSSOProviderState extends State<SettingsAWSSSOProvider> {
       closePressed: () {
         Navigator.pop(context);
       },
-      actionText: widget.provider == null ? 'Save and Add Cluster(s)' : 'Save',
+      actionText: widget.provider == null
+          ? t(context, 'Save and Add Cluster(s)')
+          : t(context, 'Save'),
       actionPressed: () {
         _saveProvider();
       },
@@ -331,9 +333,9 @@ class _SettingsAWSSSOProviderState extends State<SettingsAWSSSOProvider> {
                   autocorrect: false,
                   enableSuggestions: false,
                   maxLines: 1,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     border: OutlineInputBorder(),
-                    labelText: 'Role ARN (optional)',
+                    labelText: t(context, 'Role ARN (optional)'),
                   ),
                 ),
                 const SizedBox(height: Constants.spacingMiddle),

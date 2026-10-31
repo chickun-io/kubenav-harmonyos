@@ -68,7 +68,7 @@ class SettingsSponsor extends StatelessWidget {
     /// products we open a [SettingsSponsorSubscribe] widget with this product
     /// were a user can buy it.
     return AppVerticalListSimpleWidget(
-      title: 'Sponsor',
+      title: t(context, 'Sponsor'),
       items: sponsorRepository.products
           .map(
             (e) => AppVerticalListSimpleModel(
@@ -84,7 +84,10 @@ class SettingsSponsor extends StatelessWidget {
                 Expanded(
                   flex: 1,
                   child: Text(
-                    titles.containsKey(e.id) ? titles[e.id]! : e.title,
+                    t(
+                      context,
+                      titles.containsKey(e.id) ? titles[e.id]! : e.title,
+                    ),
                     style: normalTextStyle(context),
                   ),
                 ),

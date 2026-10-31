@@ -125,7 +125,7 @@ class SettingsReuseProviderActions extends StatelessWidget {
     if (providerType == ClusterProviderType.awssso) {
       actions.add(
         AppActionsWidgetAction(
-          title: 'Add Multiple Providers',
+          title: t(context, 'Add Multiple Providers'),
           color: Theme.of(context).colorScheme.primary,
           onTap: () {
             Navigator.pop(context);

@@ -140,7 +140,9 @@ class _SettingsAWSProviderState extends State<SettingsAWSProvider> {
       closePressed: () {
         Navigator.pop(context);
       },
-      actionText: widget.provider == null ? 'Save and Add Cluster(s)' : 'Save',
+      actionText: widget.provider == null
+          ? t(context, 'Save and Add Cluster(s)')
+          : t(context, 'Save'),
       actionPressed: () {
         _saveProvider();
       },
@@ -189,9 +191,9 @@ class _SettingsAWSProviderState extends State<SettingsAWSProvider> {
                   autocorrect: false,
                   enableSuggestions: false,
                   maxLines: 1,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     border: OutlineInputBorder(),
-                    labelText: 'Secret Key',
+                    labelText: t(context, 'Secret Key'),
                   ),
                   validator: _validator,
                 ),
@@ -235,9 +237,9 @@ class _SettingsAWSProviderState extends State<SettingsAWSProvider> {
                   autocorrect: false,
                   enableSuggestions: false,
                   maxLines: 1,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     border: OutlineInputBorder(),
-                    labelText: 'Session Token (optional)',
+                    labelText: t(context, 'Session Token (optional)'),
                   ),
                 ),
                 const SizedBox(height: Constants.spacingMiddle),
@@ -247,9 +249,9 @@ class _SettingsAWSProviderState extends State<SettingsAWSProvider> {
                   autocorrect: false,
                   enableSuggestions: false,
                   maxLines: 1,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     border: OutlineInputBorder(),
-                    labelText: 'Role ARN (optional)',
+                    labelText: t(context, 'Role ARN (optional)'),
                   ),
                 ),
               ],

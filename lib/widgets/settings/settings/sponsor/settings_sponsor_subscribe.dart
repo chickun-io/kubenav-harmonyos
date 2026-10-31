@@ -105,7 +105,7 @@ class _SettingsSponsorSubscribeState extends State<SettingsSponsorSubscribe> {
                       [
                         widget.product.price,
                         periods.containsKey(widget.product.id)
-                            ? periods[widget.product.id]
+                            ? t(context, periods[widget.product.id]!)
                             : '',
                       ],
                     ),
@@ -178,7 +178,7 @@ class _SettingsSponsorSubscribeState extends State<SettingsSponsorSubscribe> {
       subtitle: tFmt(context, 'Subscribe for {0} {1}', [
         widget.product.price,
         periods.containsKey(widget.product.id)
-            ? periods[widget.product.id]
+            ? t(context, periods[widget.product.id]!)
             : '',
       ]),
       icon: Icons.favorite,
@@ -188,7 +188,7 @@ class _SettingsSponsorSubscribeState extends State<SettingsSponsorSubscribe> {
       actionText: tFmt(context, 'Subscribe for {0} {1}', [
         widget.product.price,
         periods.containsKey(widget.product.id)
-            ? periods[widget.product.id]
+            ? t(context, periods[widget.product.id]!)
             : '',
       ]),
       actionPressed: () {

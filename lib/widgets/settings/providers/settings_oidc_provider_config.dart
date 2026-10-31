@@ -490,9 +490,9 @@ class _SettingsOIDCProviderState extends State<SettingsOIDCProvider> {
           autocorrect: false,
           enableSuggestions: false,
           maxLines: 1,
-          decoration: const InputDecoration(
+          decoration: InputDecoration(
             border: OutlineInputBorder(),
-            labelText: 'Scopes (optional)',
+            labelText: t(context, 'Scopes (optional)'),
           ),
         ),
         const SizedBox(height: Constants.spacingMiddle),
@@ -602,9 +602,9 @@ class _SettingsOIDCProviderState extends State<SettingsOIDCProvider> {
           autocorrect: false,
           enableSuggestions: false,
           maxLines: 1,
-          decoration: const InputDecoration(
+          decoration: InputDecoration(
             border: OutlineInputBorder(),
-            labelText: 'Scopes (optional)',
+            labelText: t(context, 'Scopes (optional)'),
           ),
         ),
       ),
@@ -657,9 +657,9 @@ class _SettingsOIDCProviderState extends State<SettingsOIDCProvider> {
           autocorrect: false,
           enableSuggestions: false,
           maxLines: null,
-          decoration: const InputDecoration(
+          decoration: InputDecoration(
             border: OutlineInputBorder(),
-            labelText: 'Certificate Authority (optional)',
+            labelText: t(context, 'Certificate Authority (optional)'),
           ),
         ),
       ),
@@ -671,9 +671,9 @@ class _SettingsOIDCProviderState extends State<SettingsOIDCProvider> {
           autocorrect: false,
           enableSuggestions: false,
           maxLines: 1,
-          decoration: const InputDecoration(
+          decoration: InputDecoration(
             border: OutlineInputBorder(),
-            labelText: 'Refresh Token (optional)',
+            labelText: t(context, 'Refresh Token (optional)'),
           ),
         ),
       ),
@@ -815,7 +815,9 @@ class _SettingsOIDCProviderState extends State<SettingsOIDCProvider> {
       closePressed: () {
         Navigator.pop(context);
       },
-      actionText: widget.provider == null ? 'Save and Add Cluster(s)' : 'Save',
+      actionText: widget.provider == null
+          ? t(context, 'Save and Add Cluster(s)')
+          : t(context, 'Save'),
       actionPressed: () {
         _saveProvider();
       },

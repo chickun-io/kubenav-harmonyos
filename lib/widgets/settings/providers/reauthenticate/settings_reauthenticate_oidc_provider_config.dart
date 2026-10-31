@@ -95,7 +95,7 @@ class _SettingsReauthenticateOIDCState
         showSnackbar(
           context,
           t(context, 'Provider Configuration Saved'),
-          'Refresh the view to use the new credentials',
+          t(context, 'Refresh the view to use the new credentials'),
         );
       }
     } catch (err) {

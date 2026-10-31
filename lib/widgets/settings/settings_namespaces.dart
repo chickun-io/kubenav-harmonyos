@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:kubenav/repositories/app_repository.dart';
 import 'package:kubenav/utils/constants.dart';
 import 'package:kubenav/utils/helpers.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/utils/showmodal.dart';
 import 'package:kubenav/utils/themes.dart';
 import 'package:kubenav/widgets/settings/namespaces/settings_add_namespace.dart';
@@ -77,15 +78,15 @@ class SettingsNamespaces extends StatelessWidget {
         slidableActions: [
           AppListItemSlidableAction(
             icon: Icons.delete,
-            label: 'Delete',
+            label: t(context, 'Delete'),
             backgroundColor: Theme.of(context).colorScheme.error,
             foregroundColor: Theme.of(context).colorScheme.onError,
             onTap: (BuildContext context) {
               appRepository.deleteNamespace(namespace);
               showSnackbar(
                 context,
-                'Namespace Deleted',
-                'The Namespace $namespace was deleted',
+                t(context, 'Namespace Deleted'),
+                tFmt(context, 'The Namespace {0} was deleted', [namespace]),
               );
             },
           ),
@@ -140,7 +141,7 @@ class SettingsNamespaces extends StatelessWidget {
             },
           ),
         ],
-        title: const Text('Namespaces'),
+        title: Text(t(context, 'Namespaces')),
       ),
       bottomNavigationBar: const AppBottomNavigationBarWidget(),
       floatingActionButton: const AppFloatingActionButtonsWidget(),
