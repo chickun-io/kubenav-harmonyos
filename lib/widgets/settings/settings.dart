@@ -400,6 +400,52 @@ class Settings extends StatelessWidget {
                   AppVerticalListSimpleModel(
                     children: [
                       Icon(
+                        Icons.language,
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                      const SizedBox(width: Constants.spacingSmall),
+                      Expanded(
+                        flex: 1,
+                        child: Text(
+                          t(context, 'Language'),
+                          style: normalTextStyle(context),
+                        ),
+                      ),
+                      DropdownButton<String>(
+                        value: appRepository.settings.language,
+                        underline: Container(
+                          height: 2,
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                        onChanged: (String? value) {
+                          appRepository.setLanguage(value ?? 'system');
+                        },
+                        items:
+                            const <MapEntry<String, String>>[
+                              MapEntry('system', 'Follow System'),
+                              MapEntry('en', 'English'),
+                              MapEntry('zh', '简体中文'),
+                            ].map((value) {
+                              return DropdownMenuItem(
+                                value: value.key,
+                                child: Text(
+                                  value.key == 'system'
+                                      ? t(context, value.value)
+                                      : value.value,
+                                  style: TextStyle(
+                                    color: Theme.of(context)
+                                        .extension<CustomColors>()!
+                                        .textPrimary,
+                                  ),
+                                ),
+                              );
+                            }).toList(),
+                      ),
+                    ],
+                  ),
+                  AppVerticalListSimpleModel(
+                    children: [
+                      Icon(
                         Icons.code,
                         color: Theme.of(context).colorScheme.primary,
                       ),

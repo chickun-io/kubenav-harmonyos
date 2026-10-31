@@ -5,6 +5,9 @@ import 'package:kubenav/l10n/zh_cn.dart';
 
 /// Locales shipped with the app. Resolution follows the device language:
 /// Chinese maps to zh-CN, every other language maps to en-US.
+///
+/// A saved language of `en` or `zh` overrides the device. `system` (and any
+/// other value) keeps the device language.
 const Locale localeEnUs = Locale('en', 'US');
 const Locale localeZhCn = Locale('zh', 'CN');
 
@@ -15,6 +18,19 @@ Locale resolveAppLocale(Locale? locale, Iterable<Locale> supported) {
     return localeZhCn;
   }
   return localeEnUs;
+}
+
+/// `en` and `zh` force a shipped locale. Anything else, including `system`,
+/// follows the device.
+Locale? localeForLanguage(String language) {
+  switch (language) {
+    case 'en':
+      return localeEnUs;
+    case 'zh':
+      return localeZhCn;
+    default:
+      return null;
+  }
 }
 
 bool isChinese(BuildContext context) {

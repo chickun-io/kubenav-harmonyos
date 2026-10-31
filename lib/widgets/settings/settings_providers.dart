@@ -111,13 +111,13 @@ class SettingsProviders extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                 ),
                 Text(
-                  provider.type!.title(),
+                  t(context, provider.type!.title()),
                   style: secondaryTextStyle(context),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
                 Text(
-                  provider.type!.subtitle(),
+                  t(context, provider.type!.subtitle()),
                   style: secondaryTextStyle(context),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,

@@ -145,7 +145,7 @@ class _SettingsAddClusterAzureState extends State<SettingsAddClusterAzure> {
     if (_error != '') {
       return AppErrorWidget(
         message: t(context, 'Failed to Load Clusters'),
-        details: _error,
+        details: t(context, _error),
         icon: ClusterProviderType.azure.icon(),
       );
     }
@@ -217,8 +217,8 @@ class _SettingsAddClusterAzureState extends State<SettingsAddClusterAzure> {
   @override
   Widget build(BuildContext context) {
     return AppBottomSheetWidget(
-      title: ClusterProviderType.azure.title(),
-      subtitle: ClusterProviderType.azure.subtitle(),
+      title: t(context, ClusterProviderType.azure.title()),
+      subtitle: t(context, ClusterProviderType.azure.subtitle()),
       icon: ClusterProviderType.azure.icon(),
       closePressed: () {
         Navigator.pop(context);

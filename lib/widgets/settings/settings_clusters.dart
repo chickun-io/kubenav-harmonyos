@@ -93,8 +93,8 @@ class _SettingsClustersState extends State<SettingsClusters> {
       cards: List.generate(
         ClusterProviderType.values.length,
         (index) => AppHorizontalListCardsModel(
-          title: ClusterProviderType.values[index].title(),
-          subtitle: [ClusterProviderType.values[index].subtitle()],
+          title: t(context, ClusterProviderType.values[index].title()),
+          subtitle: [t(context, ClusterProviderType.values[index].subtitle())],
           image: ClusterProviderType.values[index].icon(),
           onTap: () {
             _showAddClusterBottomSheet(

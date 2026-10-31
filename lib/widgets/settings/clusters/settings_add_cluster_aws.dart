@@ -156,7 +156,7 @@ class _SettingsAddClusterAWSState extends State<SettingsAddClusterAWS> {
     if (_error != '') {
       return AppErrorWidget(
         message: t(context, 'Failed to Load Clusters'),
-        details: _error,
+        details: t(context, _error),
         icon: ClusterProviderType.aws.icon(),
       );
     }
@@ -228,8 +228,8 @@ class _SettingsAddClusterAWSState extends State<SettingsAddClusterAWS> {
   @override
   Widget build(BuildContext context) {
     return AppBottomSheetWidget(
-      title: ClusterProviderType.aws.title(),
-      subtitle: ClusterProviderType.aws.subtitle(),
+      title: t(context, ClusterProviderType.aws.title()),
+      subtitle: t(context, ClusterProviderType.aws.subtitle()),
       icon: ClusterProviderType.aws.icon(),
       closePressed: () {
         Navigator.pop(context);

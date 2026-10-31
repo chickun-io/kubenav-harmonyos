@@ -168,8 +168,8 @@ class _SettingsRancherProviderState extends State<SettingsRancherProvider> {
   @override
   Widget build(BuildContext context) {
     return AppBottomSheetWidget(
-      title: ClusterProviderType.rancher.title(),
-      subtitle: ClusterProviderType.rancher.subtitle(),
+      title: t(context, ClusterProviderType.rancher.title()),
+      subtitle: t(context, ClusterProviderType.rancher.subtitle()),
       icon: ClusterProviderType.rancher.icon(),
       closePressed: () {
         Navigator.pop(context);

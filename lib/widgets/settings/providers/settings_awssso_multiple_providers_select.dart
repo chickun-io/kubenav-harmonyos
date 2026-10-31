@@ -142,8 +142,8 @@ class _SettingsAWSSSOMultipleProvidersSelectState
   @override
   Widget build(BuildContext context) {
     return AppBottomSheetWidget(
-      title: ClusterProviderType.awssso.title(),
-      subtitle: ClusterProviderType.awssso.subtitle(),
+      title: t(context, ClusterProviderType.awssso.title()),
+      subtitle: t(context, ClusterProviderType.awssso.subtitle()),
       icon: ClusterProviderType.awssso.icon(),
       closePressed: () {
         Navigator.pop(context);

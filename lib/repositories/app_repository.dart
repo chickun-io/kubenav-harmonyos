@@ -212,6 +212,16 @@ class AppRepository with ChangeNotifier {
     } catch (_) {}
   }
 
+  /// [setLanguage] stores the interface language. `system` follows the device.
+  /// `en` and `zh` force English (en-US) and Simplified Chinese (zh-CN).
+  Future<void> setLanguage(String value) async {
+    try {
+      _settings.language = value == 'en' || value == 'zh' ? value : 'system';
+      await _save();
+      notifyListeners();
+    } catch (_) {}
+  }
+
   /// [setEditorFormat] sets the editor format to the provided [value]. The
   /// editor format can be `yaml` or `json`. By default all manifests in a code
   /// editor are displayed as `yaml` documents.
@@ -310,6 +320,7 @@ class AppRepositorySettings {
   List<String> namespaces;
   bool isAuthenticationEnabled;
   bool isShowClustersOnStart;
+  String language;
   String editorFormat;
   String proxy;
   int timeout;
@@ -321,6 +332,7 @@ class AppRepositorySettings {
     required this.namespaces,
     required this.isAuthenticationEnabled,
     required this.isShowClustersOnStart,
+    required this.language,
     required this.editorFormat,
     required this.proxy,
     required this.timeout,
@@ -334,6 +346,7 @@ class AppRepositorySettings {
       namespaces: [],
       isAuthenticationEnabled: false,
       isShowClustersOnStart: false,
+      language: 'system',
       editorFormat: 'yaml',
       proxy: '',
       timeout: 0,
@@ -358,6 +371,9 @@ class AppRepositorySettings {
               data['isShowClustersOnStart'] != null
           ? data['isShowClustersOnStart']
           : false,
+      language: data['language'] == 'en' || data['language'] == 'zh'
+          ? data['language']
+          : 'system',
       editorFormat:
           data.containsKey('editorFormat') && data['editorFormat'] != null
           ? data['editorFormat']
@@ -386,6 +402,7 @@ class AppRepositorySettings {
       'namespaces': json.encode(namespaces),
       'isAuthenticationEnabled': isAuthenticationEnabled,
       'isShowClustersOnStart': isShowClustersOnStart,
+      'language': language,
       'editorFormat': editorFormat,
       'proxy': proxy,
       'timeout': timeout,

@@ -147,7 +147,7 @@ class _SettingsAddClusterRancherState extends State<SettingsAddClusterRancher> {
     if (_error != '') {
       return AppErrorWidget(
         message: t(context, 'Failed to Load Clusters'),
-        details: _error,
+        details: t(context, _error),
         icon: ClusterProviderType.rancher.icon(),
       );
     }
@@ -219,8 +219,8 @@ class _SettingsAddClusterRancherState extends State<SettingsAddClusterRancher> {
   @override
   Widget build(BuildContext context) {
     return AppBottomSheetWidget(
-      title: ClusterProviderType.rancher.title(),
-      subtitle: ClusterProviderType.rancher.subtitle(),
+      title: t(context, ClusterProviderType.rancher.title()),
+      subtitle: t(context, ClusterProviderType.rancher.subtitle()),
       icon: ClusterProviderType.rancher.icon(),
       closePressed: () {
         Navigator.pop(context);

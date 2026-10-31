@@ -157,7 +157,7 @@ class _SettingsAddClusterDigitalOceanState
     if (_error != '') {
       return AppErrorWidget(
         message: t(context, 'Failed to Load Clusters'),
-        details: _error,
+        details: t(context, _error),
         icon: ClusterProviderType.digitalocean.icon(),
       );
     }
@@ -229,8 +229,8 @@ class _SettingsAddClusterDigitalOceanState
   @override
   Widget build(BuildContext context) {
     return AppBottomSheetWidget(
-      title: ClusterProviderType.digitalocean.title(),
-      subtitle: ClusterProviderType.digitalocean.subtitle(),
+      title: t(context, ClusterProviderType.digitalocean.title()),
+      subtitle: t(context, ClusterProviderType.digitalocean.subtitle()),
       icon: ClusterProviderType.digitalocean.icon(),
       closePressed: () {
         Navigator.pop(context);

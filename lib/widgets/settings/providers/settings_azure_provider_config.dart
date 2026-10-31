@@ -133,8 +133,8 @@ class _SettingsAzureProviderState extends State<SettingsAzureProvider> {
   @override
   Widget build(BuildContext context) {
     return AppBottomSheetWidget(
-      title: ClusterProviderType.azure.title(),
-      subtitle: ClusterProviderType.azure.subtitle(),
+      title: t(context, ClusterProviderType.azure.title()),
+      subtitle: t(context, ClusterProviderType.azure.subtitle()),
       icon: ClusterProviderType.azure.icon(),
       closePressed: () {
         Navigator.pop(context);

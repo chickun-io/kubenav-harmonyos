@@ -155,7 +155,7 @@ class _SettingsAddClusterGoogleState extends State<SettingsAddClusterGoogle> {
     if (_error != '') {
       return AppErrorWidget(
         message: t(context, 'Failed to Load Clusters'),
-        details: _error,
+        details: t(context, _error),
         icon: ClusterProviderType.google.icon(),
       );
     }
@@ -227,8 +227,8 @@ class _SettingsAddClusterGoogleState extends State<SettingsAddClusterGoogle> {
   @override
   Widget build(BuildContext context) {
     return AppBottomSheetWidget(
-      title: ClusterProviderType.google.title(),
-      subtitle: ClusterProviderType.google.subtitle(),
+      title: t(context, ClusterProviderType.google.title()),
+      subtitle: t(context, ClusterProviderType.google.subtitle()),
       icon: ClusterProviderType.google.icon(),
       closePressed: () {
         Navigator.pop(context);

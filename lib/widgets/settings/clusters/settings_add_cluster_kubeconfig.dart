@@ -132,8 +132,8 @@ class _SettingsAddClusterKubeconfigState
   @override
   Widget build(BuildContext context) {
     return AppBottomSheetWidget(
-      title: ClusterProviderType.kubeconfig.title(),
-      subtitle: ClusterProviderType.kubeconfig.subtitle(),
+      title: t(context, ClusterProviderType.kubeconfig.title()),
+      subtitle: t(context, ClusterProviderType.kubeconfig.subtitle()),
       icon: ClusterProviderType.kubeconfig.icon(),
       closePressed: () {
         Navigator.pop(context);

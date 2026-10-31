@@ -26,6 +26,22 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   String shortcut = '';
+  final QuickActions _quickActions = const QuickActions();
+  Locale? _shortcutLocale;
+
+  void _setShortcutItems(Locale locale) {
+    if (_shortcutLocale == locale) {
+      return;
+    }
+    _shortcutLocale = locale;
+    _quickActions.setShortcutItems(<ShortcutItem>[
+      ShortcutItem(
+        type: 'reset',
+        localizedTitle: tLocale(locale, 'Reset'),
+        localizedSubtitle: tLocale(locale, 'Reset Data'),
+      ),
+    ]);
+  }
 
   @override
   void initState() {
@@ -36,20 +52,17 @@ class _HomeState extends State<Home> {
     /// the app crashes for a invalid cluster configuration and I wasn't able
     /// until now, why this happens. So having a workaround that effect users
     /// can start using the app again might be a good idea.
-    const QuickActions quickActions = QuickActions();
-    quickActions.initialize((String shortcutType) {
+    _quickActions.initialize((String shortcutType) {
       setState(() {
         shortcut = shortcutType;
       });
     });
-    final deviceLocale = WidgetsBinding.instance.platformDispatcher.locale;
-    quickActions.setShortcutItems(<ShortcutItem>[
-      ShortcutItem(
-        type: 'reset',
-        localizedTitle: tLocale(deviceLocale, 'Reset'),
-        localizedSubtitle: tLocale(deviceLocale, 'Reset Data'),
+    _setShortcutItems(
+      resolveAppLocale(
+        WidgetsBinding.instance.platformDispatcher.locale,
+        appSupportedLocales,
       ),
-    ]);
+    );
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       ThemeRepository themeRepository = Provider.of<ThemeRepository>(
@@ -91,6 +104,18 @@ class _HomeState extends State<Home> {
       context,
       listen: true,
     );
+    final shortcutLocale = resolveAppLocale(
+      localeForLanguage(appRepository.settings.language) ??
+          WidgetsBinding.instance.platformDispatcher.locale,
+      appSupportedLocales,
+    );
+    if (_shortcutLocale != shortcutLocale) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          _setShortcutItems(shortcutLocale);
+        }
+      });
+    }
     ClustersRepository clustersRepository = Provider.of<ClustersRepository>(
       context,
       listen: true,

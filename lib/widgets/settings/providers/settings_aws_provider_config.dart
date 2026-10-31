@@ -134,8 +134,8 @@ class _SettingsAWSProviderState extends State<SettingsAWSProvider> {
   @override
   Widget build(BuildContext context) {
     return AppBottomSheetWidget(
-      title: ClusterProviderType.aws.title(),
-      subtitle: ClusterProviderType.aws.subtitle(),
+      title: t(context, ClusterProviderType.aws.title()),
+      subtitle: t(context, ClusterProviderType.aws.subtitle()),
       icon: ClusterProviderType.aws.icon(),
       closePressed: () {
         Navigator.pop(context);

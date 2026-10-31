@@ -200,7 +200,12 @@ class _SettingsClusterItemState extends State<SettingsClusterItem> {
                         overflow: TextOverflow.ellipsis,
                       ),
                       Text(
-                        Characters(widget.cluster.clusterProviderType.title())
+                        Characters(
+                              t(
+                                context,
+                                widget.cluster.clusterProviderType.title(),
+                              ),
+                            )
                             .replaceAll(Characters(''), Characters('\u{200B}'))
                             .toString(),
                         style: secondaryTextStyle(context),

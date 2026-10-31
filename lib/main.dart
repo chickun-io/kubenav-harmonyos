@@ -56,6 +56,10 @@ class AppMaterialApp extends StatelessWidget {
       context,
       listen: true,
     );
+    AppRepository appRepository = Provider.of<AppRepository>(
+      context,
+      listen: true,
+    );
 
     return TooltipVisibility(
       visible: false,
@@ -64,6 +68,7 @@ class AppMaterialApp extends StatelessWidget {
         theme: lightTheme,
         darkTheme: darkTheme,
         themeMode: themeRepository.themeMode,
+        locale: localeForLanguage(appRepository.settings.language),
         debugShowCheckedModeBanner: false,
         localizationsDelegates: const [
           GlobalMaterialLocalizations.delegate,

@@ -115,8 +115,8 @@ class _SettingsAddClusterOIDCState extends State<SettingsAddClusterOIDC> {
   @override
   Widget build(BuildContext context) {
     return AppBottomSheetWidget(
-      title: ClusterProviderType.oidc.title(),
-      subtitle: ClusterProviderType.oidc.subtitle(),
+      title: t(context, ClusterProviderType.oidc.title()),
+      subtitle: t(context, ClusterProviderType.oidc.subtitle()),
       icon: ClusterProviderType.oidc.icon(),
       closePressed: () {
         Navigator.pop(context);

@@ -134,8 +134,8 @@ class _SettingsAddClusterManualState extends State<SettingsAddClusterManual> {
   @override
   Widget build(BuildContext context) {
     return AppBottomSheetWidget(
-      title: ClusterProviderType.manual.title(),
-      subtitle: ClusterProviderType.manual.subtitle(),
+      title: t(context, ClusterProviderType.manual.title()),
+      subtitle: t(context, ClusterProviderType.manual.subtitle()),
       icon: ClusterProviderType.manual.icon(),
       closePressed: () {
         Navigator.pop(context);

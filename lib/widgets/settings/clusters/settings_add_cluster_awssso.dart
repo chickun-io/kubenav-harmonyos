@@ -161,7 +161,7 @@ class _SettingsAddClusterAWSSSOState extends State<SettingsAddClusterAWSSSO> {
     if (_error != '') {
       return AppErrorWidget(
         message: t(context, 'Failed to Load Clusters'),
-        details: _error,
+        details: t(context, _error),
         icon: ClusterProviderType.awssso.icon(),
       );
     }
@@ -233,8 +233,8 @@ class _SettingsAddClusterAWSSSOState extends State<SettingsAddClusterAWSSSO> {
   @override
   Widget build(BuildContext context) {
     return AppBottomSheetWidget(
-      title: ClusterProviderType.awssso.title(),
-      subtitle: ClusterProviderType.awssso.subtitle(),
+      title: t(context, ClusterProviderType.awssso.title()),
+      subtitle: t(context, ClusterProviderType.awssso.subtitle()),
       icon: ClusterProviderType.awssso.icon(),
       closePressed: () {
         Navigator.pop(context);

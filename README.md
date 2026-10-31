@@ -61,8 +61,9 @@ for development.
   directly in the dashboard and to build your own dashboards via the Prometheus
   plugin.
 
-The app follows the device language. This release includes English (en-US) and
-Simplified Chinese (zh-CN). Any other language falls back to English.
+The app follows the device language by default. Settings → Language can switch
+between Follow System, English (en-US), and Simplified Chinese (zh-CN). Any
+other device language falls back to English.
 
 ## Usage
 
