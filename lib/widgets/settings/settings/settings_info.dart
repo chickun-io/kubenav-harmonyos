@@ -9,6 +9,7 @@ import 'package:kubenav/repositories/sponsor_repository.dart';
 import 'package:kubenav/utils/constants.dart';
 import 'package:kubenav/utils/custom_icons.dart';
 import 'package:kubenav/utils/helpers.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/utils/logger.dart';
 import 'package:kubenav/utils/showmodal.dart';
 import 'package:kubenav/utils/themes.dart';
@@ -87,7 +88,10 @@ class _SettingsInfoState extends State<SettingsInfo> {
             const SizedBox(width: Constants.spacingSmall),
             Expanded(
               flex: 1,
-              child: Text('Terms of Use', style: normalTextStyle(context)),
+              child: Text(
+                t(context, 'Terms of Use'),
+                style: normalTextStyle(context),
+              ),
             ),
             Icon(
               Icons.arrow_forward_ios,
@@ -104,7 +108,7 @@ class _SettingsInfoState extends State<SettingsInfo> {
             sponsorRepository.restorePurchases();
             showSnackbar(
               context,
-              'Restore Purchases',
+              t(context, 'Restore Purchases'),
               'Your previous purchases were restored',
             );
           },
@@ -113,7 +117,10 @@ class _SettingsInfoState extends State<SettingsInfo> {
             const SizedBox(width: Constants.spacingSmall),
             Expanded(
               flex: 1,
-              child: Text('Restore Purchases', style: normalTextStyle(context)),
+              child: Text(
+                t(context, 'Restore Purchases'),
+                style: normalTextStyle(context),
+              ),
             ),
             Icon(
               Icons.arrow_forward_ios,
@@ -140,7 +147,7 @@ class _SettingsInfoState extends State<SettingsInfo> {
   @override
   Widget build(BuildContext context) {
     return AppVerticalListSimpleWidget(
-      title: 'Info',
+      title: t(context, 'Info'),
       items: [
         AppVerticalListSimpleModel(
           children: [
@@ -148,7 +155,10 @@ class _SettingsInfoState extends State<SettingsInfo> {
             const SizedBox(width: Constants.spacingSmall),
             Expanded(
               flex: 1,
-              child: Text('Version', style: normalTextStyle(context)),
+              child: Text(
+                t(context, 'Version'),
+                style: normalTextStyle(context),
+              ),
             ),
             Container(
               padding: const EdgeInsets.only(
@@ -185,7 +195,10 @@ class _SettingsInfoState extends State<SettingsInfo> {
             const SizedBox(width: Constants.spacingSmall),
             Expanded(
               flex: 1,
-              child: Text('Website', style: normalTextStyle(context)),
+              child: Text(
+                t(context, 'Website'),
+                style: normalTextStyle(context),
+              ),
             ),
             Icon(
               Icons.arrow_forward_ios,
@@ -226,13 +239,13 @@ class _SettingsInfoState extends State<SettingsInfo> {
             showModal(
               context,
               AppBottomSheetWidget(
-                title: 'License',
-                subtitle: 'MIT License',
+                title: t(context, 'License'),
+                subtitle: t(context, 'MIT License'),
                 icon: Icons.copyright,
                 closePressed: () {
                   Navigator.pop(context);
                 },
-                actionText: 'Close',
+                actionText: t(context, 'Close'),
                 actionPressed: () {
                   Navigator.pop(context);
                 },
@@ -248,9 +261,9 @@ class _SettingsInfoState extends State<SettingsInfo> {
                     child: Text(
                       licenseText,
                       style: TextStyle(
-                        color: Theme.of(
-                          context,
-                        ).extension<CustomColors>()!.textPrimary,
+                        color: Theme.of(context)
+                            .extension<CustomColors>()!
+                            .textPrimary,
                       ),
                     ),
                   ),
@@ -263,7 +276,10 @@ class _SettingsInfoState extends State<SettingsInfo> {
             const SizedBox(width: Constants.spacingSmall),
             Expanded(
               flex: 1,
-              child: Text('License', style: normalTextStyle(context)),
+              child: Text(
+                t(context, 'License'),
+                style: normalTextStyle(context),
+              ),
             ),
             Icon(
               Icons.arrow_forward_ios,
@@ -284,7 +300,10 @@ class _SettingsInfoState extends State<SettingsInfo> {
             const SizedBox(width: Constants.spacingSmall),
             Expanded(
               flex: 1,
-              child: Text('Privacy Policy', style: normalTextStyle(context)),
+              child: Text(
+                t(context, 'Privacy Policy'),
+                style: normalTextStyle(context),
+              ),
             ),
             Icon(
               Icons.arrow_forward_ios,

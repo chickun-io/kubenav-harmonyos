@@ -4,6 +4,7 @@ import 'package:code_text_field/code_text_field.dart';
 
 import 'package:kubenav/utils/constants.dart';
 import 'package:kubenav/utils/helpers.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/utils/themes.dart';
 import 'package:kubenav/widgets/shared/app_bottom_sheet_widget.dart';
 
@@ -43,13 +44,13 @@ class _PluginHelmDetailsTemplateState extends State<PluginHelmDetailsTemplate> {
   @override
   Widget build(BuildContext context) {
     return AppBottomSheetWidget(
-      title: 'Template',
+      title: t(context, 'Template'),
       subtitle: widget.name,
       icon: Icons.description,
       closePressed: () {
         Navigator.pop(context);
       },
-      actionText: 'Close',
+      actionText: t(context, 'Close'),
       actionPressed: () {
         Navigator.pop(context);
       },

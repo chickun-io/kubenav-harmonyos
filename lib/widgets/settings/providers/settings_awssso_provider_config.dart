@@ -8,6 +8,7 @@ import 'package:kubenav/repositories/clusters_repository.dart';
 import 'package:kubenav/services/providers/aws_service.dart';
 import 'package:kubenav/utils/constants.dart';
 import 'package:kubenav/utils/helpers.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/utils/logger.dart';
 import 'package:kubenav/utils/showmodal.dart';
 import 'package:kubenav/utils/themes.dart';
@@ -41,7 +42,7 @@ class _SettingsAWSSSOProviderState extends State<SettingsAWSSSOProvider> {
   /// missing the validation of the form will fail.
   String? _validator(String? value) {
     if (value == null || value.isEmpty) {
-      return 'This field is required';
+      return t(context, 'This field is required');
     }
 
     return null;
@@ -65,7 +66,7 @@ class _SettingsAWSSSOProviderState extends State<SettingsAWSSSOProvider> {
       if (mounted) {
         showSnackbar(
           context,
-          'Sing in Completed',
+          t(context, 'Sing in Completed'),
           'You can now click on the verify button',
         );
       }
@@ -78,7 +79,7 @@ class _SettingsAWSSSOProviderState extends State<SettingsAWSSSOProvider> {
       if (mounted) {
         showSnackbar(
           context,
-          'Failed to Get SSO Configuration',
+          t(context, 'Failed to Get SSO Configuration'),
           err.toString(),
         );
       }
@@ -98,7 +99,11 @@ class _SettingsAWSSSOProviderState extends State<SettingsAWSSSOProvider> {
         err,
       );
       if (mounted) {
-        showSnackbar(context, 'Failed to Verify Device', err.toString());
+        showSnackbar(
+          context,
+          t(context, 'Failed to Verify Device'),
+          err.toString(),
+        );
       }
     }
   }
@@ -127,7 +132,7 @@ class _SettingsAWSSSOProviderState extends State<SettingsAWSSSOProvider> {
       if (mounted) {
         showSnackbar(
           context,
-          'Credentials Created',
+          t(context, 'Credentials Created'),
           'You can now click on the save button',
         );
       }
@@ -138,7 +143,11 @@ class _SettingsAWSSSOProviderState extends State<SettingsAWSSSOProvider> {
         err,
       );
       if (mounted) {
-        showSnackbar(context, 'Failed to Get SSO Credentials', err.toString());
+        showSnackbar(
+          context,
+          t(context, 'Failed to Get SSO Credentials'),
+          err.toString(),
+        );
       }
     }
   }
@@ -207,7 +216,7 @@ class _SettingsAWSSSOProviderState extends State<SettingsAWSSSOProvider> {
       if (mounted) {
         showSnackbar(
           context,
-          'Failed to Save Provider Configuration',
+          t(context, 'Failed to Save Provider Configuration'),
           err.toString(),
         );
       }
@@ -270,9 +279,9 @@ class _SettingsAWSSSOProviderState extends State<SettingsAWSSSOProvider> {
                   autocorrect: false,
                   enableSuggestions: false,
                   maxLines: 1,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     border: OutlineInputBorder(),
-                    labelText: 'Name',
+                    labelText: t(context, 'Name'),
                   ),
                   validator: _validator,
                 ),
@@ -283,9 +292,9 @@ class _SettingsAWSSSOProviderState extends State<SettingsAWSSSOProvider> {
                   autocorrect: false,
                   enableSuggestions: false,
                   maxLines: 1,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     border: OutlineInputBorder(),
-                    labelText: 'Start URL',
+                    labelText: t(context, 'Start URL'),
                   ),
                   validator: _validator,
                 ),
@@ -296,9 +305,9 @@ class _SettingsAWSSSOProviderState extends State<SettingsAWSSSOProvider> {
                   autocorrect: false,
                   enableSuggestions: false,
                   maxLines: 1,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     border: OutlineInputBorder(),
-                    labelText: 'Account ID',
+                    labelText: t(context, 'Account ID'),
                   ),
                   validator: _validator,
                 ),
@@ -309,9 +318,9 @@ class _SettingsAWSSSOProviderState extends State<SettingsAWSSSOProvider> {
                   autocorrect: false,
                   enableSuggestions: false,
                   maxLines: 1,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     border: OutlineInputBorder(),
-                    labelText: 'Role Name',
+                    labelText: t(context, 'Role Name'),
                   ),
                   validator: _validator,
                 ),
@@ -332,7 +341,7 @@ class _SettingsAWSSSOProviderState extends State<SettingsAWSSSOProvider> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const Text('SSO Region'),
+                    Text(t(context, 'SSO Region')),
                     DropdownButton(
                       value: _ssoRegion,
                       underline: Container(
@@ -350,9 +359,9 @@ class _SettingsAWSSSOProviderState extends State<SettingsAWSSSOProvider> {
                           child: Text(
                             value,
                             style: TextStyle(
-                              color: Theme.of(
-                                context,
-                              ).extension<CustomColors>()!.textPrimary,
+                              color: Theme.of(context)
+                                  .extension<CustomColors>()!
+                                  .textPrimary,
                             ),
                           ),
                         );
@@ -365,7 +374,7 @@ class _SettingsAWSSSOProviderState extends State<SettingsAWSSSOProvider> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const Text('Region'),
+                    Text(t(context, 'Region')),
                     DropdownButton(
                       value: _region,
                       underline: Container(
@@ -383,9 +392,9 @@ class _SettingsAWSSSOProviderState extends State<SettingsAWSSSOProvider> {
                           child: Text(
                             value,
                             style: TextStyle(
-                              color: Theme.of(
-                                context,
-                              ).extension<CustomColors>()!.textPrimary,
+                              color: Theme.of(context)
+                                  .extension<CustomColors>()!
+                                  .textPrimary,
                             ),
                           ),
                         );
@@ -407,7 +416,7 @@ class _SettingsAWSSSOProviderState extends State<SettingsAWSSSOProvider> {
                   ),
                   onPressed: _startSSOFlow,
                   child: Text(
-                    'Sign In',
+                    t(context, 'Sign In'),
                     style: primaryTextStyle(
                       context,
                       color: Theme.of(context).colorScheme.onPrimary,
@@ -429,7 +438,7 @@ class _SettingsAWSSSOProviderState extends State<SettingsAWSSSOProvider> {
                   ),
                   onPressed: _awsSSOConfig == null ? null : _verifyDevice,
                   child: Text(
-                    'Verify',
+                    t(context, 'Verify'),
                     style: primaryTextStyle(
                       context,
                       color: Theme.of(context).colorScheme.onPrimary,
@@ -453,7 +462,7 @@ class _SettingsAWSSSOProviderState extends State<SettingsAWSSSOProvider> {
                       ? null
                       : _getSSOCredentials,
                   child: Text(
-                    'Get Credentials',
+                    t(context, 'Get Credentials'),
                     style: primaryTextStyle(
                       context,
                       color: Theme.of(context).colorScheme.onPrimary,

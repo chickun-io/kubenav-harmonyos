@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import 'package:kubenav/models/kubernetes/schema.models.swagger.dart';
 import 'package:kubenav/utils/constants.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/utils/resources.dart';
 import 'package:kubenav/widgets/plugins/flux/resources/plugin_flux_resources.dart';
 import 'package:kubenav/widgets/resources/helpers/details_item.dart';
@@ -18,8 +19,7 @@ final Resource fluxResourceBucket = Resource(
   category: FluxResourceCategories.sourceController,
   plural: 'Buckets',
   singular: 'Bucket',
-  description:
-      'The Bucket API defines a Source to produce an Artifact for objects from storage solutions like Amazon S3, Google Cloud Storage buckets, or any other solution with a S3 compatible API such as Minio, Alibaba Cloud OSS and others',
+  description: 'The Bucket API defines a Source to produce an Artifact for objects from storage solutions like Amazon S3, Google Cloud Storage buckets, or any other solution with a S3 compatible API such as Minio, Alibaba Cloud OSS and others',
   path: '/apis/source.toolkit.fluxcd.io/v1beta2',
   resource: 'buckets',
   scope: ResourceScope.namespaced,
@@ -72,32 +72,65 @@ final Resource fluxResourceBucket = Resource(
   toJson: (dynamic item) {
     return json.decode(json.encode(item));
   },
-  listItemBuilder: (BuildContext context, Resource resource, ResourceItem listItem) {
-    final item = listItem.item as IoFluxcdToolkitSourceV1Bucket;
-    final status = listItem.status;
+  listItemBuilder:
+      (BuildContext context, Resource resource, ResourceItem listItem) {
+        final item = listItem.item as IoFluxcdToolkitSourceV1Bucket;
+        final status = listItem.status;
 
-    return ResourcesListItem(
-      name: item.metadata?.name ?? '',
-      namespace: item.metadata?.namespace ?? '',
-      resource: resource,
-      item: item,
-      status: status,
-      details: [
-        'Namespace: ${item.metadata?.namespace ?? '-'}',
-        'Ready: ${item.status?.conditions != null && item.status!.conditions!.isNotEmpty ? item.status!.conditions!.where((e) => e.type == 'Ready').firstOrNull?.status : '-'}',
-        'Status: ${item.status?.conditions != null && item.status!.conditions!.isNotEmpty ? item.status!.conditions!.where((e) => e.type == 'Ready').firstOrNull?.message : '-'}',
-        'Age: ${getAge(item.metadata?.creationTimestamp)}',
-      ],
-    );
-  },
-  previewItemBuilder: (dynamic listItem) {
+        return ResourcesListItem(
+          name: item.metadata?.name ?? '',
+          namespace: item.metadata?.namespace ?? '',
+          resource: resource,
+          item: item,
+          status: status,
+          details: [
+            tFmt(context, 'Namespace: {0}', [item.metadata?.namespace ?? '-']),
+            tFmt(context, 'Ready: {0}', [
+              item.status?.conditions != null &&
+                      item.status!.conditions!.isNotEmpty
+                  ? item.status!.conditions!
+                        .where((e) => e.type == 'Ready')
+                        .firstOrNull
+                        ?.status
+                  : '-',
+            ]),
+            tFmt(context, 'Status: {0}', [
+              item.status?.conditions != null &&
+                      item.status!.conditions!.isNotEmpty
+                  ? item.status!.conditions!
+                        .where((e) => e.type == 'Ready')
+                        .firstOrNull
+                        ?.message
+                  : '-',
+            ]),
+            tFmt(context, 'Age: {0}', [
+              getAge(item.metadata?.creationTimestamp),
+            ]),
+          ],
+        );
+      },
+  previewItemBuilder: (BuildContext context, dynamic listItem) {
     final item = listItem as IoFluxcdToolkitSourceV1Bucket;
 
     return [
-      'Namespace: ${item.metadata?.namespace ?? '-'}',
-      'Ready: ${item.status?.conditions != null && item.status!.conditions!.isNotEmpty ? item.status!.conditions!.where((e) => e.type == 'Ready').firstOrNull?.status : '-'}',
-      'Status: ${item.status?.conditions != null && item.status!.conditions!.isNotEmpty ? item.status!.conditions!.where((e) => e.type == 'Ready').firstOrNull?.message : '-'}',
-      'Age: ${getAge(item.metadata?.creationTimestamp)}',
+      tFmt(context, 'Namespace: {0}', [item.metadata?.namespace ?? '-']),
+      tFmt(context, 'Ready: {0}', [
+        item.status?.conditions != null && item.status!.conditions!.isNotEmpty
+            ? item.status!.conditions!
+                  .where((e) => e.type == 'Ready')
+                  .firstOrNull
+                  ?.status
+            : '-',
+      ]),
+      tFmt(context, 'Status: {0}', [
+        item.status?.conditions != null && item.status!.conditions!.isNotEmpty
+            ? item.status!.conditions!
+                  .where((e) => e.type == 'Ready')
+                  .firstOrNull
+                  ?.message
+            : '-',
+      ]),
+      tFmt(context, 'Age: {0}', [getAge(item.metadata?.creationTimestamp)]),
     ];
   },
   detailsItemBuilder:
@@ -123,57 +156,76 @@ final Resource fluxResourceBucket = Resource(
             ),
             const SizedBox(height: Constants.spacingMiddle),
             DetailsItem(
-              title: 'Configuration',
+              title: t(context, 'Configuration'),
               details: [
                 DetailsItemModel(
-                  name: 'Provider',
+                  name: t(context, 'Provider'),
                   values: item.spec?.provider?.value,
                 ),
                 DetailsItemModel(
-                  name: 'Bucket Name',
+                  name: t(context, 'Bucket Name'),
                   values: item.spec?.bucketName,
                 ),
-                DetailsItemModel(name: 'Provider', values: item.spec?.endpoint),
-                DetailsItemModel(name: 'Region', values: item.spec?.region),
-                DetailsItemModel(name: 'Prefix', values: item.spec?.prefix),
                 DetailsItemModel(
-                  name: 'Insecure',
-                  values: item.spec?.insecure == true ? 'True' : 'False',
+                  name: t(context, 'Provider'),
+                  values: item.spec?.endpoint,
                 ),
-                DetailsItemModel(name: 'Interval', values: item.spec?.interval),
                 DetailsItemModel(
-                  name: 'Suspended',
-                  values: item.spec?.suspend == true ? 'True' : 'False',
+                  name: t(context, 'Region'),
+                  values: item.spec?.region,
                 ),
-                DetailsItemModel(name: 'Timeout', values: item.spec?.timeout),
+                DetailsItemModel(
+                  name: t(context, 'Prefix'),
+                  values: item.spec?.prefix,
+                ),
+                DetailsItemModel(
+                  name: t(context, 'Insecure'),
+                  values: item.spec?.insecure == true
+                      ? t(context, 'True')
+                      : t(context, 'False'),
+                ),
+                DetailsItemModel(
+                  name: t(context, 'Interval'),
+                  values: item.spec?.interval,
+                ),
+                DetailsItemModel(
+                  name: t(context, 'Suspended'),
+                  values: item.spec?.suspend == true
+                      ? t(context, 'True')
+                      : t(context, 'False'),
+                ),
+                DetailsItemModel(
+                  name: t(context, 'Timeout'),
+                  values: item.spec?.timeout,
+                ),
               ],
             ),
             const SizedBox(height: Constants.spacingMiddle),
             DetailsItem(
-              title: 'Artifact',
+              title: t(context, 'Artifact'),
               details: [
                 DetailsItemModel(
-                  name: 'Path',
+                  name: t(context, 'Path'),
                   values: item.status?.artifact?.path,
                 ),
                 DetailsItemModel(
-                  name: 'Url',
+                  name: t(context, 'Url'),
                   values: item.status?.artifact?.url,
                 ),
                 DetailsItemModel(
-                  name: 'Revision',
+                  name: t(context, 'Revision'),
                   values: item.status?.artifact?.revision,
                 ),
                 DetailsItemModel(
-                  name: 'Digest',
+                  name: t(context, 'Digest'),
                   values: item.status?.artifact?.digest,
                 ),
                 DetailsItemModel(
-                  name: 'Last Update',
+                  name: t(context, 'Last Update'),
                   values: getAge(item.status?.artifact?.lastUpdateTime),
                 ),
                 DetailsItemModel(
-                  name: 'Size',
+                  name: t(context, 'Size'),
                   values: item.status?.artifact?.size != null
                       ? formatBytes(item.status!.artifact!.size!)
                       : null,

@@ -8,6 +8,7 @@ import 'package:kubenav/repositories/theme_repository.dart';
 import 'package:kubenav/utils/constants.dart';
 import 'package:kubenav/utils/custom_icons.dart';
 import 'package:kubenav/utils/helpers.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/utils/logger.dart';
 import 'package:kubenav/utils/navigate.dart';
 import 'package:kubenav/utils/showmodal.dart';
@@ -378,11 +379,11 @@ class Settings extends StatelessWidget {
                           return DropdownMenuItem(
                             value: value,
                             child: Text(
-                              value.toShortString(),
+                              t(context, value.toShortString()),
                               style: TextStyle(
-                                color: Theme.of(
-                                  context,
-                                ).extension<CustomColors>()!.textPrimary,
+                                color: Theme.of(context)
+                                    .extension<CustomColors>()!
+                                    .textPrimary,
                               ),
                             ),
                           );
@@ -419,9 +420,9 @@ class Settings extends StatelessWidget {
                             child: Text(
                               value,
                               style: TextStyle(
-                                color: Theme.of(
-                                  context,
-                                ).extension<CustomColors>()!.textPrimary,
+                                color: Theme.of(context)
+                                    .extension<CustomColors>()!
+                                    .textPrimary,
                               ),
                             ),
                           );

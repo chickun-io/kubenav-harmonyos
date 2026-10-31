@@ -5,6 +5,7 @@ import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:kubenav/models/help.dart' as help_model;
 import 'package:kubenav/utils/constants.dart';
 import 'package:kubenav/utils/helpers.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/utils/showmodal.dart';
 import 'package:kubenav/utils/themes.dart';
 import 'package:kubenav/widgets/shared/app_bottom_navigation_bar_widget.dart';
@@ -23,7 +24,7 @@ class SettingsHelp extends StatelessWidget {
     return Column(
       children: [
         AppVerticalListSimpleWidget(
-          title: help_model.Help.list[sectionIndex].title,
+          title: t(context, help_model.Help.list[sectionIndex].title),
           items: List.generate(
             help_model.Help.list[sectionIndex].items.length,
             (itemIndex) => AppVerticalListSimpleModel(
@@ -31,12 +32,11 @@ class SettingsHelp extends StatelessWidget {
                 showModal(
                   context,
                   AppBottomSheetWidget(
-                    title: help_model
-                        .Help
-                        .list[sectionIndex]
-                        .items[itemIndex]
-                        .title,
-                    subtitle: 'Help',
+                    title: t(
+                      context,
+                      help_model.Help.list[sectionIndex].items[itemIndex].title,
+                    ),
+                    subtitle: t(context, 'Help'),
                     icon: help_model
                         .Help
                         .list[sectionIndex]
@@ -45,7 +45,7 @@ class SettingsHelp extends StatelessWidget {
                     closePressed: () {
                       Navigator.pop(context);
                     },
-                    actionText: 'Close',
+                    actionText: t(context, 'Close'),
                     actionPressed: () {
                       Navigator.pop(context);
                     },
@@ -63,11 +63,19 @@ class SettingsHelp extends StatelessWidget {
                         ),
                       ),
                       selectable: true,
-                      data: help_model
-                          .Help
-                          .list[sectionIndex]
-                          .items[itemIndex]
-                          .markdown,
+                      data: helpBody(
+                        context,
+                        help_model
+                            .Help
+                            .list[sectionIndex]
+                            .items[itemIndex]
+                            .title,
+                        help_model
+                            .Help
+                            .list[sectionIndex]
+                            .items[itemIndex]
+                            .markdown,
+                      ),
                     ),
                   ),
                 );
@@ -81,7 +89,10 @@ class SettingsHelp extends StatelessWidget {
                 Expanded(
                   flex: 1,
                   child: Text(
-                    help_model.Help.list[sectionIndex].items[itemIndex].title,
+                    t(
+                      context,
+                      help_model.Help.list[sectionIndex].items[itemIndex].title,
+                    ),
                     style: normalTextStyle(context),
                   ),
                 ),
@@ -105,7 +116,7 @@ class SettingsHelp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(centerTitle: true, title: const Text('Help')),
+      appBar: AppBar(centerTitle: true, title: Text(t(context, 'Help'))),
       bottomNavigationBar: const AppBottomNavigationBarWidget(),
       floatingActionButton: const AppFloatingActionButtonsWidget(),
       body: SafeArea(

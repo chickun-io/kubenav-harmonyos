@@ -11,6 +11,7 @@ import 'package:kubenav/repositories/clusters_repository.dart';
 import 'package:kubenav/services/kubernetes_service.dart';
 import 'package:kubenav/utils/constants.dart';
 import 'package:kubenav/utils/helpers.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/utils/logger.dart';
 import 'package:kubenav/utils/showmodal.dart';
 import 'package:kubenav/widgets/resources/resources/resources_jobs.dart';
@@ -47,7 +48,7 @@ class _CreateJobState extends State<CreateJob> {
   /// [_validator] is used to validate the required field [_nameController].
   String? _validator(String? value) {
     if (value == null || value.isEmpty) {
-      return 'This field is required';
+      return t(context, 'This field is required');
     }
 
     return null;
@@ -125,8 +126,12 @@ class _CreateJobState extends State<CreateJob> {
         if (mounted) {
           showSnackbar(
             context,
-            'Job Created',
-            'The Job ${_nameController.text} for the CronJob ${widget.namespace}/${widget.name} was created',
+            t(context, 'Job Created'),
+            tFmt(context, 'The Job {0} for the CronJob {1}/{2} was created', [
+              _nameController.text,
+              widget.namespace,
+              widget.name,
+            ]),
           );
           Navigator.pop(context);
         }
@@ -136,7 +141,11 @@ class _CreateJobState extends State<CreateJob> {
           _isLoading = false;
         });
         if (mounted) {
-          showSnackbar(context, 'Failed to Create Job', err.toString());
+          showSnackbar(
+            context,
+            t(context, 'Failed to Create Job'),
+            err.toString(),
+          );
         }
       }
     }
@@ -157,13 +166,13 @@ class _CreateJobState extends State<CreateJob> {
   @override
   Widget build(BuildContext context) {
     return AppBottomSheetWidget(
-      title: 'Create Job',
+      title: t(context, 'Create Job'),
       subtitle: '${widget.namespace}/${widget.name}',
       icon: Icons.start,
       closePressed: () {
         Navigator.pop(context);
       },
-      actionText: 'Create Job',
+      actionText: t(context, 'Create Job'),
       actionPressed: () {
         _createJob();
       },
@@ -181,7 +190,11 @@ class _CreateJobState extends State<CreateJob> {
             child: Column(
               children: [
                 Text(
-                  'Do you really want to create a Job for the CronJob ${widget.namespace}/${widget.name}?',
+                  tFmt(
+                    context,
+                    'Do you really want to create a Job for the CronJob {0}/{1}?',
+                    [widget.namespace, widget.name],
+                  ),
                 ),
                 const SizedBox(height: Constants.spacingMiddle),
                 TextFormField(

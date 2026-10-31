@@ -8,6 +8,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:kubenav/models/kubernetes/schema.models.swagger.dart';
 import 'package:kubenav/utils/constants.dart';
 import 'package:kubenav/utils/helpers.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/utils/resources.dart';
 import 'package:kubenav/utils/showmodal.dart';
 import 'package:kubenav/utils/themes.dart';
@@ -25,8 +26,7 @@ final resourceSecret = Resource(
   category: ResourceCategories.configAndStorage,
   plural: 'Secrets',
   singular: 'Secret',
-  description:
-      'A Secret is an object that contains a small amount of sensitive data such as a password, a token, or a key.',
+  description: 'A Secret is an object that contains a small amount of sensitive data such as a password, a token, or a key.',
   path: '/api/v1',
   resource: 'secrets',
   scope: ResourceScope.namespaced,
@@ -80,21 +80,23 @@ final resourceSecret = Resource(
           item: item,
           status: status,
           details: [
-            'Namespace: ${item.metadata?.namespace ?? '-'}',
-            'Type: ${item.type ?? '-'}',
-            'Data: ${item.data?.entries.length}',
-            'Age: ${getAge(item.metadata?.creationTimestamp)}',
+            tFmt(context, 'Namespace: {0}', [item.metadata?.namespace ?? '-']),
+            tFmt(context, 'Type: {0}', [item.type ?? '-']),
+            tFmt(context, 'Data: {0}', [item.data?.entries.length]),
+            tFmt(context, 'Age: {0}', [
+              getAge(item.metadata?.creationTimestamp),
+            ]),
           ],
         );
       },
-  previewItemBuilder: (dynamic listItem) {
+  previewItemBuilder: (BuildContext context, dynamic listItem) {
     final item = listItem as IoK8sApiCoreV1Secret;
 
     return [
-      'Namespace: ${item.metadata?.namespace ?? '-'}',
-      'Type: ${item.type ?? '-'}',
-      'Data: ${item.data?.entries.length}',
-      'Age: ${getAge(item.metadata?.creationTimestamp)}',
+      tFmt(context, 'Namespace: {0}', [item.metadata?.namespace ?? '-']),
+      tFmt(context, 'Type: {0}', [item.type ?? '-']),
+      tFmt(context, 'Data: {0}', [item.data?.entries.length]),
+      tFmt(context, 'Age: {0}', [getAge(item.metadata?.creationTimestamp)]),
     ];
   },
   detailsItemBuilder:
@@ -106,14 +108,22 @@ final resourceSecret = Resource(
             DetailsItemMetadata(kind: item.kind, metadata: item.metadata),
             const SizedBox(height: Constants.spacingMiddle),
             DetailsItem(
-              title: 'Configuration',
+              title: t(context, 'Configuration'),
               details: [
-                DetailsItemModel(name: 'Type', values: item.type ?? '-'),
+                DetailsItemModel(
+                  name: t(context, 'Type'),
+                  values: item.type ?? '-',
+                ),
               ],
             ),
             const SizedBox(height: Constants.spacingMiddle),
-            ..._buildData(context, 'Data', item.data, true),
-            ..._buildData(context, 'String Data', item.stringData, false),
+            ..._buildData(context, t(context, 'Data'), item.data, true),
+            ..._buildData(
+              context,
+              t(context, 'String Data'),
+              item.stringData,
+              false,
+            ),
             DetailsResourcesPreview(
               resource: resourceEvent,
               namespace: item.metadata?.namespace,
@@ -214,12 +224,12 @@ Widget _buildBottomSheet(
 ) {
   return AppBottomSheetWidget(
     title: key,
-    subtitle: 'Data',
+    subtitle: t(context, 'Data'),
     icon: 'assets/resources/secrets.svg',
     closePressed: () {
       Navigator.pop(context);
     },
-    actionText: 'Copy',
+    actionText: t(context, 'Copy'),
     actionPressed: () {
       Clipboard.setData(ClipboardData(text: utf8.fuse(base64).decode(value)));
       Navigator.pop(context);

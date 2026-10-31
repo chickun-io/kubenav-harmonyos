@@ -8,6 +8,7 @@ import 'package:kubenav/repositories/app_repository.dart';
 import 'package:kubenav/repositories/bookmarks_repository.dart';
 import 'package:kubenav/repositories/clusters_repository.dart';
 import 'package:kubenav/repositories/theme_repository.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/widgets/home/home_clusters.dart';
 import 'package:kubenav/widgets/home/home_overview.dart';
 import 'package:kubenav/widgets/reset/reset.dart';
@@ -41,11 +42,12 @@ class _HomeState extends State<Home> {
         shortcut = shortcutType;
       });
     });
+    final deviceLocale = WidgetsBinding.instance.platformDispatcher.locale;
     quickActions.setShortcutItems(<ShortcutItem>[
-      const ShortcutItem(
+      ShortcutItem(
         type: 'reset',
-        localizedTitle: 'Reset',
-        localizedSubtitle: 'Reset Data',
+        localizedTitle: tLocale(deviceLocale, 'Reset'),
+        localizedSubtitle: tLocale(deviceLocale, 'Reset Data'),
       ),
     ]);
 

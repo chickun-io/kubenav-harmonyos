@@ -6,6 +6,7 @@ import 'package:kubenav/repositories/app_repository.dart';
 import 'package:kubenav/repositories/sponsor_repository.dart';
 import 'package:kubenav/utils/constants.dart';
 import 'package:kubenav/utils/helpers.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/utils/showmodal.dart';
 import 'package:kubenav/utils/themes.dart';
 import 'package:kubenav/widgets/settings/settings/sponsor/settings_sponsor_actions.dart';
@@ -74,13 +75,19 @@ class SettingsSponsorBanner extends StatelessWidget {
               const SizedBox(height: Constants.spacingSmall),
               Padding(
                 padding: const EdgeInsets.only(left: Constants.spacingSmall),
-                child: Text('Sponsor', style: primaryTextStyle(context)),
+                child: Text(
+                  t(context, 'Sponsor'),
+                  style: primaryTextStyle(context),
+                ),
               ),
               const SizedBox(height: Constants.spacingExtraSmall),
               Padding(
                 padding: const EdgeInsets.only(left: Constants.spacingSmall),
                 child: Text(
-                  'Support the development of kubenav by becoming a sponsor.',
+                  t(
+                    context,
+                    'Support the development of kubenav by becoming a sponsor.',
+                  ),
                   style: secondaryTextStyle(context),
                 ),
               ),

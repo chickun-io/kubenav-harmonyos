@@ -6,6 +6,7 @@ import 'package:uuid/uuid.dart';
 import 'package:kubenav/models/cluster_provider.dart';
 import 'package:kubenav/repositories/clusters_repository.dart';
 import 'package:kubenav/utils/constants.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/utils/logger.dart';
 import 'package:kubenav/utils/showmodal.dart';
 import 'package:kubenav/widgets/settings/clusters/settings_add_cluster_digitalocean.dart';
@@ -32,7 +33,7 @@ class _SettingsDigitalOceanProviderState
   /// missing the validation of the form will fail.
   String? _validator(String? value) {
     if (value == null || value.isEmpty) {
-      return 'This field is required';
+      return t(context, 'This field is required');
     }
 
     return null;
@@ -97,7 +98,7 @@ class _SettingsDigitalOceanProviderState
       if (mounted) {
         showSnackbar(
           context,
-          'Failed to Save Provider Configuration',
+          t(context, 'Failed to Save Provider Configuration'),
           err.toString(),
         );
       }
@@ -152,9 +153,9 @@ class _SettingsDigitalOceanProviderState
                   autocorrect: false,
                   enableSuggestions: false,
                   maxLines: 1,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     border: OutlineInputBorder(),
-                    labelText: 'Name',
+                    labelText: t(context, 'Name'),
                   ),
                   validator: _validator,
                 ),

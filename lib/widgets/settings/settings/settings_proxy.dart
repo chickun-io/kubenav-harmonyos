@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 
 import 'package:kubenav/repositories/app_repository.dart';
 import 'package:kubenav/utils/constants.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/widgets/shared/app_bottom_sheet_widget.dart';
 
 /// The [SettingsProxy] widget allows a user to specify a proxy for all
@@ -41,13 +42,13 @@ class _SettingsProxyState extends State<SettingsProxy> {
     );
 
     return AppBottomSheetWidget(
-      title: 'Proxy',
-      subtitle: 'A proxy for all Kubernetes requests',
+      title: t(context, 'Proxy'),
+      subtitle: t(context, 'A proxy for all Kubernetes requests'),
       icon: Icons.http,
       closePressed: () {
         Navigator.pop(context);
       },
-      actionText: 'Save',
+      actionText: t(context, 'Save'),
       actionPressed: () {
         appRepository.setProxy(_proxyController.text);
         Navigator.pop(context);
@@ -65,8 +66,11 @@ class _SettingsProxyState extends State<SettingsProxy> {
             ),
             child: Column(
               children: [
-                const Text(
-                  'Set a proxy for all Kubernetes requests. The proxy must be a valid URL.',
+                Text(
+                  t(
+                    context,
+                    'Set a proxy for all Kubernetes requests. The proxy must be a valid URL.',
+                  ),
                 ),
                 const SizedBox(height: Constants.spacingMiddle),
                 TextFormField(
@@ -75,9 +79,9 @@ class _SettingsProxyState extends State<SettingsProxy> {
                   autocorrect: false,
                   enableSuggestions: false,
                   maxLines: 1,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     border: OutlineInputBorder(),
-                    labelText: 'Proxy',
+                    labelText: t(context, 'Proxy'),
                   ),
                 ),
               ],

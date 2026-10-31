@@ -6,6 +6,7 @@ import 'package:kubenav/repositories/bookmarks_repository.dart';
 import 'package:kubenav/repositories/clusters_repository.dart';
 import 'package:kubenav/utils/constants.dart';
 import 'package:kubenav/utils/helpers.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/utils/navigate.dart';
 import 'package:kubenav/utils/showmodal.dart';
 import 'package:kubenav/utils/themes.dart';
@@ -129,7 +130,7 @@ class _ResourcesBookmarksState extends State<ResourcesBookmarks> {
     );
 
     return Scaffold(
-      appBar: AppBar(centerTitle: true, title: const Text('Bookmarks')),
+      appBar: AppBar(centerTitle: true, title: Text(t(context, 'Bookmarks'))),
       bottomNavigationBar: const AppBottomNavigationBarWidget(),
       floatingActionButton: const AppFloatingActionButtonsWidget(),
       body: SafeArea(
@@ -179,13 +180,13 @@ class _ResourcesBookmarksState extends State<ResourcesBookmarks> {
                         slidableActions: [
                           AppListItemSlidableAction(
                             icon: Icons.delete,
-                            label: 'Delete',
-                            backgroundColor: Theme.of(
-                              context,
-                            ).colorScheme.error,
-                            foregroundColor: Theme.of(
-                              context,
-                            ).colorScheme.onError,
+                            label: t(context, 'Delete'),
+                            backgroundColor: Theme.of(context)
+                                .colorScheme
+                                .error,
+                            foregroundColor: Theme.of(context)
+                                .colorScheme
+                                .onError,
                             onTap: (BuildContext context) async {
                               final title =
                                   bookmarksRepository.bookmarks[index].type ==
@@ -203,8 +204,10 @@ class _ResourcesBookmarksState extends State<ResourcesBookmarks> {
                               if (context.mounted) {
                                 showSnackbar(
                                   context,
-                                  'Bookmark Deleted',
-                                  'Bookmark $title was deleted',
+                                  t(context, 'Bookmark Deleted'),
+                                  tFmt(context, 'Bookmark {0} was deleted', [
+                                    title,
+                                  ]),
                                 );
                               }
                             },

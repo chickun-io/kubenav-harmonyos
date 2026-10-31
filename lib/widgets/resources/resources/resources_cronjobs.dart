@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import 'package:kubenav/models/kubernetes/schema.models.swagger.dart';
 import 'package:kubenav/utils/constants.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/utils/resources.dart';
 import 'package:kubenav/widgets/resources/helpers/details_item.dart';
 import 'package:kubenav/widgets/resources/helpers/details_item_metadata.dart';
@@ -74,25 +75,37 @@ final resourceCronJob = Resource(
           item: item,
           status: status,
           details: [
-            'Namespace: ${item.metadata?.namespace ?? '-'}',
-            'Schedule: ${item.spec.schedule}',
-            'Suspend: ${item.spec.suspend == false ? 'False' : 'True'}',
-            'Active: ${item.status?.active?.length ?? '-'}',
-            'Last Schedule: ${getAge(item.status?.lastScheduleTime)}',
-            'Age: ${getAge(item.metadata?.creationTimestamp)}',
+            tFmt(context, 'Namespace: {0}', [item.metadata?.namespace ?? '-']),
+            tFmt(context, 'Schedule: {0}', [item.spec.schedule]),
+            tFmt(context, 'Suspend: {0}', [
+              item.spec.suspend == false
+                  ? t(context, 'False')
+                  : t(context, 'True'),
+            ]),
+            tFmt(context, 'Active: {0}', [item.status?.active?.length ?? '-']),
+            tFmt(context, 'Last Schedule: {0}', [
+              getAge(item.status?.lastScheduleTime),
+            ]),
+            tFmt(context, 'Age: {0}', [
+              getAge(item.metadata?.creationTimestamp),
+            ]),
           ],
         );
       },
-  previewItemBuilder: (dynamic listItem) {
+  previewItemBuilder: (BuildContext context, dynamic listItem) {
     final item = listItem as IoK8sApiBatchV1CronJob;
 
     return [
-      'Namespace: ${item.metadata?.namespace ?? '-'}',
-      'Schedule: ${item.spec.schedule}',
-      'Suspend: ${item.spec.suspend == false ? 'False' : 'True'}',
-      'Active: ${item.status?.active?.length ?? '-'}',
-      'Last Schedule: ${getAge(item.status?.lastScheduleTime)}',
-      'Age: ${getAge(item.metadata?.creationTimestamp)}',
+      tFmt(context, 'Namespace: {0}', [item.metadata?.namespace ?? '-']),
+      tFmt(context, 'Schedule: {0}', [item.spec.schedule]),
+      tFmt(context, 'Suspend: {0}', [
+        item.spec.suspend == false ? t(context, 'False') : t(context, 'True'),
+      ]),
+      tFmt(context, 'Active: {0}', [item.status?.active?.length ?? '-']),
+      tFmt(context, 'Last Schedule: {0}', [
+        getAge(item.status?.lastScheduleTime),
+      ]),
+      tFmt(context, 'Age: {0}', [getAge(item.metadata?.creationTimestamp)]),
     ];
   },
   detailsItemBuilder:
@@ -104,34 +117,37 @@ final resourceCronJob = Resource(
             DetailsItemMetadata(kind: item.kind, metadata: item.metadata),
             const SizedBox(height: Constants.spacingMiddle),
             DetailsItem(
-              title: 'Configuration',
+              title: t(context, 'Configuration'),
               details: [
-                DetailsItemModel(name: 'Schedule', values: item.spec.schedule),
                 DetailsItemModel(
-                  name: 'Concurrency Policy',
+                  name: t(context, 'Schedule'),
+                  values: item.spec.schedule,
+                ),
+                DetailsItemModel(
+                  name: t(context, 'Concurrency Policy'),
                   values: item.spec.concurrencyPolicy?.value,
                 ),
                 DetailsItemModel(
-                  name: 'Suspend',
+                  name: t(context, 'Suspend'),
                   values:
                       item.spec.suspend == null || item.spec.suspend == false
-                      ? 'False'
-                      : 'True',
+                      ? t(context, 'False')
+                      : t(context, 'True'),
                 ),
                 DetailsItemModel(
-                  name: 'Successful Job History Limit',
+                  name: t(context, 'Successful Job History Limit'),
                   values: item.spec.successfulJobsHistoryLimit,
                 ),
                 DetailsItemModel(
-                  name: 'Failed Job History Limit',
+                  name: t(context, 'Failed Job History Limit'),
                   values: item.spec.failedJobsHistoryLimit,
                 ),
                 DetailsItemModel(
-                  name: 'Starting Deadline Seconds',
+                  name: t(context, 'Starting Deadline Seconds'),
                   values: item.spec.startingDeadlineSeconds,
                 ),
                 DetailsItemModel(
-                  name: 'Selector',
+                  name: t(context, 'Selector'),
                   values: item
                       .spec
                       .jobTemplate
@@ -145,29 +161,29 @@ final resourceCronJob = Resource(
                       .toList(),
                 ),
                 DetailsItemModel(
-                  name: 'Parallelism',
+                  name: t(context, 'Parallelism'),
                   values: item.spec.jobTemplate.spec?.parallelism,
                 ),
                 DetailsItemModel(
-                  name: 'Completions',
+                  name: t(context, 'Completions'),
                   values: item.spec.jobTemplate.spec?.completions,
                 ),
                 DetailsItemModel(
-                  name: 'Active Deadline Seconds',
+                  name: t(context, 'Active Deadline Seconds'),
                   values: item.spec.jobTemplate.spec?.activeDeadlineSeconds,
                 ),
                 DetailsItemModel(
-                  name: 'Backoff Limit',
+                  name: t(context, 'Backoff Limit'),
                   values: item.spec.jobTemplate.spec?.backoffLimit,
                 ),
               ],
             ),
             const SizedBox(height: Constants.spacingMiddle),
             DetailsItem(
-              title: 'Status',
+              title: t(context, 'Status'),
               details: [
                 DetailsItemModel(
-                  name: 'Last Schedule',
+                  name: t(context, 'Last Schedule'),
                   values: getAge(item.status?.lastScheduleTime),
                 ),
               ],

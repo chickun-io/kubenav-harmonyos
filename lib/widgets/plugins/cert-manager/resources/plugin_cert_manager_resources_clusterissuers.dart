@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import 'package:kubenav/models/kubernetes/schema.models.swagger.dart';
 import 'package:kubenav/utils/constants.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/utils/navigate.dart';
 import 'package:kubenav/utils/resources.dart';
 import 'package:kubenav/widgets/plugins/cert-manager/resources/plugin_cert_manager_resources.dart';
@@ -21,8 +22,7 @@ final Resource certManagerResourceClusterIssuer = Resource(
   category: CertManagerResourceCategories.certificates,
   plural: 'ClusterIssuers',
   singular: 'ClusterIssuer',
-  description:
-      'A ClusterIssuer represents a certificate issuing authority which can be referenced as part of issuerRef fields',
+  description: 'A ClusterIssuer represents a certificate issuing authority which can be referenced as part of issuerRef fields',
   path: '/apis/cert-manager.io/v1',
   resource: 'clusterissuers',
   scope: ResourceScope.cluster,
@@ -87,17 +87,36 @@ final Resource certManagerResourceClusterIssuer = Resource(
           item: item,
           status: status,
           details: [
-            'Ready: ${item.status?.conditions != null && item.status!.conditions!.isNotEmpty ? (item.status!.conditions?.where((e) => e.type == 'Ready').firstOrNull?.status ?? '-') : '-'}',
-            'Age: ${getAge(item.metadata?.creationTimestamp)}',
+            tFmt(context, 'Ready: {0}', [
+              item.status?.conditions != null &&
+                      item.status!.conditions!.isNotEmpty
+                  ? (item.status!.conditions
+                            ?.where((e) => e.type == 'Ready')
+                            .firstOrNull
+                            ?.status ??
+                        '-')
+                  : '-',
+            ]),
+            tFmt(context, 'Age: {0}', [
+              getAge(item.metadata?.creationTimestamp),
+            ]),
           ],
         );
       },
-  previewItemBuilder: (dynamic listItem) {
+  previewItemBuilder: (BuildContext context, dynamic listItem) {
     final item = listItem as IoCertManagerV1ClusterIssuer;
 
     return [
-      'Ready: ${item.status?.conditions != null && item.status!.conditions!.isNotEmpty ? (item.status!.conditions?.where((e) => e.type == 'Ready').firstOrNull?.status ?? '-') : '-'}',
-      'Age: ${getAge(item.metadata?.creationTimestamp)}',
+      tFmt(context, 'Ready: {0}', [
+        item.status?.conditions != null && item.status!.conditions!.isNotEmpty
+            ? (item.status!.conditions
+                      ?.where((e) => e.type == 'Ready')
+                      .firstOrNull
+                      ?.status ??
+                  '-')
+            : '-',
+      ]),
+      tFmt(context, 'Age: {0}', [getAge(item.metadata?.creationTimestamp)]),
     ];
   },
   detailsItemBuilder:
@@ -129,10 +148,10 @@ final Resource certManagerResourceClusterIssuer = Resource(
             _buildVault(context, 'cert-manager', item.spec.vault),
             _buildVenafi(context, 'cert-manager', item.spec.venafi),
             DetailsItem(
-              title: 'Status',
+              title: t(context, 'Status'),
               details: [
                 DetailsItemModel(
-                  name: 'Ready',
+                  name: t(context, 'Ready'),
                   values:
                       item.status?.conditions != null &&
                           item.status!.conditions!.isNotEmpty
@@ -143,7 +162,7 @@ final Resource certManagerResourceClusterIssuer = Resource(
                       : null,
                 ),
                 DetailsItemModel(
-                  name: 'Status',
+                  name: t(context, 'Status'),
                   values:
                       item.status?.conditions != null &&
                           item.status!.conditions!.isNotEmpty
@@ -154,15 +173,15 @@ final Resource certManagerResourceClusterIssuer = Resource(
                       : null,
                 ),
                 DetailsItemModel(
-                  name: 'ACME Uri',
+                  name: t(context, 'ACME Uri'),
                   values: item.status?.acme?.uri,
                 ),
                 DetailsItemModel(
-                  name: 'ACME Last Registered Email',
+                  name: t(context, 'ACME Last Registered Email'),
                   values: item.status?.acme?.lastRegisteredEmail,
                 ),
                 DetailsItemModel(
-                  name: 'ACME Last Private Key Hash',
+                  name: t(context, 'ACME Last Private Key Hash'),
                   values: item.status?.acme?.lastPrivateKeyHash,
                 ),
               ],
@@ -193,24 +212,30 @@ Widget _buildACME(
   return Column(
     children: [
       DetailsItem(
-        title: 'Configuration',
+        title: t(context, 'Configuration'),
         details: [
-          DetailsItemModel(name: 'Email', values: acme.email),
-          DetailsItemModel(name: 'Server', values: acme.server),
+          DetailsItemModel(name: t(context, 'Email'), values: acme.email),
+          DetailsItemModel(name: t(context, 'Server'), values: acme.server),
           DetailsItemModel(
-            name: 'Preferred Chain',
+            name: t(context, 'Preferred Chain'),
             values: acme.preferredChain,
           ),
-          DetailsItemModel(name: 'CA Bundle', values: acme.caBundle),
-          DetailsItemModel(name: 'Skip TLS Verify', values: acme.skipTLSVerify),
           DetailsItemModel(
-            name: 'Solvers',
+            name: t(context, 'CA Bundle'),
+            values: acme.caBundle,
+          ),
+          DetailsItemModel(
+            name: t(context, 'Skip TLS Verify'),
+            values: acme.skipTLSVerify,
+          ),
+          DetailsItemModel(
+            name: t(context, 'Solvers'),
             values: acme.solvers
                 ?.map((e) => e.dns01 != null ? 'DNS01' : 'HTTP01')
                 .toList(),
           ),
           DetailsItemModel(
-            name: 'Private Key Secret',
+            name: t(context, 'Private Key Secret'),
             values: acme.privateKeySecretRef.name,
             onTap: (index) {
               navigate(
@@ -242,10 +267,10 @@ Widget _buildCA(
   return Column(
     children: [
       DetailsItem(
-        title: 'Configuration',
+        title: t(context, 'Configuration'),
         details: [
           DetailsItemModel(
-            name: 'Secret Name',
+            name: t(context, 'Secret Name'),
             values: ca.secretName,
             onTap: (index) {
               navigate(
@@ -259,12 +284,15 @@ Widget _buildCA(
             },
           ),
           DetailsItemModel(
-            name: 'CRL Distribution Points',
+            name: t(context, 'CRL Distribution Points'),
             values: ca.crlDistributionPoints,
           ),
-          DetailsItemModel(name: 'OCSP Servers', values: ca.ocspServers),
           DetailsItemModel(
-            name: 'Issuing Certificate Urls',
+            name: t(context, 'OCSP Servers'),
+            values: ca.ocspServers,
+          ),
+          DetailsItemModel(
+            name: t(context, 'Issuing Certificate Urls'),
             values: ca.issuingCertificateURLs,
           ),
         ],
@@ -286,10 +314,10 @@ Widget _buildSelfSigned(
   return Column(
     children: [
       DetailsItem(
-        title: 'Configuration',
+        title: t(context, 'Configuration'),
         details: [
           DetailsItemModel(
-            name: 'CRL Distribution Points',
+            name: t(context, 'CRL Distribution Points'),
             values:
                 selfSigned.crlDistributionPoints != null &&
                     selfSigned.crlDistributionPoints!.isNotEmpty
@@ -315,14 +343,20 @@ Widget _buildVault(
   return Column(
     children: [
       DetailsItem(
-        title: 'Configuration',
+        title: t(context, 'Configuration'),
         details: [
-          DetailsItemModel(name: 'Server', values: vault.server),
-          DetailsItemModel(name: 'Path', values: vault.path),
-          DetailsItemModel(name: 'Namespace', values: vault.namespace),
-          DetailsItemModel(name: 'CA Bundle', values: vault.caBundle),
+          DetailsItemModel(name: t(context, 'Server'), values: vault.server),
+          DetailsItemModel(name: t(context, 'Path'), values: vault.path),
           DetailsItemModel(
-            name: 'CA Bundle Secret',
+            name: t(context, 'Namespace'),
+            values: vault.namespace,
+          ),
+          DetailsItemModel(
+            name: t(context, 'CA Bundle'),
+            values: vault.caBundle,
+          ),
+          DetailsItemModel(
+            name: t(context, 'CA Bundle Secret'),
             values: vault.caBundleSecretRef?.name,
             onTap: vault.caBundleSecretRef?.name == null
                 ? null
@@ -356,8 +390,10 @@ Widget _buildVenafi(
   return Column(
     children: [
       DetailsItem(
-        title: 'Configuration',
-        details: [DetailsItemModel(name: 'Zone', values: venafi.zone)],
+        title: t(context, 'Configuration'),
+        details: [
+          DetailsItemModel(name: t(context, 'Zone'), values: venafi.zone),
+        ],
       ),
       const SizedBox(height: Constants.spacingMiddle),
     ],

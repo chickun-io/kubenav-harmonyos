@@ -10,6 +10,7 @@ import 'package:kubenav/repositories/clusters_repository.dart';
 import 'package:kubenav/services/kubernetes_service.dart';
 import 'package:kubenav/utils/constants.dart';
 import 'package:kubenav/utils/helpers.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/utils/navigate.dart';
 import 'package:kubenav/utils/showmodal.dart';
 import 'package:kubenav/utils/themes.dart';
@@ -81,7 +82,7 @@ class OverviewWorkloads extends StatelessWidget {
             children: [
               Expanded(
                 child: Text(
-                  'Workloads',
+                  t(context, 'Workloads'),
                   style: primaryTextStyle(context, size: 18),
                 ),
               ),
@@ -241,7 +242,7 @@ class _OverviewWorkloadState extends State<OverviewWorkload> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            widget.resource.plural,
+                            t(context, widget.resource.plural),
                             style: primaryTextStyle(context),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
@@ -249,14 +250,26 @@ class _OverviewWorkloadState extends State<OverviewWorkload> {
                           Row(
                             children: [
                               Text(
-                                'All: ${isLoading ? '-' : snapshot.data?.all ?? '-'}\nHealthy: ${isLoading ? '-' : snapshot.data?.success ?? '-'}',
+                                tFmt(context, 'All: {0}\nHealthy: {1}', [
+                                  isLoading ? '-' : snapshot.data?.all ?? '-',
+                                  isLoading
+                                      ? '-'
+                                      : snapshot.data?.success ?? '-',
+                                ]),
                                 style: secondaryTextStyle(context),
                                 maxLines: 2,
                                 overflow: TextOverflow.ellipsis,
                               ),
                               const SizedBox(width: Constants.spacingMiddle),
                               Text(
-                                'Warning: ${isLoading ? '-' : snapshot.data?.warning ?? '-'}\nUnhealthy: ${isLoading ? '-' : snapshot.data?.danger ?? '-'}',
+                                tFmt(context, 'Warning: {0}\nUnhealthy: {1}', [
+                                  isLoading
+                                      ? '-'
+                                      : snapshot.data?.warning ?? '-',
+                                  isLoading
+                                      ? '-'
+                                      : snapshot.data?.danger ?? '-',
+                                ]),
                                 style: secondaryTextStyle(context),
                                 maxLines: 2,
                                 overflow: TextOverflow.ellipsis,
@@ -290,7 +303,7 @@ class OverviewWorkloadActions extends StatelessWidget {
       mode: AppResourceActionsMode.actions,
       actions: List.generate(ResourceStatus.values.length, (index) {
         return AppResourceActionsModel(
-          title: ResourceStatus.values[index].toLocalizedString(),
+          title: ResourceStatus.values[index].toLocalizedString(context),
           icon: Icons.list,
           onTap: () async {
             ClustersRepository clustersRepository =

@@ -7,6 +7,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:kubenav/models/kubernetes/schema.models.swagger.dart';
 import 'package:kubenav/utils/constants.dart';
 import 'package:kubenav/utils/helpers.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/utils/navigate.dart';
 import 'package:kubenav/utils/resources.dart';
 import 'package:kubenav/utils/themes.dart';
@@ -26,8 +27,7 @@ final resourceRoleBinding = Resource(
   category: ResourceCategories.rbac,
   plural: 'RoleBindings',
   singular: 'RoleBinding',
-  description:
-      'A role binding grants the permissions defined in a role to a user or set of users.',
+  description: 'A role binding grants the permissions defined in a role to a user or set of users.',
   path: '/apis/rbac.authorization.k8s.io/v1',
   resource: 'rolebindings',
   scope: ResourceScope.namespaced,
@@ -81,17 +81,22 @@ final resourceRoleBinding = Resource(
           item: item,
           status: status,
           details: [
-            'Role: ${item.roleRef.kind}/${item.roleRef.name}',
-            'Age: ${getAge(item.metadata?.creationTimestamp)}',
+            tFmt(context, 'Role: {0}/{1}', [
+              item.roleRef.kind,
+              item.roleRef.name,
+            ]),
+            tFmt(context, 'Age: {0}', [
+              getAge(item.metadata?.creationTimestamp),
+            ]),
           ],
         );
       },
-  previewItemBuilder: (dynamic listItem) {
+  previewItemBuilder: (BuildContext context, dynamic listItem) {
     final item = listItem as IoK8sApiRbacV1ClusterRoleBinding;
 
     return [
-      'Role: ${item.roleRef.kind}/${item.roleRef.name}',
-      'Age: ${getAge(item.metadata?.creationTimestamp)}',
+      tFmt(context, 'Role: {0}/{1}', [item.roleRef.kind, item.roleRef.name]),
+      tFmt(context, 'Age: {0}', [getAge(item.metadata?.creationTimestamp)]),
     ];
   },
   detailsItemBuilder: (BuildContext context, Resource resource, dynamic detailsItem) {
@@ -102,10 +107,10 @@ final resourceRoleBinding = Resource(
         DetailsItemMetadata(kind: item.kind, metadata: item.metadata),
         const SizedBox(height: Constants.spacingMiddle),
         DetailsItem(
-          title: 'Configuration',
+          title: t(context, 'Configuration'),
           details: [
             DetailsItemModel(
-              name: 'Role',
+              name: t(context, 'Role'),
               values: '${item.roleRef.kind}/${item.roleRef.name}',
               onTap: item.roleRef.kind == 'ClusterRole'
                   ? (index) {
@@ -135,7 +140,7 @@ final resourceRoleBinding = Resource(
         ),
         const SizedBox(height: Constants.spacingMiddle),
         AppVerticalListSimpleWidget(
-          title: 'Subjects',
+          title: t(context, 'Subjects'),
           items:
               item.subjects
                   ?.map(

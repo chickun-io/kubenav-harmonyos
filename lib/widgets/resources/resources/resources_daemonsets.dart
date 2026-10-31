@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:kubenav/models/kubernetes/schema.models.swagger.dart';
 import 'package:kubenav/models/plugins/prometheus.dart';
 import 'package:kubenav/utils/constants.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/utils/resources.dart';
 import 'package:kubenav/widgets/resources/helpers/details_item.dart';
 import 'package:kubenav/widgets/resources/helpers/details_item_conditions.dart';
@@ -27,8 +28,7 @@ final resourceDaemonSet = Resource(
   scope: ResourceScope.namespaced,
   additionalPrinterColumns: [],
   icon: 'daemonsets',
-  template:
-      '{"apiVersion":"apps/v1","kind":"DaemonSet","metadata":{"name":"","namespace":""},"spec":{"selector":{"matchLabels":{"app":"nginx"}},"template":{"metadata":{"labels":{"app":"nginx"}},"spec":{"containers":[{"name":"nginx","image":"nginx:1.14.2"}]}}}}',
+  template: '{"apiVersion":"apps/v1","kind":"DaemonSet","metadata":{"name":"","namespace":""},"spec":{"selector":{"matchLabels":{"app":"nginx"}},"template":{"metadata":{"labels":{"app":"nginx"}},"spec":{"containers":[{"name":"nginx","image":"nginx:1.14.2"}]}}}}',
   decodeListData: (ResourcesListData data) {
     final parsed = json.decode(data.list);
     final items = IoK8sApiAppsV1DaemonSetList.fromJson(parsed).items;
@@ -94,19 +94,33 @@ final resourceDaemonSet = Resource(
           item: item,
           status: status,
           details: [
-            'Namespace: ${item.metadata?.namespace ?? '-'}',
-            'Desired: ${item.status?.desiredNumberScheduled ?? 0}',
-            'Current: ${item.status?.currentNumberScheduled ?? 0}',
-            'Ready: ${item.status?.numberReady ?? 0}',
-            'Up to Date: ${item.status?.updatedNumberScheduled ?? 0}',
-            'Available: ${item.status?.numberAvailable ?? 0}',
-            'Misscheduled: ${item.status?.numberMisscheduled ?? 0}',
-            'Node Selector: ${nodeSelector.isEmpty ? '-' : nodeSelector.join(', ')}',
-            'Age: ${getAge(item.metadata?.creationTimestamp)}',
+            tFmt(context, 'Namespace: {0}', [item.metadata?.namespace ?? '-']),
+            tFmt(context, 'Desired: {0}', [
+              item.status?.desiredNumberScheduled ?? 0,
+            ]),
+            tFmt(context, 'Current: {0}', [
+              item.status?.currentNumberScheduled ?? 0,
+            ]),
+            tFmt(context, 'Ready: {0}', [item.status?.numberReady ?? 0]),
+            tFmt(context, 'Up to Date: {0}', [
+              item.status?.updatedNumberScheduled ?? 0,
+            ]),
+            tFmt(context, 'Available: {0}', [
+              item.status?.numberAvailable ?? 0,
+            ]),
+            tFmt(context, 'Misscheduled: {0}', [
+              item.status?.numberMisscheduled ?? 0,
+            ]),
+            tFmt(context, 'Node Selector: {0}', [
+              nodeSelector.isEmpty ? '-' : nodeSelector.join(', '),
+            ]),
+            tFmt(context, 'Age: {0}', [
+              getAge(item.metadata?.creationTimestamp),
+            ]),
           ],
         );
       },
-  previewItemBuilder: (dynamic listItem) {
+  previewItemBuilder: (BuildContext context, dynamic listItem) {
     final item = listItem as IoK8sApiAppsV1DaemonSet;
 
     final nodeSelector =
@@ -116,138 +130,146 @@ final resourceDaemonSet = Resource(
         [];
 
     return [
-      'Namespace: ${item.metadata?.namespace ?? '-'}',
-      'Desired: ${item.status?.desiredNumberScheduled ?? 0}',
-      'Current: ${item.status?.currentNumberScheduled ?? 0}',
-      'Ready: ${item.status?.numberReady ?? 0}',
-      'Up to Date: ${item.status?.updatedNumberScheduled ?? 0}',
-      'Available: ${item.status?.numberAvailable ?? 0}',
-      'Misscheduled: ${item.status?.numberMisscheduled ?? 0}',
-      'Node Selector: ${nodeSelector.isEmpty ? '-' : nodeSelector.join(', ')}',
-      'Age: ${getAge(item.metadata?.creationTimestamp)}',
+      tFmt(context, 'Namespace: {0}', [item.metadata?.namespace ?? '-']),
+      tFmt(context, 'Desired: {0}', [item.status?.desiredNumberScheduled ?? 0]),
+      tFmt(context, 'Current: {0}', [item.status?.currentNumberScheduled ?? 0]),
+      tFmt(context, 'Ready: {0}', [item.status?.numberReady ?? 0]),
+      tFmt(context, 'Up to Date: {0}', [
+        item.status?.updatedNumberScheduled ?? 0,
+      ]),
+      tFmt(context, 'Available: {0}', [item.status?.numberAvailable ?? 0]),
+      tFmt(context, 'Misscheduled: {0}', [
+        item.status?.numberMisscheduled ?? 0,
+      ]),
+      tFmt(context, 'Node Selector: {0}', [
+        nodeSelector.isEmpty ? '-' : nodeSelector.join(', '),
+      ]),
+      tFmt(context, 'Age: {0}', [getAge(item.metadata?.creationTimestamp)]),
     ];
   },
-  detailsItemBuilder: (BuildContext context, Resource resource, dynamic detailsItem) {
-    final item = detailsItem as IoK8sApiAppsV1DaemonSet;
+  detailsItemBuilder:
+      (BuildContext context, Resource resource, dynamic detailsItem) {
+        final item = detailsItem as IoK8sApiAppsV1DaemonSet;
 
-    return Column(
-      children: [
-        DetailsItemMetadata(kind: item.kind, metadata: item.metadata),
-        DetailsItemConditions(
-          conditions: item.status?.conditions
-              ?.map(
-                (e) => IoK8sApimachineryPkgApisMetaV1Condition(
-                  lastTransitionTime: e.lastTransitionTime ?? DateTime.now(),
-                  message: e.message ?? '',
-                  observedGeneration: null,
-                  reason: e.reason ?? '',
-                  status: e.status,
-                  type: e.type,
-                ),
-              )
-              .toList(),
-        ),
-        const SizedBox(height: Constants.spacingMiddle),
-        DetailsItem(
-          title: 'Configuration',
-          details: [
-            DetailsItemModel(
-              name: 'Revision History Limit',
-              values: item.spec?.revisionHistoryLimit,
-            ),
-            DetailsItemModel(
-              name: 'Update Strategy',
-              values: item.spec?.updateStrategy?.type?.value,
-            ),
-            DetailsItemModel(
-              name: 'Selector',
-              values: item.spec?.selector.matchLabels?.entries
-                  .map((matchLabel) => '${matchLabel.key}=${matchLabel.value}')
+        return Column(
+          children: [
+            DetailsItemMetadata(kind: item.kind, metadata: item.metadata),
+            DetailsItemConditions(
+              conditions: item.status?.conditions
+                  ?.map(
+                    (e) => IoK8sApimachineryPkgApisMetaV1Condition(
+                      lastTransitionTime:
+                          e.lastTransitionTime ?? DateTime.now(),
+                      message: e.message ?? '',
+                      observedGeneration: null,
+                      reason: e.reason ?? '',
+                      status: e.status,
+                      type: e.type,
+                    ),
+                  )
                   .toList(),
             ),
-          ],
-        ),
-        const SizedBox(height: Constants.spacingMiddle),
-        DetailsItem(
-          title: 'Status',
-          details: [
-            DetailsItemModel(
-              name: 'Desired',
-              values: item.status?.desiredNumberScheduled,
-            ),
-            DetailsItemModel(
-              name: 'Current',
-              values: item.status?.currentNumberScheduled,
-            ),
-            DetailsItemModel(name: 'Ready', values: item.status?.numberReady),
-            DetailsItemModel(
-              name: 'Available',
-              values: item.status?.numberAvailable,
-            ),
-            DetailsItemModel(
-              name: 'Up to Date',
-              values: item.status?.updatedNumberScheduled,
-            ),
-            DetailsItemModel(
-              name: 'Misscheduled',
-              values: item.status?.numberMisscheduled,
-            ),
-          ],
-        ),
-        const SizedBox(height: Constants.spacingMiddle),
-        DetailsResourcesPreview(
-          resource: resourcePod,
-          namespace: item.metadata?.namespace,
-          selector: getSelector(item.spec?.selector),
-          filter: null,
-        ),
-        const SizedBox(height: Constants.spacingMiddle),
-        DetailsResourcesPreview(
-          resource: resourceEvent,
-          namespace: item.metadata?.namespace,
-          selector:
-              'fieldSelector=involvedObject.name=${item.metadata?.name ?? ''}',
-          filter: null,
-        ),
-        const SizedBox(height: Constants.spacingMiddle),
-        AppPrometheusChartsWidget(
-          item: item,
-          toJson: resource.toJson,
-          defaultCharts: [
-            Chart(
-              title: 'Pods',
-              unit: '',
-              queries: [
-                Query(
-                  query:
-                      'kube_daemonset_status_desired_number_scheduled{namespace="{{with .metadata}}{{with .namespace}}{{.}}{{end}}{{end}}", daemonset="{{with .metadata}}{{with .name}}{{.}}{{end}}{{end}}"}',
-                  label: 'Desired',
+            const SizedBox(height: Constants.spacingMiddle),
+            DetailsItem(
+              title: t(context, 'Configuration'),
+              details: [
+                DetailsItemModel(
+                  name: t(context, 'Revision History Limit'),
+                  values: item.spec?.revisionHistoryLimit,
                 ),
-                Query(
-                  query:
-                      'kube_daemonset_status_current_number_scheduled{namespace="{{with .metadata}}{{with .namespace}}{{.}}{{end}}{{end}}", daemonset="{{with .metadata}}{{with .name}}{{.}}{{end}}{{end}}"}',
-                  label: 'Current',
+                DetailsItemModel(
+                  name: t(context, 'Update Strategy'),
+                  values: item.spec?.updateStrategy?.type?.value,
                 ),
-                Query(
-                  query:
-                      'kube_daemonset_status_number_ready{namespace="{{with .metadata}}{{with .namespace}}{{.}}{{end}}{{end}}", daemonset="{{with .metadata}}{{with .name}}{{.}}{{end}}{{end}}"}',
-                  label: 'Ready',
+                DetailsItemModel(
+                  name: t(context, 'Selector'),
+                  values: item.spec?.selector.matchLabels?.entries
+                      .map(
+                        (matchLabel) => '${matchLabel.key}=${matchLabel.value}',
+                      )
+                      .toList(),
                 ),
-                Query(
-                  query:
-                      'kube_daemonset_status_number_misscheduled{namespace="{{with .metadata}}{{with .namespace}}{{.}}{{end}}{{end}}", daemonset="{{with .metadata}}{{with .name}}{{.}}{{end}}{{end}}"}',
-                  label: 'Misscheduled',
+              ],
+            ),
+            const SizedBox(height: Constants.spacingMiddle),
+            DetailsItem(
+              title: t(context, 'Status'),
+              details: [
+                DetailsItemModel(
+                  name: t(context, 'Desired'),
+                  values: item.status?.desiredNumberScheduled,
                 ),
-                Query(
-                  query:
-                      'kube_daemonset_updated_number_scheduled{namespace="{{with .metadata}}{{with .namespace}}{{.}}{{end}}{{end}}", daemonset="{{with .metadata}}{{with .name}}{{.}}{{end}}{{end}}"}',
-                  label: 'Updated',
+                DetailsItemModel(
+                  name: t(context, 'Current'),
+                  values: item.status?.currentNumberScheduled,
+                ),
+                DetailsItemModel(
+                  name: t(context, 'Ready'),
+                  values: item.status?.numberReady,
+                ),
+                DetailsItemModel(
+                  name: t(context, 'Available'),
+                  values: item.status?.numberAvailable,
+                ),
+                DetailsItemModel(
+                  name: t(context, 'Up to Date'),
+                  values: item.status?.updatedNumberScheduled,
+                ),
+                DetailsItemModel(
+                  name: t(context, 'Misscheduled'),
+                  values: item.status?.numberMisscheduled,
+                ),
+              ],
+            ),
+            const SizedBox(height: Constants.spacingMiddle),
+            DetailsResourcesPreview(
+              resource: resourcePod,
+              namespace: item.metadata?.namespace,
+              selector: getSelector(item.spec?.selector),
+              filter: null,
+            ),
+            const SizedBox(height: Constants.spacingMiddle),
+            DetailsResourcesPreview(
+              resource: resourceEvent,
+              namespace: item.metadata?.namespace,
+              selector:
+                  'fieldSelector=involvedObject.name=${item.metadata?.name ?? ''}',
+              filter: null,
+            ),
+            const SizedBox(height: Constants.spacingMiddle),
+            AppPrometheusChartsWidget(
+              item: item,
+              toJson: resource.toJson,
+              defaultCharts: [
+                Chart(
+                  title: t(context, 'Pods'),
+                  unit: '',
+                  queries: [
+                    Query(
+                      query: 'kube_daemonset_status_desired_number_scheduled{namespace="{{with .metadata}}{{with .namespace}}{{.}}{{end}}{{end}}", daemonset="{{with .metadata}}{{with .name}}{{.}}{{end}}{{end}}"}',
+                      label: t(context, 'Desired'),
+                    ),
+                    Query(
+                      query: 'kube_daemonset_status_current_number_scheduled{namespace="{{with .metadata}}{{with .namespace}}{{.}}{{end}}{{end}}", daemonset="{{with .metadata}}{{with .name}}{{.}}{{end}}{{end}}"}',
+                      label: t(context, 'Current'),
+                    ),
+                    Query(
+                      query: 'kube_daemonset_status_number_ready{namespace="{{with .metadata}}{{with .namespace}}{{.}}{{end}}{{end}}", daemonset="{{with .metadata}}{{with .name}}{{.}}{{end}}{{end}}"}',
+                      label: t(context, 'Ready'),
+                    ),
+                    Query(
+                      query: 'kube_daemonset_status_number_misscheduled{namespace="{{with .metadata}}{{with .namespace}}{{.}}{{end}}{{end}}", daemonset="{{with .metadata}}{{with .name}}{{.}}{{end}}{{end}}"}',
+                      label: t(context, 'Misscheduled'),
+                    ),
+                    Query(
+                      query: 'kube_daemonset_updated_number_scheduled{namespace="{{with .metadata}}{{with .namespace}}{{.}}{{end}}{{end}}", daemonset="{{with .metadata}}{{with .name}}{{.}}{{end}}{{end}}"}',
+                      label: t(context, 'Updated'),
+                    ),
+                  ],
                 ),
               ],
             ),
           ],
-        ),
-      ],
-    );
-  },
+        );
+      },
 );

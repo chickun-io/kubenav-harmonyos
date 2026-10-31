@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:kubenav/utils/constants.dart';
 import 'package:kubenav/utils/custom_icons.dart';
 import 'package:kubenav/utils/helpers.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/utils/navigate.dart';
 import 'package:kubenav/utils/themes.dart';
 import 'package:kubenav/widgets/settings/settings_clusters.dart';
@@ -60,13 +61,16 @@ class AppNoClustersWidget extends StatelessWidget {
             const SizedBox(height: Constants.spacingSmall),
             Padding(
               padding: const EdgeInsets.only(left: Constants.spacingSmall),
-              child: Text('Add a Cluster', style: primaryTextStyle(context)),
+              child: Text(
+                t(context, 'Add a Cluster'),
+                style: primaryTextStyle(context),
+              ),
             ),
             const SizedBox(height: Constants.spacingExtraSmall),
             Padding(
               padding: const EdgeInsets.only(left: Constants.spacingSmall),
               child: Text(
-                'Add your first cluster and start using kubenav',
+                t(context, 'Add your first cluster and start using kubenav'),
                 style: secondaryTextStyle(context),
               ),
             ),

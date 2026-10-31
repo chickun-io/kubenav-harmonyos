@@ -15,6 +15,7 @@ import 'package:kubenav/services/helpers_service.dart';
 import 'package:kubenav/services/kubernetes_service.dart';
 import 'package:kubenav/utils/constants.dart';
 import 'package:kubenav/utils/helpers.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/utils/logger.dart';
 import 'package:kubenav/utils/showmodal.dart';
 import 'package:kubenav/utils/themes.dart';
@@ -169,9 +170,12 @@ class _EditResourceState extends State<EditResource> {
       if (mounted) {
         showSnackbar(
           context,
-          '${widget.resource.singular} Saved',
+          tFmt(context, '{0} Saved', [t(context, widget.resource.singular)]),
           widget.namespace == null
-              ? 'The ${widget.resource.singular} ${widget.name} was saved'
+              ? tFmt(context, 'The {0} {1} was saved', [
+                  t(context, widget.resource.singular),
+                  widget.name,
+                ])
               : 'The ${widget.resource.singular} ${widget.namespace}/${widget.name} was saved',
         );
         Navigator.pop(context);
@@ -188,7 +192,9 @@ class _EditResourceState extends State<EditResource> {
       if (mounted) {
         showSnackbar(
           context,
-          'Failed to Save ${widget.resource.singular}',
+          tFmt(context, 'Failed to Save {0}', [
+            t(context, widget.resource.singular),
+          ]),
           err.toString(),
         );
       }
@@ -210,7 +216,7 @@ class _EditResourceState extends State<EditResource> {
   @override
   Widget build(BuildContext context) {
     return AppBottomSheetWidget(
-      title: 'Edit',
+      title: t(context, 'Edit'),
       subtitle: widget.namespace == null
           ? widget.name
           : '${widget.namespace}/${widget.name}',
@@ -218,7 +224,7 @@ class _EditResourceState extends State<EditResource> {
       closePressed: () {
         Navigator.pop(context);
       },
-      actionText: 'Save',
+      actionText: t(context, 'Save'),
       actionPressed: () {
         _save();
       },

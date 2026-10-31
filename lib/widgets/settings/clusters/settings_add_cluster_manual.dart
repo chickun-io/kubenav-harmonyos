@@ -7,6 +7,7 @@ import 'package:kubenav/models/cluster.dart';
 import 'package:kubenav/models/cluster_provider.dart';
 import 'package:kubenav/repositories/clusters_repository.dart';
 import 'package:kubenav/utils/constants.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/utils/showmodal.dart';
 import 'package:kubenav/widgets/shared/app_bottom_sheet_widget.dart';
 
@@ -41,7 +42,7 @@ class _SettingsAddClusterManualState extends State<SettingsAddClusterManual> {
   /// will fail and the cluster will not be added to our list of clusters.
   String? _validator(String? value) {
     if (value == null || value.isEmpty) {
-      return 'This field is required';
+      return t(context, 'This field is required');
     }
 
     return null;
@@ -97,8 +98,8 @@ class _SettingsAddClusterManualState extends State<SettingsAddClusterManual> {
           Navigator.pop(context);
           showSnackbar(
             context,
-            'Cluster Added',
-            'The cluster ${cluster.name} was added',
+            t(context, 'Cluster Added'),
+            tFmt(context, 'The cluster {0} was added', [cluster.name]),
           );
         }
       }
@@ -107,7 +108,11 @@ class _SettingsAddClusterManualState extends State<SettingsAddClusterManual> {
         _isLoadingAddCluster = false;
       });
       if (mounted) {
-        showSnackbar(context, 'Failed to Add Cluster', err.toString());
+        showSnackbar(
+          context,
+          t(context, 'Failed to Add Cluster'),
+          err.toString(),
+        );
       }
     }
   }
@@ -135,7 +140,7 @@ class _SettingsAddClusterManualState extends State<SettingsAddClusterManual> {
       closePressed: () {
         Navigator.pop(context);
       },
-      actionText: 'Add Cluster',
+      actionText: t(context, 'Add Cluster'),
       actionPressed: () {
         _addCluster();
       },
@@ -158,9 +163,9 @@ class _SettingsAddClusterManualState extends State<SettingsAddClusterManual> {
                   autocorrect: false,
                   enableSuggestions: false,
                   maxLines: null,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     border: OutlineInputBorder(),
-                    labelText: 'Name',
+                    labelText: t(context, 'Name'),
                   ),
                   validator: _validator,
                   onFieldSubmitted: (String value) {
@@ -174,9 +179,9 @@ class _SettingsAddClusterManualState extends State<SettingsAddClusterManual> {
                   autocorrect: false,
                   enableSuggestions: false,
                   maxLines: null,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     border: OutlineInputBorder(),
-                    labelText: 'Server',
+                    labelText: t(context, 'Server'),
                   ),
                   validator: _validator,
                   onFieldSubmitted: (String value) {
@@ -190,9 +195,9 @@ class _SettingsAddClusterManualState extends State<SettingsAddClusterManual> {
                   autocorrect: false,
                   enableSuggestions: false,
                   maxLines: null,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     border: OutlineInputBorder(),
-                    labelText: 'Certificate Authority Data',
+                    labelText: t(context, 'Certificate Authority Data'),
                   ),
                   onFieldSubmitted: (String value) {
                     _addCluster();
@@ -203,7 +208,7 @@ class _SettingsAddClusterManualState extends State<SettingsAddClusterManual> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const Text('Insecure Skip TLS Verify'),
+                    Text(t(context, 'Insecure Skip TLS Verify')),
                     Switch(
                       activeThumbColor: Theme.of(context).colorScheme.primary,
                       onChanged: (val) => {
@@ -223,9 +228,9 @@ class _SettingsAddClusterManualState extends State<SettingsAddClusterManual> {
                   autocorrect: false,
                   enableSuggestions: false,
                   maxLines: null,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     border: OutlineInputBorder(),
-                    labelText: 'Client Certificate Data',
+                    labelText: t(context, 'Client Certificate Data'),
                   ),
                   onFieldSubmitted: (String value) {
                     _addCluster();
@@ -238,9 +243,9 @@ class _SettingsAddClusterManualState extends State<SettingsAddClusterManual> {
                   autocorrect: false,
                   enableSuggestions: false,
                   maxLines: null,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     border: OutlineInputBorder(),
-                    labelText: 'Client Key Data',
+                    labelText: t(context, 'Client Key Data'),
                   ),
                   onFieldSubmitted: (String value) {
                     _addCluster();
@@ -253,9 +258,9 @@ class _SettingsAddClusterManualState extends State<SettingsAddClusterManual> {
                   autocorrect: false,
                   enableSuggestions: false,
                   maxLines: null,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     border: OutlineInputBorder(),
-                    labelText: 'Token',
+                    labelText: t(context, 'Token'),
                   ),
                   onFieldSubmitted: (String value) {
                     _addCluster();
@@ -268,9 +273,9 @@ class _SettingsAddClusterManualState extends State<SettingsAddClusterManual> {
                   autocorrect: false,
                   enableSuggestions: false,
                   maxLines: null,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     border: OutlineInputBorder(),
-                    labelText: 'Username',
+                    labelText: t(context, 'Username'),
                   ),
                   onFieldSubmitted: (String value) {
                     _addCluster();
@@ -283,9 +288,9 @@ class _SettingsAddClusterManualState extends State<SettingsAddClusterManual> {
                   autocorrect: false,
                   enableSuggestions: false,
                   maxLines: null,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     border: OutlineInputBorder(),
-                    labelText: 'Password',
+                    labelText: t(context, 'Password'),
                   ),
                   onFieldSubmitted: (String value) {
                     _addCluster();
@@ -298,9 +303,9 @@ class _SettingsAddClusterManualState extends State<SettingsAddClusterManual> {
                   autocorrect: false,
                   enableSuggestions: false,
                   maxLines: null,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     border: OutlineInputBorder(),
-                    labelText: 'Namespace',
+                    labelText: t(context, 'Namespace'),
                   ),
                   onFieldSubmitted: (String value) {
                     _addCluster();

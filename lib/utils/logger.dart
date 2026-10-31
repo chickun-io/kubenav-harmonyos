@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'package:kubenav/utils/constants.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/widgets/shared/app_bottom_sheet_widget.dart';
 
 /// [Logger] is our custom log implementation, which allows us to log messages
@@ -13,13 +14,13 @@ class Logger extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AppBottomSheetWidget(
-      title: 'Logs',
-      subtitle: 'Debug Logs',
+      title: t(context, 'Logs'),
+      subtitle: t(context, 'Debug Logs'),
       icon: Icons.subject,
       closePressed: () {
         Navigator.pop(context);
       },
-      actionText: 'Copy',
+      actionText: t(context, 'Copy'),
       actionPressed: () {
         Clipboard.setData(
           ClipboardData(text: _Log.list.map((e) => e.toString()).join('\n\n')),

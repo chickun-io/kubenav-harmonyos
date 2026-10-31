@@ -7,6 +7,7 @@ import 'package:kubenav/repositories/clusters_repository.dart';
 import 'package:kubenav/services/providers/aws_service.dart';
 import 'package:kubenav/utils/constants.dart';
 import 'package:kubenav/utils/helpers.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/utils/logger.dart';
 import 'package:kubenav/utils/showmodal.dart';
 
@@ -43,7 +44,7 @@ class _SettingsReauthenticateAWSSSOState
       if (mounted) {
         showSnackbar(
           context,
-          'Sing in Completed',
+          t(context, 'Sing in Completed'),
           'You can now click on the verify button',
         );
       }
@@ -56,7 +57,7 @@ class _SettingsReauthenticateAWSSSOState
       if (mounted) {
         showSnackbar(
           context,
-          'Failed to Get SSO Configuration',
+          t(context, 'Failed to Get SSO Configuration'),
           err.toString(),
         );
       }
@@ -76,7 +77,11 @@ class _SettingsReauthenticateAWSSSOState
         err,
       );
       if (mounted) {
-        showSnackbar(context, 'Failed to Verify Device', err.toString());
+        showSnackbar(
+          context,
+          t(context, 'Failed to Verify Device'),
+          err.toString(),
+        );
       }
     }
   }
@@ -116,7 +121,7 @@ class _SettingsReauthenticateAWSSSOState
       if (mounted) {
         showSnackbar(
           context,
-          'Provider Configuration Saved',
+          t(context, 'Provider Configuration Saved'),
           'Refresh the view to use the new credentials',
         );
       }
@@ -127,7 +132,11 @@ class _SettingsReauthenticateAWSSSOState
         err,
       );
       if (mounted) {
-        showSnackbar(context, 'Failed to Get SSO Credentials', err.toString());
+        showSnackbar(
+          context,
+          t(context, 'Failed to Get SSO Credentials'),
+          err.toString(),
+        );
       }
     }
   }
@@ -172,7 +181,7 @@ class _SettingsReauthenticateAWSSSOState
             ),
             onPressed: _startSSOFlow,
             child: Text(
-              'Sign In',
+              t(context, 'Sign In'),
               style: primaryTextStyle(
                 context,
                 color: Theme.of(context).colorScheme.onPrimary,
@@ -197,7 +206,7 @@ class _SettingsReauthenticateAWSSSOState
             ),
             onPressed: _awsSSOConfig == null ? null : _verifyDevice,
             child: Text(
-              'Verify',
+              t(context, 'Verify'),
               style: primaryTextStyle(
                 context,
                 color: Theme.of(context).colorScheme.onPrimary,
@@ -224,7 +233,7 @@ class _SettingsReauthenticateAWSSSOState
                 ? null
                 : _getSSOCredentials,
             child: Text(
-              'Get Credentials',
+              t(context, 'Get Credentials'),
               style: primaryTextStyle(
                 context,
                 color: Theme.of(context).colorScheme.onPrimary,

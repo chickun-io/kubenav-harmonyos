@@ -7,6 +7,7 @@ import 'package:kubenav/repositories/app_repository.dart';
 import 'package:kubenav/repositories/clusters_repository.dart';
 import 'package:kubenav/services/kubernetes_service.dart';
 import 'package:kubenav/utils/constants.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/utils/logger.dart';
 import 'package:kubenav/utils/showmodal.dart';
 import 'package:kubenav/widgets/resources/resources/resources.dart';
@@ -76,8 +77,12 @@ class _CronJobResumeState extends State<CronJobResume> {
       if (mounted) {
         showSnackbar(
           context,
-          '${widget.resource.singular} Resumed',
-          'The ${widget.resource.singular} ${widget.namespace}/${widget.name} was resumed',
+          tFmt(context, '{0} Resumed', [t(context, widget.resource.singular)]),
+          tFmt(context, 'The {0} {1}/{2} was resumed', [
+            t(context, widget.resource.singular),
+            widget.namespace,
+            widget.name,
+          ]),
         );
         Navigator.pop(context);
       }
@@ -87,7 +92,7 @@ class _CronJobResumeState extends State<CronJobResume> {
         _isLoading = false;
       });
       if (mounted) {
-        showSnackbar(context, 'Resumption Failed', err.toString());
+        showSnackbar(context, t(context, 'Resumption Failed'), err.toString());
       }
     }
   }
@@ -95,13 +100,13 @@ class _CronJobResumeState extends State<CronJobResume> {
   @override
   Widget build(BuildContext context) {
     return AppBottomSheetWidget(
-      title: 'Resume',
+      title: t(context, 'Resume'),
       subtitle: '${widget.namespace}/${widget.name}',
       icon: Icons.play_arrow,
       closePressed: () {
         Navigator.pop(context);
       },
-      actionText: 'Resume',
+      actionText: t(context, 'Resume'),
       actionPressed: () {
         _resume();
       },
@@ -115,7 +120,11 @@ class _CronJobResumeState extends State<CronJobResume> {
             right: Constants.spacingMiddle,
           ),
           child: Text(
-            'Do you really want to resume the ${widget.resource.singular} ${widget.namespace}/${widget.name}?',
+            tFmt(context, 'Do you really want to resume the {0} {1}/{2}?', [
+              t(context, widget.resource.singular),
+              widget.namespace,
+              widget.name,
+            ]),
           ),
         ),
       ),

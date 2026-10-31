@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import 'package:kubenav/models/kubernetes/schema.models.swagger.dart';
 import 'package:kubenav/utils/constants.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/utils/resources.dart';
 import 'package:kubenav/widgets/plugins/flux/resources/plugin_flux_resources.dart';
 import 'package:kubenav/widgets/resources/helpers/details_item.dart';
@@ -18,8 +19,7 @@ final Resource fluxResourceGitRepository = Resource(
   category: FluxResourceCategories.sourceController,
   plural: 'Git Repositories',
   singular: 'Git Repository',
-  description:
-      'The GitRepository API defines a Source to produce an Artifact for a Git repository revision',
+  description: 'The GitRepository API defines a Source to produce an Artifact for a Git repository revision',
   path: '/apis/source.toolkit.fluxcd.io/v1',
   resource: 'gitrepositories',
   scope: ResourceScope.namespaced,
@@ -28,9 +28,8 @@ final Resource fluxResourceGitRepository = Resource(
   template: resourceDefaultTemplate,
   decodeListData: (ResourcesListData data) {
     final parsed = json.decode(data.list);
-    final items = IoFluxcdToolkitSourceV1GitRepositoryList.fromJson(
-      parsed,
-    ).items;
+    final items = IoFluxcdToolkitSourceV1GitRepositoryList.fromJson(parsed)
+        .items;
 
     return items.map((e) {
       final status =
@@ -74,32 +73,65 @@ final Resource fluxResourceGitRepository = Resource(
   toJson: (dynamic item) {
     return json.decode(json.encode(item));
   },
-  listItemBuilder: (BuildContext context, Resource resource, ResourceItem listItem) {
-    final item = listItem.item as IoFluxcdToolkitSourceV1GitRepository;
-    final status = listItem.status;
+  listItemBuilder:
+      (BuildContext context, Resource resource, ResourceItem listItem) {
+        final item = listItem.item as IoFluxcdToolkitSourceV1GitRepository;
+        final status = listItem.status;
 
-    return ResourcesListItem(
-      name: item.metadata?.name ?? '',
-      namespace: item.metadata?.namespace ?? '',
-      resource: resource,
-      item: item,
-      status: status,
-      details: [
-        'Namespace: ${item.metadata?.namespace ?? '-'}',
-        'Ready: ${item.status?.conditions != null && item.status!.conditions!.isNotEmpty ? item.status!.conditions!.where((e) => e.type == 'Ready').firstOrNull?.status : '-'}',
-        'Status: ${item.status?.conditions != null && item.status!.conditions!.isNotEmpty ? item.status!.conditions!.where((e) => e.type == 'Ready').firstOrNull?.message : '-'}',
-        'Age: ${getAge(item.metadata?.creationTimestamp)}',
-      ],
-    );
-  },
-  previewItemBuilder: (dynamic listItem) {
+        return ResourcesListItem(
+          name: item.metadata?.name ?? '',
+          namespace: item.metadata?.namespace ?? '',
+          resource: resource,
+          item: item,
+          status: status,
+          details: [
+            tFmt(context, 'Namespace: {0}', [item.metadata?.namespace ?? '-']),
+            tFmt(context, 'Ready: {0}', [
+              item.status?.conditions != null &&
+                      item.status!.conditions!.isNotEmpty
+                  ? item.status!.conditions!
+                        .where((e) => e.type == 'Ready')
+                        .firstOrNull
+                        ?.status
+                  : '-',
+            ]),
+            tFmt(context, 'Status: {0}', [
+              item.status?.conditions != null &&
+                      item.status!.conditions!.isNotEmpty
+                  ? item.status!.conditions!
+                        .where((e) => e.type == 'Ready')
+                        .firstOrNull
+                        ?.message
+                  : '-',
+            ]),
+            tFmt(context, 'Age: {0}', [
+              getAge(item.metadata?.creationTimestamp),
+            ]),
+          ],
+        );
+      },
+  previewItemBuilder: (BuildContext context, dynamic listItem) {
     final item = listItem as IoFluxcdToolkitSourceV1GitRepository;
 
     return [
-      'Namespace: ${item.metadata?.namespace ?? '-'}',
-      'Ready: ${item.status?.conditions != null && item.status!.conditions!.isNotEmpty ? item.status!.conditions!.where((e) => e.type == 'Ready').firstOrNull?.status : '-'}',
-      'Status: ${item.status?.conditions != null && item.status!.conditions!.isNotEmpty ? item.status!.conditions!.where((e) => e.type == 'Ready').firstOrNull?.message : '-'}',
-      'Age: ${getAge(item.metadata?.creationTimestamp)}',
+      tFmt(context, 'Namespace: {0}', [item.metadata?.namespace ?? '-']),
+      tFmt(context, 'Ready: {0}', [
+        item.status?.conditions != null && item.status!.conditions!.isNotEmpty
+            ? item.status!.conditions!
+                  .where((e) => e.type == 'Ready')
+                  .firstOrNull
+                  ?.status
+            : '-',
+      ]),
+      tFmt(context, 'Status: {0}', [
+        item.status?.conditions != null && item.status!.conditions!.isNotEmpty
+            ? item.status!.conditions!
+                  .where((e) => e.type == 'Ready')
+                  .firstOrNull
+                  ?.message
+            : '-',
+      ]),
+      tFmt(context, 'Age: {0}', [getAge(item.metadata?.creationTimestamp)]),
     ];
   },
   detailsItemBuilder:
@@ -125,23 +157,34 @@ final Resource fluxResourceGitRepository = Resource(
             ),
             const SizedBox(height: Constants.spacingMiddle),
             DetailsItem(
-              title: 'Configuration',
+              title: t(context, 'Configuration'),
               details: [
-                DetailsItemModel(name: 'Url', values: item.spec?.url),
-                DetailsItemModel(name: 'Interval', values: item.spec?.interval),
                 DetailsItemModel(
-                  name: 'Suspended',
-                  values: item.spec?.suspend == true ? 'True' : 'False',
+                  name: t(context, 'Url'),
+                  values: item.spec?.url,
                 ),
-                DetailsItemModel(name: 'Timeout', values: item.spec?.timeout),
+                DetailsItemModel(
+                  name: t(context, 'Interval'),
+                  values: item.spec?.interval,
+                ),
+                DetailsItemModel(
+                  name: t(context, 'Suspended'),
+                  values: item.spec?.suspend == true
+                      ? t(context, 'True')
+                      : t(context, 'False'),
+                ),
+                DetailsItemModel(
+                  name: t(context, 'Timeout'),
+                  values: item.spec?.timeout,
+                ),
               ],
             ),
             const SizedBox(height: Constants.spacingMiddle),
             DetailsItem(
-              title: 'Git Repository Reference',
+              title: t(context, 'Git Repository Reference'),
               details: [
                 DetailsItemModel(
-                  name: 'Branch',
+                  name: t(context, 'Branch'),
                   values: item.spec?.ref?.branch,
                 ),
                 DetailsItemModel(name: 'Tag', values: item.spec?.ref?.tag),
@@ -149,39 +192,42 @@ final Resource fluxResourceGitRepository = Resource(
                   name: 'SemVer',
                   values: item.spec?.ref?.semver,
                 ),
-                DetailsItemModel(name: 'Name', values: item.spec?.ref?.name),
                 DetailsItemModel(
-                  name: 'Commit',
+                  name: t(context, 'Name'),
+                  values: item.spec?.ref?.name,
+                ),
+                DetailsItemModel(
+                  name: t(context, 'Commit'),
                   values: item.spec?.ref?.commit,
                 ),
               ],
             ),
             const SizedBox(height: Constants.spacingMiddle),
             DetailsItem(
-              title: 'Artifact',
+              title: t(context, 'Artifact'),
               details: [
                 DetailsItemModel(
-                  name: 'Path',
+                  name: t(context, 'Path'),
                   values: item.status?.artifact?.path,
                 ),
                 DetailsItemModel(
-                  name: 'Url',
+                  name: t(context, 'Url'),
                   values: item.status?.artifact?.url,
                 ),
                 DetailsItemModel(
-                  name: 'Revision',
+                  name: t(context, 'Revision'),
                   values: item.status?.artifact?.revision,
                 ),
                 DetailsItemModel(
-                  name: 'Digest',
+                  name: t(context, 'Digest'),
                   values: item.status?.artifact?.digest,
                 ),
                 DetailsItemModel(
-                  name: 'Last Update',
+                  name: t(context, 'Last Update'),
                   values: getAge(item.status?.artifact?.lastUpdateTime),
                 ),
                 DetailsItemModel(
-                  name: 'Size',
+                  name: t(context, 'Size'),
                   values: item.status?.artifact?.size != null
                       ? formatBytes(item.status!.artifact!.size!)
                       : null,

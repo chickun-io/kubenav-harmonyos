@@ -9,6 +9,7 @@ import 'package:kubenav/repositories/clusters_repository.dart';
 import 'package:kubenav/repositories/terminal_repository.dart';
 import 'package:kubenav/services/kubernetes_service.dart';
 import 'package:kubenav/utils/constants.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/utils/logger.dart';
 import 'package:kubenav/utils/showmodal.dart';
 import 'package:kubenav/utils/themes.dart';
@@ -121,7 +122,7 @@ class _GetTerminalState extends State<GetTerminal> {
           setState(() {
             showSnackbar(
               context,
-              'Failed to Create Terminal',
+              t(context, 'Failed to Create Terminal'),
               'The Internal HTTP Server is Unhealthy',
             );
             _isLoading = false;
@@ -134,7 +135,11 @@ class _GetTerminalState extends State<GetTerminal> {
           err,
         );
         if (mounted) {
-          showSnackbar(context, 'Failed to Create Terminal', err.toString());
+          showSnackbar(
+            context,
+            t(context, 'Failed to Create Terminal'),
+            err.toString(),
+          );
         }
         setState(() {
           _isLoading = false;
@@ -201,13 +206,13 @@ class _GetTerminalState extends State<GetTerminal> {
   @override
   Widget build(BuildContext context) {
     return AppBottomSheetWidget(
-      title: 'Terminal',
+      title: t(context, 'Terminal'),
       subtitle: '${widget.namespace}/${widget.name}',
       icon: Icons.terminal,
       closePressed: () {
         Navigator.pop(context);
       },
-      actionText: 'Get Terminal',
+      actionText: t(context, 'Get Terminal'),
       actionPressed: () {
         _getTerminal();
       },
@@ -228,7 +233,7 @@ class _GetTerminalState extends State<GetTerminal> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const Text('Container'),
+                    Text(t(context, 'Container')),
                     DropdownButton(
                       value: _container,
                       underline: Container(
@@ -246,9 +251,9 @@ class _GetTerminalState extends State<GetTerminal> {
                           child: Text(
                             value,
                             style: TextStyle(
-                              color: Theme.of(
-                                context,
-                              ).extension<CustomColors>()!.textPrimary,
+                              color: Theme.of(context)
+                                  .extension<CustomColors>()!
+                                  .textPrimary,
                             ),
                           ),
                         );
@@ -261,7 +266,7 @@ class _GetTerminalState extends State<GetTerminal> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const Text('Shell'),
+                    Text(t(context, 'Shell')),
                     DropdownButton(
                       value: _shell,
                       underline: Container(
@@ -279,9 +284,9 @@ class _GetTerminalState extends State<GetTerminal> {
                           child: Text(
                             value,
                             style: TextStyle(
-                              color: Theme.of(
-                                context,
-                              ).extension<CustomColors>()!.textPrimary,
+                              color: Theme.of(context)
+                                  .extension<CustomColors>()!
+                                  .textPrimary,
                             ),
                           ),
                         );

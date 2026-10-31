@@ -7,6 +7,7 @@ import 'package:kubenav/repositories/clusters_repository.dart';
 import 'package:kubenav/services/providers/azure_service.dart';
 import 'package:kubenav/utils/constants.dart';
 import 'package:kubenav/utils/helpers.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/utils/logger.dart';
 import 'package:kubenav/utils/showmodal.dart';
 import 'package:kubenav/utils/themes.dart';
@@ -121,7 +122,11 @@ class _SettingsAddClusterAzureState extends State<SettingsAddClusterAzure> {
         _isLoadingAddCluster = false;
       });
       if (mounted) {
-        showSnackbar(context, 'Failed to Add Clusters', err.toString());
+        showSnackbar(
+          context,
+          t(context, 'Failed to Add Clusters'),
+          err.toString(),
+        );
       }
     }
   }
@@ -139,7 +144,7 @@ class _SettingsAddClusterAzureState extends State<SettingsAddClusterAzure> {
 
     if (_error != '') {
       return AppErrorWidget(
-        message: 'Failed to Load Clusters',
+        message: t(context, 'Failed to Load Clusters'),
         details: _error,
         icon: ClusterProviderType.azure.icon(),
       );
@@ -191,9 +196,9 @@ class _SettingsAddClusterAzureState extends State<SettingsAddClusterAzure> {
               }
             },
             title: Text(
-              Characters(
-                _clusters[index].name ?? '',
-              ).replaceAll(Characters(''), Characters('\u{200B}')).toString(),
+              Characters(_clusters[index].name ?? '')
+                  .replaceAll(Characters(''), Characters('\u{200B}'))
+                  .toString(),
               style: normalTextStyle(context),
               overflow: TextOverflow.ellipsis,
             ),
@@ -218,7 +223,7 @@ class _SettingsAddClusterAzureState extends State<SettingsAddClusterAzure> {
       closePressed: () {
         Navigator.pop(context);
       },
-      actionText: 'Add Clusters',
+      actionText: t(context, 'Add Clusters'),
       actionPressed: () {
         _addClusters();
       },

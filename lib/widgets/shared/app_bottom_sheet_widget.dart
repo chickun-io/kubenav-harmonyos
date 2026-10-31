@@ -127,9 +127,9 @@ class AppBottomSheetWidget extends StatelessWidget {
                   IconButton(
                     icon: Icon(
                       Icons.close_outlined,
-                      color: Theme.of(
-                        context,
-                      ).extension<CustomColors>()!.textPrimary,
+                      color: Theme.of(context)
+                          .extension<CustomColors>()!
+                          .textPrimary,
                     ),
                     onPressed: closePressed,
                   ),

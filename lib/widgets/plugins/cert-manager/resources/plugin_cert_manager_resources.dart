@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/utils/showmodal.dart';
 import 'package:kubenav/widgets/plugins/cert-manager/actions/plugin_cert_manager_approve.dart';
 import 'package:kubenav/widgets/plugins/cert-manager/actions/plugin_cert_manager_deny.dart';
@@ -58,7 +59,7 @@ List<AppResourceActionsModel> certManagerResourceActions(
       resource.path == certManagerResourceCertificate.path) {
     return [
       AppResourceActionsModel(
-        title: 'Renew',
+        title: t(context, 'Renew'),
         icon: Icons.restart_alt,
         onTap: () {
           showModal(
@@ -79,7 +80,7 @@ List<AppResourceActionsModel> certManagerResourceActions(
       resource.path == certManagerResourceCertificateRequest.path) {
     return [
       AppResourceActionsModel(
-        title: 'Approve',
+        title: t(context, 'Approve'),
         icon: Icons.task_alt,
         onTap: () {
           showModal(
@@ -94,7 +95,7 @@ List<AppResourceActionsModel> certManagerResourceActions(
         },
       ),
       AppResourceActionsModel(
-        title: 'Deny',
+        title: t(context, 'Deny'),
         icon: Icons.block,
         onTap: () {
           showModal(

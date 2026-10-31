@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:kubenav/utils/constants.dart';
 import 'package:kubenav/utils/helpers.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/utils/storage.dart';
 
 class Reset extends StatefulWidget {
@@ -83,7 +84,10 @@ class _ResetState extends State<Reset> {
               Padding(
                 padding: EdgeInsets.all(Constants.spacingMiddle),
                 child: Text(
-                  'Click the reset button to delete all existing providers, clusters and settings. Please be aware that this can not be undone. If you delete all existing providers, clusters and settings you have to re-add them manually.',
+                  t(
+                    context,
+                    'Click the reset button to delete all existing providers, clusters and settings. Please be aware that this can not be undone. If you delete all existing providers, clusters and settings you have to re-add them manually.',
+                  ),
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -109,7 +113,7 @@ class _ResetState extends State<Reset> {
                           child: CircularProgressIndicator(color: Colors.white),
                         )
                       : Text(
-                          'Reset',
+                          t(context, 'Reset'),
                           style: primaryTextStyle(context, color: Colors.white),
                           textAlign: TextAlign.center,
                         ),

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:kubenav/models/kubernetes/schema.models.swagger.dart';
 import 'package:kubenav/models/plugins/prometheus.dart';
 import 'package:kubenav/utils/constants.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/utils/resources.dart';
 import 'package:kubenav/widgets/resources/helpers/details_item.dart';
 import 'package:kubenav/widgets/resources/helpers/details_item_metadata.dart';
@@ -18,8 +19,7 @@ final resourceResourceQuota = Resource(
   category: ResourceCategories.configAndStorage,
   plural: 'ResourceQuotas',
   singular: 'ResourceQuota',
-  description:
-      'Resource quotas are used to allocate and limit compute resources for individual namespaces within a cluster.',
+  description: 'Resource quotas are used to allocate and limit compute resources for individual namespaces within a cluster.',
   path: '/api/v1',
   resource: 'resourcequotas',
   scope: ResourceScope.namespaced,
@@ -73,19 +73,21 @@ final resourceResourceQuota = Resource(
           item: item,
           status: status,
           details: [
-            'Namespace: ${item.metadata?.namespace ?? '-'}',
-            'Request: ${_getRequest(item.status)}',
-            'Age: ${getAge(item.metadata?.creationTimestamp)}',
+            tFmt(context, 'Namespace: {0}', [item.metadata?.namespace ?? '-']),
+            tFmt(context, 'Request: {0}', [_getRequest(item.status)]),
+            tFmt(context, 'Age: {0}', [
+              getAge(item.metadata?.creationTimestamp),
+            ]),
           ],
         );
       },
-  previewItemBuilder: (dynamic listItem) {
+  previewItemBuilder: (BuildContext context, dynamic listItem) {
     final item = listItem as IoK8sApiCoreV1ResourceQuota;
 
     return [
-      'Namespace: ${item.metadata?.namespace ?? '-'}',
-      'Request: ${_getRequest(item.status)}',
-      'Age: ${getAge(item.metadata?.creationTimestamp)}',
+      tFmt(context, 'Namespace: {0}', [item.metadata?.namespace ?? '-']),
+      tFmt(context, 'Request: {0}', [_getRequest(item.status)]),
+      tFmt(context, 'Age: {0}', [getAge(item.metadata?.creationTimestamp)]),
     ];
   },
   detailsItemBuilder: (BuildContext context, Resource resource, dynamic detailsItem) {
@@ -96,7 +98,7 @@ final resourceResourceQuota = Resource(
         DetailsItemMetadata(kind: item.kind, metadata: item.metadata),
         const SizedBox(height: Constants.spacingMiddle),
         DetailsItem(
-          title: 'Request',
+          title: t(context, 'Request'),
           details:
               item.status?.hard?.keys.map((key) {
                 return DetailsItemModel(

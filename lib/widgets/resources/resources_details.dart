@@ -8,6 +8,7 @@ import 'package:kubenav/repositories/bookmarks_repository.dart';
 import 'package:kubenav/repositories/clusters_repository.dart';
 import 'package:kubenav/services/kubernetes_service.dart';
 import 'package:kubenav/utils/constants.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/utils/showmodal.dart';
 import 'package:kubenav/widgets/plugins/argo/resources/plugin_argo_resources.dart';
 import 'package:kubenav/widgets/plugins/cert-manager/resources/plugin_cert_manager_resources.dart';
@@ -87,7 +88,7 @@ List<AppResourceActionsModel> resourceDetailsActions(
       },
     ),
     AppResourceActionsModel(
-      title: 'Edit',
+      title: t(context, 'Edit'),
       icon: Icons.edit,
       onTap: () {
         showModal(
@@ -102,7 +103,7 @@ List<AppResourceActionsModel> resourceDetailsActions(
       },
     ),
     AppResourceActionsModel(
-      title: 'Delete',
+      title: t(context, 'Delete'),
       icon: Icons.delete,
       onTap: () {
         showModal(
@@ -117,7 +118,7 @@ List<AppResourceActionsModel> resourceDetailsActions(
       resource.path == resourcePod.path) {
     actions.add(
       AppResourceActionsModel(
-        title: 'Evict',
+        title: t(context, 'Evict'),
         icon: Icons.delete_forever,
         onTap: () {
           showModal(
@@ -136,7 +137,7 @@ List<AppResourceActionsModel> resourceDetailsActions(
   if (refresh != null) {
     actions.add(
       AppResourceActionsModel(
-        title: 'Refresh',
+        title: t(context, 'Refresh'),
         icon: Icons.refresh,
         onTap: refresh,
       ),
@@ -196,7 +197,7 @@ List<AppResourceActionsModel> resourceDetailsActions(
           resource.path == resourceStatefulSet.path)) {
     actions.add(
       AppResourceActionsModel(
-        title: 'Scale',
+        title: t(context, 'Scale'),
         icon: Icons.difference,
         onTap: () {
           showModal(
@@ -221,7 +222,7 @@ List<AppResourceActionsModel> resourceDetailsActions(
           resource.path == resourceDaemonSet.path)) {
     actions.add(
       AppResourceActionsModel(
-        title: 'Restart',
+        title: t(context, 'Restart'),
         icon: Icons.restart_alt,
         onTap: () {
           showModal(
@@ -242,7 +243,7 @@ List<AppResourceActionsModel> resourceDetailsActions(
       resource.path == resourceCronJob.path) {
     actions.addAll([
       AppResourceActionsModel(
-        title: 'Create Job',
+        title: t(context, 'Create Job'),
         icon: Icons.start,
         onTap: () {
           showModal(
@@ -256,7 +257,7 @@ List<AppResourceActionsModel> resourceDetailsActions(
         },
       ),
       AppResourceActionsModel(
-        title: 'Suspend',
+        title: t(context, 'Suspend'),
         icon: Icons.pause,
         onTap: () {
           showModal(
@@ -271,7 +272,7 @@ List<AppResourceActionsModel> resourceDetailsActions(
         },
       ),
       AppResourceActionsModel(
-        title: 'Resume',
+        title: t(context, 'Resume'),
         icon: Icons.play_arrow,
         onTap: () {
           showModal(
@@ -292,7 +293,7 @@ List<AppResourceActionsModel> resourceDetailsActions(
       resource.path == resourcePod.path) {
     actions.add(
       AppResourceActionsModel(
-        title: 'Logs',
+        title: t(context, 'Logs'),
         icon: Icons.subject,
         onTap: () {
           showModal(
@@ -312,7 +313,7 @@ List<AppResourceActionsModel> resourceDetailsActions(
           resource.path == resourceDaemonSet.path)) {
     actions.add(
       AppResourceActionsModel(
-        title: 'Logs',
+        title: t(context, 'Logs'),
         icon: Icons.subject,
         onTap: () {
           showModal(
@@ -332,7 +333,7 @@ List<AppResourceActionsModel> resourceDetailsActions(
       resource.path == resourcePod.path) {
     actions.add(
       AppResourceActionsModel(
-        title: 'Terminal',
+        title: t(context, 'Terminal'),
         icon: Icons.terminal,
         onTap: () {
           showModal(
@@ -352,7 +353,7 @@ List<AppResourceActionsModel> resourceDetailsActions(
       resource.path == resourcePod.path) {
     actions.add(
       AppResourceActionsModel(
-        title: 'Debug',
+        title: t(context, 'Debug'),
         icon: Icons.bug_report,
         onTap: () {
           showModal(
@@ -372,7 +373,7 @@ List<AppResourceActionsModel> resourceDetailsActions(
       resource.path == resourcePod.path) {
     actions.add(
       AppResourceActionsModel(
-        title: 'Live Metrics',
+        title: t(context, 'Live Metrics'),
         icon: Icons.insights,
         onTap: () {
           showActions(
@@ -392,7 +393,7 @@ List<AppResourceActionsModel> resourceDetailsActions(
       resource.path == resourceNamespace.path) {
     actions.add(
       AppResourceActionsModel(
-        title: 'Favorite',
+        title: t(context, 'Favorite'),
         icon:
             appRepository.settings.namespaces
                 .where((e) => e == name)
@@ -418,7 +419,7 @@ List<AppResourceActionsModel> resourceDetailsActions(
       resource.path == resourceCertificateSigningRequest.path) {
     actions.add(
       AppResourceActionsModel(
-        title: 'Approve',
+        title: t(context, 'Approve'),
         icon: Icons.task_alt,
         onTap: () {
           showModal(
@@ -430,7 +431,7 @@ List<AppResourceActionsModel> resourceDetailsActions(
     );
     actions.add(
       AppResourceActionsModel(
-        title: 'Deny',
+        title: t(context, 'Deny'),
         icon: Icons.block,
         onTap: () {
           showModal(
@@ -446,7 +447,7 @@ List<AppResourceActionsModel> resourceDetailsActions(
       resource.path == resourceNode.path) {
     actions.add(
       AppResourceActionsModel(
-        title: 'Cordon',
+        title: t(context, 'Cordon'),
         icon: Icons.update_disabled,
         onTap: () {
           showModal(
@@ -458,7 +459,7 @@ List<AppResourceActionsModel> resourceDetailsActions(
     );
     actions.add(
       AppResourceActionsModel(
-        title: 'Uncordon',
+        title: t(context, 'Uncordon'),
         icon: Icons.update,
         onTap: () {
           showModal(
@@ -557,9 +558,9 @@ class _ResourcesDetailsState extends State<ResourcesDetails> {
         title: Column(
           children: [
             Text(
-              Characters(
-                widget.name,
-              ).replaceAll(Characters(''), Characters('\u{200B}')).toString(),
+              Characters(widget.name)
+                  .replaceAll(Characters(''), Characters('\u{200B}'))
+                  .toString(),
               textAlign: TextAlign.center,
               style: const TextStyle(
                 fontSize: 20,
@@ -568,9 +569,9 @@ class _ResourcesDetailsState extends State<ResourcesDetails> {
               ),
             ),
             Text(
-              Characters(
-                widget.namespace ?? 'No Namespace',
-              ).replaceAll(Characters(''), Characters('\u{200B}')).toString(),
+              Characters(widget.namespace ?? 'No Namespace')
+                  .replaceAll(Characters(''), Characters('\u{200B}'))
+                  .toString(),
               textAlign: TextAlign.center,
               style: const TextStyle(
                 fontSize: 14,
@@ -619,8 +620,9 @@ class _ResourcesDetailsState extends State<ResourcesDetails> {
                                   Constants.spacingMiddle,
                                 ),
                                 child: AppErrorWidget(
-                                  message:
-                                      'Failed to Load ${widget.resource.singular}',
+                                  message: tFmt(context, 'Failed to Load {0}', [
+                                    t(context, widget.resource.singular),
+                                  ]),
                                   details: snapshot.error.toString(),
                                   icon:
                                       'assets/resources/${widget.resource.icon}.svg',

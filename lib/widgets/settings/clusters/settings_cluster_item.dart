@@ -10,6 +10,7 @@ import 'package:kubenav/repositories/clusters_repository.dart';
 import 'package:kubenav/services/kubernetes_service.dart';
 import 'package:kubenav/utils/constants.dart';
 import 'package:kubenav/utils/helpers.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/utils/logger.dart';
 import 'package:kubenav/utils/showmodal.dart';
 import 'package:kubenav/utils/themes.dart';
@@ -136,7 +137,7 @@ class _SettingsClusterItemState extends State<SettingsClusterItem> {
         slidableActions: [
           AppListItemSlidableAction(
             icon: Icons.edit,
-            label: 'Edit',
+            label: t(context, 'Edit'),
             backgroundColor: Theme.of(context).colorScheme.primary,
             foregroundColor: Theme.of(context).colorScheme.onPrimary,
             onTap: (BuildContext context) {
@@ -145,7 +146,7 @@ class _SettingsClusterItemState extends State<SettingsClusterItem> {
           ),
           AppListItemSlidableAction(
             icon: Icons.delete,
-            label: 'Delete',
+            label: t(context, 'Delete'),
             backgroundColor: Theme.of(context).colorScheme.error,
             foregroundColor: Theme.of(context).colorScheme.onError,
             onTap: (BuildContext context) async {
@@ -162,15 +163,17 @@ class _SettingsClusterItemState extends State<SettingsClusterItem> {
                 if (context.mounted) {
                   showSnackbar(
                     context,
-                    'Cluster Deleted',
-                    'The cluster ${widget.cluster.name} was deleted',
+                    t(context, 'Cluster Deleted'),
+                    tFmt(context, 'The cluster {0} was deleted', [
+                      widget.cluster.name,
+                    ]),
                   );
                 }
               } catch (err) {
                 if (context.mounted) {
                   showSnackbar(
                     context,
-                    'Failed to Delete Cluster',
+                    t(context, 'Failed to Delete Cluster'),
                     err.toString(),
                   );
                 }

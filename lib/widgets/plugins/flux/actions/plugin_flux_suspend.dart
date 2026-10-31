@@ -7,6 +7,7 @@ import 'package:kubenav/repositories/app_repository.dart';
 import 'package:kubenav/repositories/clusters_repository.dart';
 import 'package:kubenav/services/kubernetes_service.dart';
 import 'package:kubenav/utils/constants.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/utils/logger.dart';
 import 'package:kubenav/utils/showmodal.dart';
 import 'package:kubenav/widgets/resources/resources/resources.dart';
@@ -86,8 +87,14 @@ class _PluginFluxSuspendState extends State<PluginFluxSuspend> {
       if (mounted) {
         showSnackbar(
           context,
-          '${widget.resource.singular} Suspended',
-          'The ${widget.resource.singular} ${widget.namespace}/${widget.name} was suspended',
+          tFmt(context, '{0} Suspended', [
+            t(context, widget.resource.singular),
+          ]),
+          tFmt(context, 'The {0} {1}/{2} was suspended', [
+            t(context, widget.resource.singular),
+            widget.namespace,
+            widget.name,
+          ]),
         );
         Navigator.pop(context);
       }
@@ -97,7 +104,7 @@ class _PluginFluxSuspendState extends State<PluginFluxSuspend> {
         _isLoading = false;
       });
       if (mounted) {
-        showSnackbar(context, 'Suspension Failed', err.toString());
+        showSnackbar(context, t(context, 'Suspension Failed'), err.toString());
       }
     }
   }
@@ -105,13 +112,13 @@ class _PluginFluxSuspendState extends State<PluginFluxSuspend> {
   @override
   Widget build(BuildContext context) {
     return AppBottomSheetWidget(
-      title: 'Suspend',
+      title: t(context, 'Suspend'),
       subtitle: '${widget.namespace}/${widget.name}',
       icon: Icons.pause,
       closePressed: () {
         Navigator.pop(context);
       },
-      actionText: 'Suspend',
+      actionText: t(context, 'Suspend'),
       actionPressed: () {
         _suspend();
       },
@@ -125,7 +132,11 @@ class _PluginFluxSuspendState extends State<PluginFluxSuspend> {
             right: Constants.spacingMiddle,
           ),
           child: Text(
-            'Do you really want to suspend the ${widget.resource.singular} ${widget.namespace}/${widget.name}?',
+            tFmt(context, 'Do you really want to suspend the {0} {1}/{2}?', [
+              t(context, widget.resource.singular),
+              widget.namespace,
+              widget.name,
+            ]),
           ),
         ),
       ),

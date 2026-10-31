@@ -6,6 +6,7 @@ import 'package:uuid/uuid.dart';
 import 'package:kubenav/models/cluster_provider.dart';
 import 'package:kubenav/repositories/clusters_repository.dart';
 import 'package:kubenav/utils/constants.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/utils/showmodal.dart';
 import 'package:kubenav/widgets/settings/clusters/settings_add_cluster_azure.dart';
 import 'package:kubenav/widgets/shared/app_bottom_sheet_widget.dart';
@@ -33,7 +34,7 @@ class _SettingsAzureProviderState extends State<SettingsAzureProvider> {
   /// missing the validation of the form will fail.
   String? _validator(String? value) {
     if (value == null || value.isEmpty) {
-      return 'This field is required';
+      return t(context, 'This field is required');
     }
 
     return null;
@@ -98,7 +99,7 @@ class _SettingsAzureProviderState extends State<SettingsAzureProvider> {
       if (mounted) {
         showSnackbar(
           context,
-          'Failed to Save Provider Configuration',
+          t(context, 'Failed to Save Provider Configuration'),
           err.toString(),
         );
       }
@@ -161,9 +162,9 @@ class _SettingsAzureProviderState extends State<SettingsAzureProvider> {
                   autocorrect: false,
                   enableSuggestions: false,
                   maxLines: 1,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     border: OutlineInputBorder(),
-                    labelText: 'Name',
+                    labelText: t(context, 'Name'),
                   ),
                   validator: _validator,
                 ),
@@ -174,9 +175,9 @@ class _SettingsAzureProviderState extends State<SettingsAzureProvider> {
                   autocorrect: false,
                   enableSuggestions: false,
                   maxLines: 1,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     border: OutlineInputBorder(),
-                    labelText: 'Subscription ID',
+                    labelText: t(context, 'Subscription ID'),
                   ),
                   validator: _validator,
                 ),
@@ -187,9 +188,9 @@ class _SettingsAzureProviderState extends State<SettingsAzureProvider> {
                   autocorrect: false,
                   enableSuggestions: false,
                   maxLines: 1,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     border: OutlineInputBorder(),
-                    labelText: 'Tenant ID',
+                    labelText: t(context, 'Tenant ID'),
                   ),
                   validator: _validator,
                 ),
@@ -200,9 +201,9 @@ class _SettingsAzureProviderState extends State<SettingsAzureProvider> {
                   autocorrect: false,
                   enableSuggestions: false,
                   maxLines: 1,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     border: OutlineInputBorder(),
-                    labelText: 'Client ID',
+                    labelText: t(context, 'Client ID'),
                   ),
                   validator: _validator,
                 ),
@@ -213,9 +214,9 @@ class _SettingsAzureProviderState extends State<SettingsAzureProvider> {
                   autocorrect: false,
                   enableSuggestions: false,
                   maxLines: 1,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     border: OutlineInputBorder(),
-                    labelText: 'Client Secret',
+                    labelText: t(context, 'Client Secret'),
                   ),
                   validator: _validator,
                 ),
@@ -224,7 +225,7 @@ class _SettingsAzureProviderState extends State<SettingsAzureProvider> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const Text('Admin'),
+                    Text(t(context, 'Admin')),
                     Switch(
                       activeThumbColor: Theme.of(context).colorScheme.primary,
                       onChanged: (val) {

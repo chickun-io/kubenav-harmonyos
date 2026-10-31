@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:kubenav/models/kubernetes/schema.models.swagger.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/utils/resources.dart';
 import 'package:kubenav/widgets/resources/helpers/details_item.dart';
 
@@ -25,29 +26,32 @@ class DetailsItemMetadata extends StatelessWidget {
         .toList();
 
     return DetailsItem(
-      title: 'Metadata',
+      title: t(context, 'Metadata'),
       details: [
-        DetailsItemModel(name: 'Kind', values: kind),
-        DetailsItemModel(name: 'Name', values: metadata?.name),
-        DetailsItemModel(name: 'Namespace', values: metadata?.namespace),
+        DetailsItemModel(name: t(context, 'Kind'), values: kind),
+        DetailsItemModel(name: t(context, 'Name'), values: metadata?.name),
         DetailsItemModel(
-          name: 'Age',
+          name: t(context, 'Namespace'),
+          values: metadata?.namespace,
+        ),
+        DetailsItemModel(
+          name: t(context, 'Age'),
           values: getAge(metadata?.creationTimestamp),
         ),
         DetailsItemModel(
-          name: 'Labels',
+          name: t(context, 'Labels'),
           values: metadata?.labels?.entries
               .map((e) => '${e.key}: ${e.value}')
               .toList(),
         ),
         DetailsItemModel(
-          name: 'Annotations',
+          name: t(context, 'Annotations'),
           values: metadata?.annotations?.entries
               .map((e) => '${e.key}: ${e.value}')
               .toList(),
         ),
         DetailsItemModel(
-          name: 'Owner References',
+          name: t(context, 'Owner References'),
           values: ownerReferences,
           onTap: (int index) {
             goToReference(

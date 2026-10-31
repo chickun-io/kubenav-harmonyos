@@ -9,6 +9,7 @@ import 'package:kubenav/models/plugins/time.dart';
 import 'package:kubenav/repositories/app_repository.dart';
 import 'package:kubenav/utils/constants.dart';
 import 'package:kubenav/utils/helpers.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/utils/logger.dart';
 import 'package:kubenav/utils/showmodal.dart';
 import 'package:kubenav/widgets/shared/app_list_item.dart';
@@ -154,7 +155,7 @@ class _AppPrometheusChartsWidgetState extends State<AppPrometheusChartsWidget> {
               Expanded(
                 flex: 1,
                 child: Text(
-                  'Prometheus Metrics',
+                  t(context, 'Prometheus Metrics'),
                   style: primaryTextStyle(context, size: 18),
                 ),
               ),
@@ -181,7 +182,7 @@ class _AppPrometheusChartsWidgetState extends State<AppPrometheusChartsWidget> {
                     ),
                     const SizedBox(width: Constants.spacingExtraSmall),
                     Text(
-                      'Time Range',
+                      t(context, 'Time Range'),
                       style: secondaryTextStyle(
                         context,
                         color: Theme.of(context).colorScheme.primary,

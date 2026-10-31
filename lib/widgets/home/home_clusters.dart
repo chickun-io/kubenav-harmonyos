@@ -6,6 +6,7 @@ import 'package:kubenav/repositories/app_repository.dart';
 import 'package:kubenav/repositories/clusters_repository.dart';
 import 'package:kubenav/utils/constants.dart';
 import 'package:kubenav/utils/helpers.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/widgets/shared/app_list_item.dart';
 
 /// The [HomeClusters] can be used to display a list of clusters when the app
@@ -47,7 +48,10 @@ class _HomeClustersState extends State<HomeClusters> {
     );
 
     return Scaffold(
-      appBar: AppBar(centerTitle: true, title: const Text('Select Cluster')),
+      appBar: AppBar(
+        centerTitle: true,
+        title: Text(t(context, 'Select Cluster')),
+      ),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(Constants.spacingMiddle),

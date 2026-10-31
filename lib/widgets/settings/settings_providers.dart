@@ -7,6 +7,7 @@ import 'package:kubenav/models/cluster_provider.dart';
 import 'package:kubenav/repositories/clusters_repository.dart';
 import 'package:kubenav/utils/constants.dart';
 import 'package:kubenav/utils/helpers.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/utils/showmodal.dart';
 import 'package:kubenav/utils/themes.dart';
 import 'package:kubenav/widgets/settings/providers/settings_provider_actions.dart';
@@ -47,7 +48,7 @@ class SettingsProviders extends StatelessWidget {
       slidableActions: [
         AppListItemSlidableAction(
           icon: Icons.edit,
-          label: 'Edit',
+          label: t(context, 'Edit'),
           backgroundColor: Theme.of(context).colorScheme.primary,
           foregroundColor: Theme.of(context).colorScheme.onPrimary,
           onTap: (BuildContext context) {
@@ -56,7 +57,7 @@ class SettingsProviders extends StatelessWidget {
         ),
         AppListItemSlidableAction(
           icon: Icons.delete,
-          label: 'Delete',
+          label: t(context, 'Delete'),
           backgroundColor: Theme.of(context).colorScheme.error,
           foregroundColor: Theme.of(context).colorScheme.onError,
           onTap: (BuildContext context) async {
@@ -65,15 +66,17 @@ class SettingsProviders extends StatelessWidget {
               if (context.mounted) {
                 showSnackbar(
                   context,
-                  'Provider Deleted',
-                  'The provider ${provider.name} was deleted',
+                  t(context, 'Provider Deleted'),
+                  tFmt(context, 'The provider {0} was deleted', [
+                    provider.name,
+                  ]),
                 );
               }
             } catch (err) {
               if (context.mounted) {
                 showSnackbar(
                   context,
-                  'Failed to Delete Provider',
+                  t(context, 'Failed to Delete Provider'),
                   err.toString(),
                 );
               }
@@ -144,7 +147,7 @@ class SettingsProviders extends StatelessWidget {
     );
 
     return Scaffold(
-      appBar: AppBar(centerTitle: true, title: const Text('Providers')),
+      appBar: AppBar(centerTitle: true, title: Text(t(context, 'Providers'))),
       bottomNavigationBar: const AppBottomNavigationBarWidget(),
       floatingActionButton: const AppFloatingActionButtonsWidget(),
       body: SafeArea(

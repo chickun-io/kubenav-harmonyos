@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:kubenav/models/plugins/time.dart';
 import 'package:kubenav/utils/constants.dart';
 import 'package:kubenav/utils/helpers.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/widgets/shared/app_bottom_sheet_widget.dart';
 import 'package:kubenav/widgets/shared/app_list_item.dart';
 
@@ -90,13 +91,13 @@ class _AppTimeRangeSelectorWidgetState
   @override
   Widget build(BuildContext context) {
     return AppBottomSheetWidget(
-      title: 'Time Range',
-      subtitle: 'Select the time range for you data',
+      title: t(context, 'Time Range'),
+      subtitle: t(context, 'Select the time range for you data'),
       icon: Icons.schedule,
       closePressed: () {
         Navigator.pop(context);
       },
-      actionText: 'Select Time Range',
+      actionText: t(context, 'Select Time Range'),
       actionPressed: () {
         widget.selectTime(_getTime());
         Navigator.pop(context);

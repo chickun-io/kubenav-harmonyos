@@ -9,6 +9,7 @@ import 'package:kubenav/repositories/clusters_repository.dart';
 import 'package:kubenav/services/providers/google_service.dart';
 import 'package:kubenav/utils/constants.dart';
 import 'package:kubenav/utils/helpers.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/utils/logger.dart';
 import 'package:kubenav/utils/showmodal.dart';
 import 'package:kubenav/utils/themes.dart';
@@ -131,7 +132,11 @@ class _SettingsAddClusterGoogleState extends State<SettingsAddClusterGoogle> {
         _isLoadingAddCluster = false;
       });
       if (mounted) {
-        showSnackbar(context, 'Failed to Add Clusters', err.toString());
+        showSnackbar(
+          context,
+          t(context, 'Failed to Add Clusters'),
+          err.toString(),
+        );
       }
     }
   }
@@ -149,7 +154,7 @@ class _SettingsAddClusterGoogleState extends State<SettingsAddClusterGoogle> {
 
     if (_error != '') {
       return AppErrorWidget(
-        message: 'Failed to Load Clusters',
+        message: t(context, 'Failed to Load Clusters'),
         details: _error,
         icon: ClusterProviderType.google.icon(),
       );
@@ -228,7 +233,7 @@ class _SettingsAddClusterGoogleState extends State<SettingsAddClusterGoogle> {
       closePressed: () {
         Navigator.pop(context);
       },
-      actionText: 'Add Clusters',
+      actionText: t(context, 'Add Clusters'),
       actionPressed: () {
         _addClusters();
       },

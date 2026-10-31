@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import 'package:kubenav/models/kubernetes/schema.models.swagger.dart';
 import 'package:kubenav/utils/constants.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/utils/resources.dart';
 import 'package:kubenav/widgets/resources/helpers/details_item.dart';
 import 'package:kubenav/widgets/resources/helpers/details_item_metadata.dart';
@@ -17,8 +18,7 @@ final resourceIngressClass = Resource(
   category: ResourceCategories.discoveryandloadbalancing,
   plural: 'IngressClasses',
   singular: 'IngressClass',
-  description:
-      'Ingresses can be implemented by different controllers, often with different configuration. Each Ingress should specify a class, a reference to an IngressClass resource.',
+  description: 'Ingresses can be implemented by different controllers, often with different configuration. Each Ingress should specify a class, a reference to an IngressClass resource.',
   path: '/apis/networking.k8s.io/v1',
   resource: 'ingressclasses',
   scope: ResourceScope.cluster,
@@ -58,31 +58,38 @@ final resourceIngressClass = Resource(
   toJson: (dynamic item) {
     return json.decode(json.encode(item));
   },
-  listItemBuilder:
-      (BuildContext context, Resource resource, ResourceItem listItem) {
-        final item = listItem.item as IoK8sApiNetworkingV1IngressClass;
-        final status = listItem.status;
+  listItemBuilder: (BuildContext context, Resource resource, ResourceItem listItem) {
+    final item = listItem.item as IoK8sApiNetworkingV1IngressClass;
+    final status = listItem.status;
 
-        return ResourcesListItem(
-          name: item.metadata?.name ?? '',
-          namespace: item.metadata?.namespace,
-          resource: resource,
-          item: item,
-          status: status,
-          details: [
-            'Controller: ${item.spec?.controller ?? '-'}',
-            'Parameters: ${item.spec?.parameters != null ? '${item.spec?.parameters?.namespace != null ? '${item.spec?.parameters?.namespace}/' : ''}${item.spec?.parameters?.name}' : '-'}',
-            'Age: ${getAge(item.metadata?.creationTimestamp)}',
-          ],
-        );
-      },
-  previewItemBuilder: (dynamic listItem) {
+    return ResourcesListItem(
+      name: item.metadata?.name ?? '',
+      namespace: item.metadata?.namespace,
+      resource: resource,
+      item: item,
+      status: status,
+      details: [
+        tFmt(context, 'Controller: {0}', [item.spec?.controller ?? '-']),
+        tFmt(context, 'Parameters: {0}', [
+          item.spec?.parameters != null
+              ? '${item.spec?.parameters?.namespace != null ? '${item.spec?.parameters?.namespace}/' : ''}${item.spec?.parameters?.name}'
+              : '-',
+        ]),
+        tFmt(context, 'Age: {0}', [getAge(item.metadata?.creationTimestamp)]),
+      ],
+    );
+  },
+  previewItemBuilder: (BuildContext context, dynamic listItem) {
     final item = listItem as IoK8sApiNetworkingV1IngressClass;
 
     return [
-      'Controller: ${item.spec?.controller ?? '-'}',
-      'Parameters: ${item.spec?.parameters != null ? '${item.spec?.parameters?.namespace != null ? '${item.spec?.parameters?.namespace}/' : ''}${item.spec?.parameters?.name}' : '-'}',
-      'Age: ${getAge(item.metadata?.creationTimestamp)}',
+      tFmt(context, 'Controller: {0}', [item.spec?.controller ?? '-']),
+      tFmt(context, 'Parameters: {0}', [
+        item.spec?.parameters != null
+            ? '${item.spec?.parameters?.namespace != null ? '${item.spec?.parameters?.namespace}/' : ''}${item.spec?.parameters?.name}'
+            : '-',
+      ]),
+      tFmt(context, 'Age: {0}', [getAge(item.metadata?.creationTimestamp)]),
     ];
   },
   detailsItemBuilder: (BuildContext context, Resource resource, dynamic detailsItem) {
@@ -93,11 +100,14 @@ final resourceIngressClass = Resource(
         DetailsItemMetadata(kind: item.kind, metadata: item.metadata),
         const SizedBox(height: Constants.spacingMiddle),
         DetailsItem(
-          title: 'Configuration',
+          title: t(context, 'Configuration'),
           details: [
-            DetailsItemModel(name: 'Controller', values: item.spec?.controller),
             DetailsItemModel(
-              name: 'Parameters',
+              name: t(context, 'Controller'),
+              values: item.spec?.controller,
+            ),
+            DetailsItemModel(
+              name: t(context, 'Parameters'),
               values: item.spec?.parameters == null
                   ? null
                   : '${item.spec?.parameters?.kind} (${item.spec?.parameters?.namespace != null ? '${item.spec?.parameters?.namespace}/' : ''}${item.spec?.parameters?.name})',

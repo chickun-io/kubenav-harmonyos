@@ -7,6 +7,7 @@ import 'package:kubenav/repositories/app_repository.dart';
 import 'package:kubenav/repositories/clusters_repository.dart';
 import 'package:kubenav/services/kubernetes_service.dart';
 import 'package:kubenav/utils/constants.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/utils/logger.dart';
 import 'package:kubenav/utils/showmodal.dart';
 import 'package:kubenav/widgets/resources/resources/resources.dart';
@@ -66,8 +67,11 @@ class _NodeCordonState extends State<NodeCordon> {
       if (mounted) {
         showSnackbar(
           context,
-          '${widget.resource.singular} Cordoned',
-          'The ${widget.resource.singular} ${widget.name} was cordoned',
+          tFmt(context, '{0} Cordoned', [t(context, widget.resource.singular)]),
+          tFmt(context, 'The {0} {1} was cordoned', [
+            t(context, widget.resource.singular),
+            widget.name,
+          ]),
         );
         Navigator.pop(context);
       }
@@ -83,7 +87,9 @@ class _NodeCordonState extends State<NodeCordon> {
       if (mounted) {
         showSnackbar(
           context,
-          'Failed to Cordon ${widget.resource.singular}',
+          tFmt(context, 'Failed to Cordon {0}', [
+            t(context, widget.resource.singular),
+          ]),
           err.toString(),
         );
       }
@@ -93,13 +99,13 @@ class _NodeCordonState extends State<NodeCordon> {
   @override
   Widget build(BuildContext context) {
     return AppBottomSheetWidget(
-      title: 'Cordon',
+      title: t(context, 'Cordon'),
       subtitle: widget.name,
       icon: Icons.update_disabled,
       closePressed: () {
         Navigator.pop(context);
       },
-      actionText: 'Cordon',
+      actionText: t(context, 'Cordon'),
       actionPressed: () {
         _cordon();
       },
@@ -113,7 +119,10 @@ class _NodeCordonState extends State<NodeCordon> {
             right: Constants.spacingMiddle,
           ),
           child: Text(
-            'Do you really want to cordon the ${widget.resource.singular} ${widget.name}?',
+            tFmt(context, 'Do you really want to cordon the {0} {1}?', [
+              t(context, widget.resource.singular),
+              widget.name,
+            ]),
           ),
         ),
       ),

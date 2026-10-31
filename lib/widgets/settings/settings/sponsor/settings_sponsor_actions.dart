@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 
 import 'package:kubenav/repositories/app_repository.dart';
 import 'package:kubenav/repositories/sponsor_repository.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/utils/showmodal.dart';
 import 'package:kubenav/utils/themes.dart';
 import 'package:kubenav/widgets/settings/settings/sponsor/settings_sponsor_subscribe.dart';
@@ -43,7 +44,7 @@ class SettingsSponsorActions extends StatelessWidget {
                 ),
               ),
               AppActionsWidgetAction(
-                title: 'Not Now',
+                title: t(context, 'Not Now'),
                 color: Theme.of(context).extension<CustomColors>()!.error,
                 onTap: () {
                   // For testing we can set the reminder to 1 minute, by default

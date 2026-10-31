@@ -12,6 +12,7 @@ import 'package:kubenav/models/kubernetes_extensions/kubeconfig.dart';
 import 'package:kubenav/repositories/clusters_repository.dart';
 import 'package:kubenav/utils/constants.dart';
 import 'package:kubenav/utils/helpers.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/utils/logger.dart';
 import 'package:kubenav/utils/showmodal.dart';
 import 'package:kubenav/widgets/shared/app_bottom_sheet_widget.dart';
@@ -38,7 +39,7 @@ class _SettingsAddClusterKubeconfigState
   /// form will fail and the cluster will not be added to our list of clusters.
   String? _validator(String? value) {
     if (value == null || value.isEmpty) {
-      return 'This field is required';
+      return t(context, 'This field is required');
     }
 
     return null;
@@ -100,7 +101,11 @@ class _SettingsAddClusterKubeconfigState
           _isLoadingAddCluster = false;
         });
         if (mounted) {
-          showSnackbar(context, 'Clusters Added', '$count clusters were added');
+          showSnackbar(
+            context,
+            t(context, 'Clusters Added'),
+            tFmt(context, '{0} clusters were added', [count]),
+          );
           Navigator.pop(context);
         }
       } catch (err) {
@@ -108,7 +113,11 @@ class _SettingsAddClusterKubeconfigState
           _isLoadingAddCluster = false;
         });
         if (mounted) {
-          showSnackbar(context, 'Failed to Add Clusters', err.toString());
+          showSnackbar(
+            context,
+            t(context, 'Failed to Add Clusters'),
+            err.toString(),
+          );
         }
       }
     }
@@ -129,7 +138,7 @@ class _SettingsAddClusterKubeconfigState
       closePressed: () {
         Navigator.pop(context);
       },
-      actionText: 'Add Clusters',
+      actionText: t(context, 'Add Clusters'),
       actionPressed: () {
         _addCluster();
       },
@@ -161,7 +170,7 @@ class _SettingsAddClusterKubeconfigState
                     _selectKubeconfigFile();
                   },
                   child: Text(
-                    'Select Kubeconfig',
+                    t(context, 'Select Kubeconfig'),
                     style: primaryTextStyle(
                       context,
                       color: Theme.of(context).colorScheme.onPrimary,
@@ -174,7 +183,7 @@ class _SettingsAddClusterKubeconfigState
                   children: [
                     const Expanded(child: Divider(height: 0, thickness: 1.0)),
                     Text(
-                      'or paste content',
+                      t(context, 'or paste content'),
                       style: secondaryTextStyle(context),
                     ),
                     const Expanded(child: Divider(height: 0, thickness: 1.0)),

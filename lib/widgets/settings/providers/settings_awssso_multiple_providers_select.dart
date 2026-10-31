@@ -8,6 +8,7 @@ import 'package:kubenav/repositories/clusters_repository.dart';
 import 'package:kubenav/services/providers/aws_service.dart';
 import 'package:kubenav/utils/constants.dart';
 import 'package:kubenav/utils/helpers.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/utils/showmodal.dart';
 import 'package:kubenav/utils/themes.dart';
 import 'package:kubenav/widgets/settings/clusters/settings_reuse_provider_config_actions.dart';
@@ -131,7 +132,7 @@ class _SettingsAWSSSOMultipleProvidersSelectState
       if (mounted) {
         showSnackbar(
           context,
-          'Failed to Save Provider Configuration',
+          t(context, 'Failed to Save Provider Configuration'),
           err.toString(),
         );
       }
@@ -147,7 +148,7 @@ class _SettingsAWSSSOMultipleProvidersSelectState
       closePressed: () {
         Navigator.pop(context);
       },
-      actionText: 'Add Providers',
+      actionText: t(context, 'Add Providers'),
       actionPressed: () {
         _addProviders();
       },
@@ -196,9 +197,9 @@ class _SettingsAWSSSOMultipleProvidersSelectState
                         decoration: BoxDecoration(
                           boxShadow: [
                             BoxShadow(
-                              color: Theme.of(
-                                context,
-                              ).extension<CustomColors>()!.shadow,
+                              color: Theme.of(context)
+                                  .extension<CustomColors>()!
+                                  .shadow,
                               blurRadius: Constants.sizeBorderBlurRadius,
                               spreadRadius: Constants.sizeBorderSpreadRadius,
                               offset: const Offset(0.0, 0.0),

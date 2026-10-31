@@ -16,6 +16,7 @@ import 'package:kubenav/repositories/portforwarding_repository.dart';
 import 'package:kubenav/services/kubernetes_service.dart';
 import 'package:kubenav/utils/constants.dart';
 import 'package:kubenav/utils/helpers.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/utils/navigate.dart';
 import 'package:kubenav/utils/resources.dart';
 import 'package:kubenav/utils/showmodal.dart';
@@ -38,15 +39,13 @@ final resourcePod = Resource(
   category: ResourceCategories.workload,
   plural: 'Pods',
   singular: 'Pod',
-  description:
-      'Pods are the smallest deployable units of computing that you can create and manage in Kubernetes.',
+  description: 'Pods are the smallest deployable units of computing that you can create and manage in Kubernetes.',
   path: '/api/v1',
   resource: 'pods',
   scope: ResourceScope.namespaced,
   additionalPrinterColumns: [],
   icon: 'pods',
-  template:
-      '{"apiVersion":"v1","kind":"Pod","metadata":{"name":"","namespace":""},"spec":{"containers":[{"name":"nginx","image":"nginx:1.14.2"}]}}',
+  template: '{"apiVersion":"v1","kind":"Pod","metadata":{"name":"","namespace":""},"spec":{"containers":[{"name":"nginx","image":"nginx:1.14.2"}]}}',
   decodeListData: (ResourcesListData data) {
     final parsed = json.decode(data.list);
     final items = IoK8sApiCoreV1PodList.fromJson(parsed).items;
@@ -99,26 +98,28 @@ final resourcePod = Resource(
           item: item,
           status: podDetails.status,
           details: [
-            'Namespace: ${item.metadata?.namespace ?? '-'}',
-            'Ready: ${podDetails.ready}',
-            'Status: ${podDetails.statusText}',
-            'Restarts: ${podDetails.restarts}',
-            'Age: ${getAge(item.metadata?.creationTimestamp)}',
-            'CPU: ${resourceDetails?.cpu ?? '-'}',
-            'Memory: ${resourceDetails?.memory ?? '-'}',
+            tFmt(context, 'Namespace: {0}', [item.metadata?.namespace ?? '-']),
+            tFmt(context, 'Ready: {0}', [podDetails.ready]),
+            tFmt(context, 'Status: {0}', [t(context, podDetails.statusText)]),
+            tFmt(context, 'Restarts: {0}', [podDetails.restarts]),
+            tFmt(context, 'Age: {0}', [
+              getAge(item.metadata?.creationTimestamp),
+            ]),
+            tFmt(context, 'CPU: {0}', [resourceDetails?.cpu ?? '-']),
+            tFmt(context, 'Memory: {0}', [resourceDetails?.memory ?? '-']),
           ],
         );
       },
-  previewItemBuilder: (dynamic listItem) {
+  previewItemBuilder: (BuildContext context, dynamic listItem) {
     final item = listItem as IoK8sApiCoreV1Pod;
     final podDetails = _getPodDetails(item);
 
     return [
-      'Namespace: ${item.metadata?.namespace ?? '-'}',
-      'Ready: ${podDetails.ready}',
-      'Status: ${podDetails.statusText}',
-      'Restarts: ${podDetails.restarts}',
-      'Age: ${getAge(item.metadata?.creationTimestamp)}',
+      tFmt(context, 'Namespace: {0}', [item.metadata?.namespace ?? '-']),
+      tFmt(context, 'Ready: {0}', [podDetails.ready]),
+      tFmt(context, 'Status: {0}', [t(context, podDetails.statusText)]),
+      tFmt(context, 'Restarts: {0}', [podDetails.restarts]),
+      tFmt(context, 'Age: {0}', [getAge(item.metadata?.creationTimestamp)]),
     ];
   },
   detailsItemBuilder:
@@ -190,7 +191,11 @@ class PodItem extends StatelessWidget {
     PortForwardingRepository portForwardingRepository =
         Provider.of<PortForwardingRepository>(context, listen: false);
 
-    showSnackbar(context, 'Port Forwarding', 'Create Session ...');
+    showSnackbar(
+      context,
+      t(context, 'Port Forwarding'),
+      t(context, 'Create Session ...'),
+    );
 
     try {
       final cluster = await clustersRepository.getClusterWithCredentials(
@@ -210,13 +215,17 @@ class PodItem extends StatelessWidget {
       );
 
       if (context.mounted) {
-        showSnackbar(context, 'Port Forwarding', 'Session Created');
+        showSnackbar(
+          context,
+          t(context, 'Port Forwarding'),
+          t(context, 'Session Created'),
+        );
       }
     } catch (err) {
       if (context.mounted) {
         showSnackbar(
           context,
-          'Failed to Create Port Forwarding Session',
+          t(context, 'Failed to Create Port Forwarding Session'),
           err.toString(),
         );
       }
@@ -247,11 +256,14 @@ class PodItem extends StatelessWidget {
         ),
         const SizedBox(height: Constants.spacingMiddle),
         DetailsItem(
-          title: 'Configuration',
+          title: t(context, 'Configuration'),
           details: [
-            DetailsItemModel(name: 'Priority', values: pod.spec?.priority),
             DetailsItemModel(
-              name: 'Node',
+              name: t(context, 'Priority'),
+              values: pod.spec?.priority,
+            ),
+            DetailsItemModel(
+              name: t(context, 'Node'),
               values: pod.spec?.nodeName,
               onTap: (index) {
                 navigate(
@@ -265,19 +277,19 @@ class PodItem extends StatelessWidget {
               },
             ),
             DetailsItemModel(
-              name: 'Service Account',
+              name: t(context, 'Service Account'),
               values: pod.spec?.serviceAccountName,
             ),
             DetailsItemModel(
-              name: 'Restart Policy',
+              name: t(context, 'Restart Policy'),
               values: pod.spec?.restartPolicy?.value,
             ),
             DetailsItemModel(
-              name: 'Termination Grace Period Seconds',
+              name: t(context, 'Termination Grace Period Seconds'),
               values: pod.spec?.terminationGracePeriodSeconds,
             ),
             DetailsItemModel(
-              name: 'Ports',
+              name: t(context, 'Ports'),
               values: ports
                   ?.map(
                     (port) =>
@@ -298,14 +310,32 @@ class PodItem extends StatelessWidget {
         ),
         const SizedBox(height: Constants.spacingMiddle),
         DetailsItem(
-          title: 'Status',
+          title: t(context, 'Status'),
           details: [
-            DetailsItemModel(name: 'Ready', values: podDetails.ready),
-            DetailsItemModel(name: 'Restarts', values: podDetails.restarts),
-            DetailsItemModel(name: 'Status', values: podDetails.statusText),
-            DetailsItemModel(name: 'QoS', values: pod.status?.qosClass?.value),
-            DetailsItemModel(name: 'Pod IP', values: pod.status?.podIP),
-            DetailsItemModel(name: 'Host IP', values: pod.status?.hostIP),
+            DetailsItemModel(
+              name: t(context, 'Ready'),
+              values: podDetails.ready,
+            ),
+            DetailsItemModel(
+              name: t(context, 'Restarts'),
+              values: podDetails.restarts,
+            ),
+            DetailsItemModel(
+              name: t(context, 'Status'),
+              values: t(context, podDetails.statusText),
+            ),
+            DetailsItemModel(
+              name: t(context, 'QoS'),
+              values: pod.status?.qosClass?.value,
+            ),
+            DetailsItemModel(
+              name: t(context, 'Pod IP'),
+              values: pod.status?.podIP,
+            ),
+            DetailsItemModel(
+              name: t(context, 'Host IP'),
+              values: pod.status?.hostIP,
+            ),
           ],
         ),
         const SizedBox(height: Constants.spacingMiddle),
@@ -349,70 +379,61 @@ class PodItem extends StatelessWidget {
           toJson: resource.toJson,
           defaultCharts: [
             Chart(
-              title: 'CPU Usage',
+              title: t(context, 'CPU Usage'),
               unit: 'm',
               queries: [
                 Query(
-                  query:
-                      '(sum(rate(container_cpu_usage_seconds_total{namespace="{{with .metadata}}{{with .namespace}}{{.}}{{end}}{{end}}", pod="{{with .metadata}}{{with .name}}{{.}}{{end}}{{end}}", container!="", container!="POD"}[2m])) by (container)) * 1000',
-                  label: 'Usage {{ .container }}',
+                  query: '(sum(rate(container_cpu_usage_seconds_total{namespace="{{with .metadata}}{{with .namespace}}{{.}}{{end}}{{end}}", pod="{{with .metadata}}{{with .name}}{{.}}{{end}}{{end}}", container!="", container!="POD"}[2m])) by (container)) * 1000',
+                  label: t(context, 'Usage {{ .container }}'),
                 ),
                 Query(
-                  query:
-                      '(sum(kube_pod_container_resource_requests{namespace="{{with .metadata}}{{with .namespace}}{{.}}{{end}}{{end}}", pod="{{with .metadata}}{{with .name}}{{.}}{{end}}{{end}}", resource="cpu", container!="", container!="POD"}) by (container)) * 1000',
-                  label: 'Requests {{ .container }}',
+                  query: '(sum(kube_pod_container_resource_requests{namespace="{{with .metadata}}{{with .namespace}}{{.}}{{end}}{{end}}", pod="{{with .metadata}}{{with .name}}{{.}}{{end}}{{end}}", resource="cpu", container!="", container!="POD"}) by (container)) * 1000',
+                  label: t(context, 'Requests {{ .container }}'),
                 ),
                 Query(
-                  query:
-                      '(sum(kube_pod_container_resource_limits{namespace="{{with .metadata}}{{with .namespace}}{{.}}{{end}}{{end}}", pod="{{with .metadata}}{{with .name}}{{.}}{{end}}{{end}}", resource="cpu", container!="", container!="POD"}) by (container)) * 1000',
-                  label: 'Limits {{ .container }}',
+                  query: '(sum(kube_pod_container_resource_limits{namespace="{{with .metadata}}{{with .namespace}}{{.}}{{end}}{{end}}", pod="{{with .metadata}}{{with .name}}{{.}}{{end}}{{end}}", resource="cpu", container!="", container!="POD"}) by (container)) * 1000',
+                  label: t(context, 'Limits {{ .container }}'),
                 ),
               ],
             ),
             Chart(
-              title: 'Memory Usage',
+              title: t(context, 'Memory Usage'),
               unit: 'MiB',
               queries: [
                 Query(
-                  query:
-                      '(sum(container_memory_working_set_bytes{namespace="{{with .metadata}}{{with .namespace}}{{.}}{{end}}{{end}}", pod="{{with .metadata}}{{with .name}}{{.}}{{end}}{{end}}", container!="", container!="POD"}) by (container)) / 1024 / 1024',
-                  label: 'Usage {{ .container }}',
+                  query: '(sum(container_memory_working_set_bytes{namespace="{{with .metadata}}{{with .namespace}}{{.}}{{end}}{{end}}", pod="{{with .metadata}}{{with .name}}{{.}}{{end}}{{end}}", container!="", container!="POD"}) by (container)) / 1024 / 1024',
+                  label: t(context, 'Usage {{ .container }}'),
                 ),
                 Query(
-                  query:
-                      '(sum(kube_pod_container_resource_requests{namespace="{{with .metadata}}{{with .namespace}}{{.}}{{end}}{{end}}", pod="{{with .metadata}}{{with .name}}{{.}}{{end}}{{end}}", resource="memory", container!="", container!="POD"}) by (container)) / 1024 / 1024',
-                  label: 'Requests {{ .container }}',
+                  query: '(sum(kube_pod_container_resource_requests{namespace="{{with .metadata}}{{with .namespace}}{{.}}{{end}}{{end}}", pod="{{with .metadata}}{{with .name}}{{.}}{{end}}{{end}}", resource="memory", container!="", container!="POD"}) by (container)) / 1024 / 1024',
+                  label: t(context, 'Requests {{ .container }}'),
                 ),
                 Query(
-                  query:
-                      '(sum(kube_pod_container_resource_limits{namespace="{{with .metadata}}{{with .namespace}}{{.}}{{end}}{{end}}", pod="{{with .metadata}}{{with .name}}{{.}}{{end}}{{end}}", resource="memory", container!="", container!="POD"}) by (container)) / 1024 / 1024',
-                  label: 'Limits {{ .container }}',
+                  query: '(sum(kube_pod_container_resource_limits{namespace="{{with .metadata}}{{with .namespace}}{{.}}{{end}}{{end}}", pod="{{with .metadata}}{{with .name}}{{.}}{{end}}{{end}}", resource="memory", container!="", container!="POD"}) by (container)) / 1024 / 1024',
+                  label: t(context, 'Limits {{ .container }}'),
                 ),
               ],
             ),
             Chart(
-              title: 'Network I/O',
+              title: t(context, 'Network I/O'),
               unit: 'MiB',
               queries: [
                 Query(
-                  query:
-                      'sum(rate(container_network_receive_bytes_total{namespace="{{with .metadata}}{{with .namespace}}{{.}}{{end}}{{end}}", pod="{{with .metadata}}{{with .name}}{{.}}{{end}}{{end}}"}[2m])) by (pod) / 1024 / 1024',
-                  label: 'Received',
+                  query: 'sum(rate(container_network_receive_bytes_total{namespace="{{with .metadata}}{{with .namespace}}{{.}}{{end}}{{end}}", pod="{{with .metadata}}{{with .name}}{{.}}{{end}}{{end}}"}[2m])) by (pod) / 1024 / 1024',
+                  label: t(context, 'Received'),
                 ),
                 Query(
-                  query:
-                      '-sum(rate(container_network_transmit_bytes_total{namespace="{{with .metadata}}{{with .namespace}}{{.}}{{end}}{{end}}", pod="{{with .metadata}}{{with .name}}{{.}}{{end}}{{end}}"}[2m])) by (pod) / 1024 / 1024',
-                  label: 'Transmitted',
+                  query: '-sum(rate(container_network_transmit_bytes_total{namespace="{{with .metadata}}{{with .namespace}}{{.}}{{end}}{{end}}", pod="{{with .metadata}}{{with .name}}{{.}}{{end}}{{end}}"}[2m])) by (pod) / 1024 / 1024',
+                  label: t(context, 'Transmitted'),
                 ),
               ],
             ),
             Chart(
-              title: 'Restarts',
+              title: t(context, 'Restarts'),
               unit: '',
               queries: [
                 Query(
-                  query:
-                      'sum(kube_pod_container_status_restarts_total{namespace="{{with .metadata}}{{with .namespace}}{{.}}{{end}}{{end}}", pod="{{with .metadata}}{{with .name}}{{.}}{{end}}{{end}}", container!="", container!="POD"}) by (container)',
+                  query: 'sum(kube_pod_container_status_restarts_total{namespace="{{with .metadata}}{{with .namespace}}{{.}}{{end}}{{end}}", pod="{{with .metadata}}{{with .name}}{{.}}{{end}}{{end}}", container!="", container!="POD"}) by (container)',
                   label: '{{ .container }}',
                 ),
               ],
@@ -446,6 +467,7 @@ class DetailsContainers extends StatelessWidget {
   final List<ApisMetricsV1beta1PodMetricsItemContainer> containerMetrics;
 
   List<String> getSubtitle(
+    BuildContext context,
     String containerType,
     IoK8sApiCoreV1Container container,
   ) {
@@ -461,7 +483,9 @@ class DetailsContainers extends StatelessWidget {
     }
 
     if (status.length != 1) {
-      return ['Type: $containerType'];
+      return [
+        tFmt(context, 'Type: {0}', [containerType]),
+      ];
     }
 
     List<ApisMetricsV1beta1PodMetricsItemContainer> filteredContainerMetrics =
@@ -473,25 +497,67 @@ class DetailsContainers extends StatelessWidget {
     }
 
     return [
-      'Type: $containerType ',
-      'Ready: ${status[0].ready ? 'True' : 'False'}',
-      'Restarts: ${status[0].restartCount}',
-      'State: ${_getContainerState(status[0].state)}',
-      'CPU: ${filteredContainerMetrics.isNotEmpty && filteredContainerMetrics[0].usage?.cpu != null ? formatCpuMetric(cpuMetricsStringToDouble(filteredContainerMetrics[0].usage!.cpu!)) : '-'} / ${container.resources?.requests != null && container.resources!.requests!.containsKey('cpu') ? container.resources!.requests!['cpu'] : '-'} / ${container.resources?.limits != null && container.resources!.limits!.containsKey('cpu') ? container.resources!.limits!['cpu'] : '-'}',
-      'Memory: ${filteredContainerMetrics.isNotEmpty && filteredContainerMetrics[0].usage?.memory != null ? formatMemoryMetric(memoryMetricsStringToDouble(filteredContainerMetrics[0].usage!.memory!)) : '-'} / ${container.resources?.requests != null && container.resources!.requests!.containsKey('memory') ? container.resources!.requests!['memory'] : '-'} / ${container.resources?.limits != null && container.resources!.limits!.containsKey('memory') ? container.resources!.limits!['memory'] : '-'}',
+      tFmt(context, 'Type: {0} ', [containerType]),
+      tFmt(context, 'Ready: {0}', [
+        status[0].ready ? t(context, 'True') : t(context, 'False'),
+      ]),
+      tFmt(context, 'Restarts: {0}', [status[0].restartCount]),
+      tFmt(context, 'State: {0}', [
+        _getContainerState(context, status[0].state),
+      ]),
+      tFmt(context, 'CPU: {0} / {1} / {2}', [
+        filteredContainerMetrics.isNotEmpty &&
+                filteredContainerMetrics[0].usage?.cpu != null
+            ? formatCpuMetric(
+                cpuMetricsStringToDouble(
+                  filteredContainerMetrics[0].usage!.cpu!,
+                ),
+              )
+            : '-',
+        container.resources?.requests != null &&
+                container.resources!.requests!.containsKey('cpu')
+            ? container.resources!.requests!['cpu']
+            : '-',
+        container.resources?.limits != null &&
+                container.resources!.limits!.containsKey('cpu')
+            ? container.resources!.limits!['cpu']
+            : '-',
+      ]),
+      tFmt(context, 'Memory: {0} / {1} / {2}', [
+        filteredContainerMetrics.isNotEmpty &&
+                filteredContainerMetrics[0].usage?.memory != null
+            ? formatMemoryMetric(
+                memoryMetricsStringToDouble(
+                  filteredContainerMetrics[0].usage!.memory!,
+                ),
+              )
+            : '-',
+        container.resources?.requests != null &&
+                container.resources!.requests!.containsKey('memory')
+            ? container.resources!.requests!['memory']
+            : '-',
+        container.resources?.limits != null &&
+                container.resources!.limits!.containsKey('memory')
+            ? container.resources!.limits!['memory']
+            : '-',
+      ]),
     ];
   }
 
   @override
   Widget build(BuildContext context) {
     return AppHorizontalListCardsWidget(
-      title: 'Containers',
+      title: t(context, 'Containers'),
       cards: [
         ...List.generate(
           initContainers.length,
           (index) => AppHorizontalListCardsModel(
             title: initContainers[index].name,
-            subtitle: getSubtitle('Init Container', initContainers[index]),
+            subtitle: getSubtitle(
+              context,
+              'Init Container',
+              initContainers[index],
+            ),
             image: 'assets/resources/containers.svg',
             imageFit: BoxFit.none,
             onTap: () {
@@ -512,7 +578,7 @@ class DetailsContainers extends StatelessWidget {
           containers.length,
           (index) => AppHorizontalListCardsModel(
             title: containers[index].name,
-            subtitle: getSubtitle('Container', containers[index]),
+            subtitle: getSubtitle(context, 'Container', containers[index]),
             image: 'assets/resources/containers.svg',
             imageFit: BoxFit.none,
             onTap: () {
@@ -553,7 +619,7 @@ class DetailsContainer extends StatelessWidget {
   final List<IoK8sApiCoreV1ContainerStatus> containerStatuses;
   final List<ApisMetricsV1beta1PodMetricsItemContainer> containerMetrics;
 
-  List<Widget> buildStatus() {
+  List<Widget> buildStatus(BuildContext context) {
     List<IoK8sApiCoreV1ContainerStatus> status = [];
     if (containerType == 'Init Container') {
       status = initContainerStatuses
@@ -571,21 +637,24 @@ class DetailsContainer extends StatelessWidget {
 
     return [
       DetailsItem(
-        title: 'Status',
+        title: t(context, 'Status'),
         details: [
           DetailsItemModel(
-            name: 'State',
-            values: _getContainerState(status[0].state, true),
+            name: t(context, 'State'),
+            values: _getContainerState(context, status[0].state, true),
           ),
           DetailsItemModel(
-            name: 'Last State',
-            values: _getContainerState(status[0].lastState, true),
+            name: t(context, 'Last State'),
+            values: _getContainerState(context, status[0].lastState, true),
           ),
           DetailsItemModel(
-            name: 'Ready',
-            values: status[0].ready ? 'True' : 'False',
+            name: t(context, 'Ready'),
+            values: status[0].ready ? t(context, 'True') : t(context, 'False'),
           ),
-          DetailsItemModel(name: 'Restarts', values: status[0].restartCount),
+          DetailsItemModel(
+            name: t(context, 'Restarts'),
+            values: status[0].restartCount,
+          ),
         ],
       ),
       const SizedBox(height: Constants.spacingMiddle),
@@ -606,7 +675,7 @@ class DetailsContainer extends StatelessWidget {
       closePressed: () {
         Navigator.pop(context);
       },
-      actionText: 'Close',
+      actionText: t(context, 'Close'),
       actionPressed: () {
         Navigator.pop(context);
       },
@@ -617,18 +686,18 @@ class DetailsContainer extends StatelessWidget {
           child: Column(
             children: [
               DetailsItem(
-                title: 'Configuration',
+                title: t(context, 'Configuration'),
                 details: [
                   DetailsItemModel(
-                    name: 'Image',
+                    name: t(context, 'Image'),
                     values: container.image ?? '-',
                   ),
                   DetailsItemModel(
-                    name: 'Image Pull Policy',
+                    name: t(context, 'Image Pull Policy'),
                     values: container.imagePullPolicy?.value ?? '-',
                   ),
                   DetailsItemModel(
-                    name: 'Command',
+                    name: t(context, 'Command'),
                     values:
                         container.command != null &&
                             container.command!.isNotEmpty
@@ -636,13 +705,13 @@ class DetailsContainer extends StatelessWidget {
                         : '-',
                   ),
                   DetailsItemModel(
-                    name: 'Arguments',
+                    name: t(context, 'Arguments'),
                     values: container.args != null && container.args!.isNotEmpty
                         ? container.args
                         : '-',
                   ),
                   DetailsItemModel(
-                    name: 'Ports',
+                    name: t(context, 'Ports'),
                     values:
                         container.ports != null && container.ports!.isNotEmpty
                         ? container.ports!
@@ -654,19 +723,19 @@ class DetailsContainer extends StatelessWidget {
                         : '-',
                   ),
                   DetailsItemModel(
-                    name: 'Readiness Probe',
+                    name: t(context, 'Readiness Probe'),
                     values: container.readinessProbe != null
                         ? _getProbe(container.readinessProbe!)
                         : '-',
                   ),
                   DetailsItemModel(
-                    name: 'Liveness Probe',
+                    name: t(context, 'Liveness Probe'),
                     values: container.livenessProbe != null
                         ? _getProbe(container.livenessProbe!)
                         : '-',
                   ),
                   DetailsItemModel(
-                    name: 'Startup Probe',
+                    name: t(context, 'Startup Probe'),
                     values: container.startupProbe != null
                         ? _getProbe(container.startupProbe!)
                         : '-',
@@ -674,12 +743,12 @@ class DetailsContainer extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: Constants.spacingMiddle),
-              ...buildStatus(),
+              ...buildStatus(context),
               DetailsItem(
-                title: 'Resources',
+                title: t(context, 'Resources'),
                 details: [
                   DetailsItemModel(
-                    name: 'CPU Usage',
+                    name: t(context, 'CPU Usage'),
                     values:
                         containerMetric.isNotEmpty &&
                             containerMetric[0].usage?.cpu != null
@@ -691,7 +760,7 @@ class DetailsContainer extends StatelessWidget {
                         : '-',
                   ),
                   DetailsItemModel(
-                    name: 'CPU Requests',
+                    name: t(context, 'CPU Requests'),
                     values:
                         container.resources?.requests != null &&
                             container.resources!.requests!.containsKey('cpu')
@@ -699,7 +768,7 @@ class DetailsContainer extends StatelessWidget {
                         : '-',
                   ),
                   DetailsItemModel(
-                    name: 'CPU Limits',
+                    name: t(context, 'CPU Limits'),
                     values:
                         container.resources?.limits != null &&
                             container.resources!.limits!.containsKey('cpu')
@@ -707,7 +776,7 @@ class DetailsContainer extends StatelessWidget {
                         : '-',
                   ),
                   DetailsItemModel(
-                    name: 'Memory Usage',
+                    name: t(context, 'Memory Usage'),
                     values:
                         containerMetric.isNotEmpty &&
                             containerMetric[0].usage?.memory != null
@@ -719,7 +788,7 @@ class DetailsContainer extends StatelessWidget {
                         : '-',
                   ),
                   DetailsItemModel(
-                    name: 'Memory Requests',
+                    name: t(context, 'Memory Requests'),
                     values:
                         container.resources?.requests != null &&
                             container.resources!.requests!.containsKey('memory')
@@ -727,7 +796,7 @@ class DetailsContainer extends StatelessWidget {
                         : '-',
                   ),
                   DetailsItemModel(
-                    name: 'Memory Limits',
+                    name: t(context, 'Memory Limits'),
                     values:
                         container.resources?.limits != null &&
                             container.resources!.limits!.containsKey('memory')
@@ -738,7 +807,7 @@ class DetailsContainer extends StatelessWidget {
               ),
               const SizedBox(height: Constants.spacingMiddle),
               AppVerticalListSimpleWidget(
-                title: 'Environment Variables',
+                title: t(context, 'Environment Variables'),
                 items:
                     container.env
                         ?.map(
@@ -813,7 +882,7 @@ class DetailsContainer extends StatelessWidget {
               ),
               const SizedBox(height: Constants.spacingMiddle),
               AppVerticalListSimpleWidget(
-                title: 'Volume Mounts',
+                title: t(context, 'Volume Mounts'),
                 items:
                     container.volumeMounts
                         ?.map(
@@ -822,7 +891,17 @@ class DetailsContainer extends StatelessWidget {
                               showSnackbar(
                                 context,
                                 volumeMount.name,
-                                'Path: ${volumeMount.mountPath}\nSub-Path: ${volumeMount.subPath ?? '-'}\nReadonly: ${volumeMount.readOnly == true ? 'True' : 'False'}',
+                                tFmt(
+                                  context,
+                                  'Path: {0}\nSub-Path: {1}\nReadonly: {2}',
+                                  [
+                                    volumeMount.mountPath,
+                                    volumeMount.subPath ?? '-',
+                                    volumeMount.readOnly == true
+                                        ? t(context, 'True')
+                                        : t(context, 'False'),
+                                  ],
+                                ),
                               );
                             },
                             children: [
@@ -1244,6 +1323,7 @@ ResourceMetrics? _getMetricsForPod(
 }
 
 String _getContainerState(
+  BuildContext context,
   IoK8sApiCoreV1ContainerState? state, [
   bool detailed = false,
 ]) {
@@ -1272,7 +1352,7 @@ String _getContainerState(
       return 'Running since ${formatTime(state.running?.startedAt)}';
     }
 
-    return 'Running';
+    return t(context, 'Running');
   }
 
   return '-';

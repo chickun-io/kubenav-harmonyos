@@ -10,6 +10,7 @@ import 'package:kubenav/repositories/clusters_repository.dart';
 import 'package:kubenav/services/kubernetes_service.dart';
 import 'package:kubenav/utils/constants.dart';
 import 'package:kubenav/utils/helpers.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/utils/logger.dart';
 import 'package:kubenav/utils/resources.dart';
 import 'package:kubenav/utils/showmodal.dart';
@@ -108,7 +109,7 @@ class _GetLogsPodsState extends State<GetLogsPods> {
 
     if (_error != '') {
       return AppErrorWidget(
-        message: 'Could not load Pods',
+        message: t(context, 'Could not load Pods'),
         details: _error,
         icon: ClusterProviderType.google.icon(),
       );
@@ -165,9 +166,9 @@ class _GetLogsPodsState extends State<GetLogsPods> {
               }
             },
             title: Text(
-              Characters(
-                _pods[index].metadata?.name ?? '',
-              ).replaceAll(Characters(''), Characters('\u{200B}')).toString(),
+              Characters(_pods[index].metadata?.name ?? '')
+                  .replaceAll(Characters(''), Characters('\u{200B}'))
+                  .toString(),
               style: normalTextStyle(context),
               overflow: TextOverflow.ellipsis,
             ),
@@ -186,13 +187,13 @@ class _GetLogsPodsState extends State<GetLogsPods> {
   @override
   Widget build(BuildContext context) {
     return AppBottomSheetWidget(
-      title: 'Select Pods',
+      title: t(context, 'Select Pods'),
       subtitle: '${widget.name}/${widget.namespace}',
       icon: Icons.subject,
       closePressed: () {
         Navigator.pop(context);
       },
-      actionText: 'Get Logs',
+      actionText: t(context, 'Get Logs'),
       actionPressed: () {
         Navigator.pop(context);
         if (_selectedPods.isNotEmpty && _pod != null) {

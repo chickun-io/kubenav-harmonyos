@@ -7,6 +7,7 @@ import 'package:kubenav/repositories/clusters_repository.dart';
 import 'package:kubenav/services/providers/oidc_service.dart';
 import 'package:kubenav/utils/constants.dart';
 import 'package:kubenav/utils/helpers.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/utils/logger.dart';
 import 'package:kubenav/utils/showmodal.dart';
 
@@ -55,7 +56,11 @@ class _SettingsReauthenticateOIDCState
         err,
       );
       if (mounted) {
-        showSnackbar(context, 'Failed to Open Sign In Url', err.toString());
+        showSnackbar(
+          context,
+          t(context, 'Failed to Open Sign In Url'),
+          err.toString(),
+        );
       }
     }
   }
@@ -89,7 +94,7 @@ class _SettingsReauthenticateOIDCState
       if (mounted) {
         showSnackbar(
           context,
-          'Provider Configuration Saved',
+          t(context, 'Provider Configuration Saved'),
           'Refresh the view to use the new credentials',
         );
       }
@@ -100,7 +105,11 @@ class _SettingsReauthenticateOIDCState
         err,
       );
       if (mounted) {
-        showSnackbar(context, 'Failed to Get Credentials', err.toString());
+        showSnackbar(
+          context,
+          t(context, 'Failed to Get Credentials'),
+          err.toString(),
+        );
       }
     }
   }
@@ -150,9 +159,9 @@ class _SettingsReauthenticateOIDCState
             autocorrect: false,
             enableSuggestions: false,
             maxLines: 1,
-            decoration: const InputDecoration(
+            decoration: InputDecoration(
               border: OutlineInputBorder(),
-              labelText: 'State',
+              labelText: t(context, 'State'),
             ),
           ),
         ),
@@ -172,7 +181,7 @@ class _SettingsReauthenticateOIDCState
             ),
             onPressed: _signIn,
             child: Text(
-              'Sign In',
+              t(context, 'Sign In'),
               style: primaryTextStyle(
                 context,
                 color: Theme.of(context).colorScheme.onPrimary,
@@ -192,9 +201,9 @@ class _SettingsReauthenticateOIDCState
             autocorrect: false,
             enableSuggestions: false,
             maxLines: 1,
-            decoration: const InputDecoration(
+            decoration: InputDecoration(
               border: OutlineInputBorder(),
-              labelText: 'Code',
+              labelText: t(context, 'Code'),
             ),
           ),
         ),
@@ -214,7 +223,7 @@ class _SettingsReauthenticateOIDCState
             ),
             onPressed: _codeController.text == '' ? null : _getCredentials,
             child: Text(
-              'Get Credentials',
+              t(context, 'Get Credentials'),
               style: primaryTextStyle(
                 context,
                 color: Theme.of(context).colorScheme.onPrimary,

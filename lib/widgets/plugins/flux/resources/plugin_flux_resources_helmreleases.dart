@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import 'package:kubenav/models/kubernetes/schema.models.swagger.dart';
 import 'package:kubenav/utils/constants.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/utils/navigate.dart';
 import 'package:kubenav/utils/resources.dart';
 import 'package:kubenav/utils/showmodal.dart';
@@ -21,8 +22,7 @@ final Resource fluxResourceHelmRelease = Resource(
   category: FluxResourceCategories.helmController,
   plural: 'Helm Releases',
   singular: 'Helm Release',
-  description:
-      'The HelmRelease API allows for controller-driven reconciliation of Helm releases via Helm actions such as install, upgrade, test, uninstall, and rollback',
+  description: 'The HelmRelease API allows for controller-driven reconciliation of Helm releases via Helm actions such as install, upgrade, test, uninstall, and rollback',
   path: '/apis/helm.toolkit.fluxcd.io/v2',
   resource: 'helmreleases',
   scope: ResourceScope.namespaced,
@@ -75,32 +75,65 @@ final Resource fluxResourceHelmRelease = Resource(
   toJson: (dynamic item) {
     return json.decode(json.encode(item));
   },
-  listItemBuilder: (BuildContext context, Resource resource, ResourceItem listItem) {
-    final item = listItem.item as IoFluxcdToolkitHelmV2HelmRelease;
-    final status = listItem.status;
+  listItemBuilder:
+      (BuildContext context, Resource resource, ResourceItem listItem) {
+        final item = listItem.item as IoFluxcdToolkitHelmV2HelmRelease;
+        final status = listItem.status;
 
-    return ResourcesListItem(
-      name: item.metadata?.name ?? '',
-      namespace: item.metadata?.namespace ?? '',
-      resource: resource,
-      item: item,
-      status: status,
-      details: [
-        'Namespace: ${item.metadata?.namespace ?? '-'}',
-        'Ready: ${item.status?.conditions != null && item.status!.conditions!.isNotEmpty ? item.status!.conditions!.where((e) => e.type == 'Ready').firstOrNull?.status : '-'}',
-        'Status: ${item.status?.conditions != null && item.status!.conditions!.isNotEmpty ? item.status!.conditions!.where((e) => e.type == 'Ready').firstOrNull?.message : '-'}',
-        'Age: ${getAge(item.metadata?.creationTimestamp)}',
-      ],
-    );
-  },
-  previewItemBuilder: (dynamic listItem) {
+        return ResourcesListItem(
+          name: item.metadata?.name ?? '',
+          namespace: item.metadata?.namespace ?? '',
+          resource: resource,
+          item: item,
+          status: status,
+          details: [
+            tFmt(context, 'Namespace: {0}', [item.metadata?.namespace ?? '-']),
+            tFmt(context, 'Ready: {0}', [
+              item.status?.conditions != null &&
+                      item.status!.conditions!.isNotEmpty
+                  ? item.status!.conditions!
+                        .where((e) => e.type == 'Ready')
+                        .firstOrNull
+                        ?.status
+                  : '-',
+            ]),
+            tFmt(context, 'Status: {0}', [
+              item.status?.conditions != null &&
+                      item.status!.conditions!.isNotEmpty
+                  ? item.status!.conditions!
+                        .where((e) => e.type == 'Ready')
+                        .firstOrNull
+                        ?.message
+                  : '-',
+            ]),
+            tFmt(context, 'Age: {0}', [
+              getAge(item.metadata?.creationTimestamp),
+            ]),
+          ],
+        );
+      },
+  previewItemBuilder: (BuildContext context, dynamic listItem) {
     final item = listItem as IoFluxcdToolkitHelmV2HelmRelease;
 
     return [
-      'Namespace: ${item.metadata?.namespace ?? '-'}',
-      'Ready: ${item.status?.conditions != null && item.status!.conditions!.isNotEmpty ? item.status!.conditions!.where((e) => e.type == 'Ready').firstOrNull?.status : '-'}',
-      'Status: ${item.status?.conditions != null && item.status!.conditions!.isNotEmpty ? item.status!.conditions!.where((e) => e.type == 'Ready').firstOrNull?.message : '-'}',
-      'Age: ${getAge(item.metadata?.creationTimestamp)}',
+      tFmt(context, 'Namespace: {0}', [item.metadata?.namespace ?? '-']),
+      tFmt(context, 'Ready: {0}', [
+        item.status?.conditions != null && item.status!.conditions!.isNotEmpty
+            ? item.status!.conditions!
+                  .where((e) => e.type == 'Ready')
+                  .firstOrNull
+                  ?.status
+            : '-',
+      ]),
+      tFmt(context, 'Status: {0}', [
+        item.status?.conditions != null && item.status!.conditions!.isNotEmpty
+            ? item.status!.conditions!
+                  .where((e) => e.type == 'Ready')
+                  .firstOrNull
+                  ?.message
+            : '-',
+      ]),
+      tFmt(context, 'Age: {0}', [getAge(item.metadata?.creationTimestamp)]),
     ];
   },
   detailsItemBuilder: (BuildContext context, Resource resource, dynamic detailsItem) {
@@ -125,14 +158,14 @@ final Resource fluxResourceHelmRelease = Resource(
         ),
         const SizedBox(height: Constants.spacingMiddle),
         DetailsItem(
-          title: 'Configuration',
+          title: t(context, 'Configuration'),
           details: [
             DetailsItemModel(
-              name: 'Chart',
+              name: t(context, 'Chart'),
               values: item.spec?.chart?.spec.chart,
             ),
             DetailsItemModel(
-              name: 'Source',
+              name: t(context, 'Source'),
               values: item.spec?.chart?.spec.sourceRef != null
                   ? '${item.spec?.chart?.spec.sourceRef.kind} (${item.spec?.chart?.spec.sourceRef.namespace ?? item.metadata?.namespace}/${item.spec?.chart?.spec.sourceRef.name})'
                   : null,
@@ -166,27 +199,35 @@ final Resource fluxResourceHelmRelease = Resource(
                       } else {
                         showSnackbar(
                           context,
-                          'Source',
+                          t(context, 'Source'),
                           '${item.spec!.chart?.spec.sourceRef.kind.value} (${item.spec?.chart?.spec.sourceRef.namespace ?? item.metadata?.namespace ?? ''}/${item.spec?.chart?.spec.sourceRef.name ?? ''})',
                         );
                       }
                     }
                   : null,
             ),
-            DetailsItemModel(name: 'Interval', values: item.spec?.interval),
             DetailsItemModel(
-              name: 'Suspended',
-              values: item.spec?.suspend == true ? 'True' : 'False',
+              name: t(context, 'Interval'),
+              values: item.spec?.interval,
             ),
-            DetailsItemModel(name: 'Timeout', values: item.spec?.timeout),
+            DetailsItemModel(
+              name: t(context, 'Suspended'),
+              values: item.spec?.suspend == true
+                  ? t(context, 'True')
+                  : t(context, 'False'),
+            ),
+            DetailsItemModel(
+              name: t(context, 'Timeout'),
+              values: item.spec?.timeout,
+            ),
           ],
         ),
         const SizedBox(height: Constants.spacingMiddle),
         DetailsItem(
-          title: 'Status',
+          title: t(context, 'Status'),
           details: [
             DetailsItemModel(
-              name: 'Helm Chart',
+              name: t(context, 'Helm Chart'),
               values: item.status?.helmChart,
               onTap: item.status?.helmChart != null
                   ? (int index) {
@@ -207,28 +248,34 @@ final Resource fluxResourceHelmRelease = Resource(
                       } else {
                         showSnackbar(
                           context,
-                          'Helm Chart',
-                          'HelmChart (${namespacename != null ? namespacename[0] : ''}/${namespacename != null ? namespacename[1] : ''})',
+                          t(context, 'Helm Chart'),
+                          tFmt(context, 'HelmChart ({0}/{1})', [
+                            namespacename != null ? namespacename[0] : '',
+                            namespacename != null ? namespacename[1] : '',
+                          ]),
                         );
                       }
                     }
                   : null,
             ),
             DetailsItemModel(
-              name: 'Last Applied Revision',
+              name: t(context, 'Last Applied Revision'),
               values: item.status?.history?.firstOrNull?.chartVersion,
             ),
             DetailsItemModel(
-              name: 'Last Attempted Revision',
+              name: t(context, 'Last Attempted Revision'),
               values: item.status?.lastAttemptedRevision,
             ),
-            DetailsItemModel(name: 'Failures', values: item.status?.failures),
             DetailsItemModel(
-              name: 'Install Failures',
+              name: t(context, 'Failures'),
+              values: item.status?.failures,
+            ),
+            DetailsItemModel(
+              name: t(context, 'Install Failures'),
               values: item.status?.installFailures,
             ),
             DetailsItemModel(
-              name: 'Upgrade Failures',
+              name: t(context, 'Upgrade Failures'),
               values: item.status?.upgradeFailures,
             ),
           ],

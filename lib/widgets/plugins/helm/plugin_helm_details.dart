@@ -10,6 +10,7 @@ import 'package:kubenav/repositories/clusters_repository.dart';
 import 'package:kubenav/services/kubernetes_service.dart';
 import 'package:kubenav/utils/constants.dart';
 import 'package:kubenav/utils/helpers.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/utils/navigate.dart';
 import 'package:kubenav/utils/resources.dart';
 import 'package:kubenav/utils/showmodal.dart';
@@ -35,13 +36,13 @@ List<AppResourceActionsModel> helmDetailsActions(
 ) {
   final actions = [
     AppResourceActionsModel(
-      title: 'Values',
+      title: t(context, 'Values'),
       icon: Icons.description,
       onTap: () {
         showModal(
           context,
           PluginHelmDetailsValues(
-            title: 'Values',
+            title: t(context, 'Values'),
             name: release.name ?? '',
             values: release.config,
           ),
@@ -49,13 +50,13 @@ List<AppResourceActionsModel> helmDetailsActions(
       },
     ),
     AppResourceActionsModel(
-      title: 'Default Values',
+      title: t(context, 'Default Values'),
       icon: Icons.description,
       onTap: () {
         showModal(
           context,
           PluginHelmDetailsValues(
-            title: 'Default Values',
+            title: t(context, 'Default Values'),
             name: release.name ?? '',
             values: release.chart?.values,
           ),
@@ -63,7 +64,7 @@ List<AppResourceActionsModel> helmDetailsActions(
       },
     ),
     AppResourceActionsModel(
-      title: 'Manifest',
+      title: t(context, 'Manifest'),
       icon: Icons.description,
       onTap: () {
         showModal(
@@ -76,7 +77,7 @@ List<AppResourceActionsModel> helmDetailsActions(
       },
     ),
     AppResourceActionsModel(
-      title: 'Rollback',
+      title: t(context, 'Rollback'),
       icon: Icons.history,
       onTap: () {
         showModal(
@@ -90,7 +91,7 @@ List<AppResourceActionsModel> helmDetailsActions(
       },
     ),
     AppResourceActionsModel(
-      title: 'Uninstall',
+      title: t(context, 'Uninstall'),
       icon: Icons.delete,
       onTap: () {
         showModal(
@@ -107,7 +108,7 @@ List<AppResourceActionsModel> helmDetailsActions(
   if (refresh != null) {
     actions.add(
       AppResourceActionsModel(
-        title: 'Refresh',
+        title: t(context, 'Refresh'),
         icon: Icons.refresh,
         onTap: refresh,
       ),
@@ -196,7 +197,7 @@ class _PluginHelmDetailsState extends State<PluginHelmDetails> {
   Widget _buildTemplates(Release release) {
     if (release.chart != null && release.chart!.templates != null) {
       return AppVerticalListSimpleWidget(
-        title: 'Templates',
+        title: t(context, 'Templates'),
         items: release.chart!.templates!
             .map(
               (template) => AppVerticalListSimpleModel(
@@ -261,9 +262,9 @@ class _PluginHelmDetailsState extends State<PluginHelmDetails> {
         title: Column(
           children: [
             Text(
-              Characters(
-                '${widget.name} v${widget.version}',
-              ).replaceAll(Characters(''), Characters('\u{200B}')).toString(),
+              Characters('${widget.name} v${widget.version}')
+                  .replaceAll(Characters(''), Characters('\u{200B}'))
+                  .toString(),
               textAlign: TextAlign.center,
               style: const TextStyle(
                 fontSize: 20,
@@ -272,9 +273,9 @@ class _PluginHelmDetailsState extends State<PluginHelmDetails> {
               ),
             ),
             Text(
-              Characters(
-                widget.namespace,
-              ).replaceAll(Characters(''), Characters('\u{200B}')).toString(),
+              Characters(widget.namespace)
+                  .replaceAll(Characters(''), Characters('\u{200B}'))
+                  .toString(),
               textAlign: TextAlign.center,
               style: const TextStyle(
                 fontSize: 14,
@@ -325,7 +326,10 @@ class _PluginHelmDetailsState extends State<PluginHelmDetails> {
                                   Constants.spacingMiddle,
                                 ),
                                 child: AppErrorWidget(
-                                  message: 'Failed to Load Helm Release',
+                                  message: t(
+                                    context,
+                                    'Failed to Load Helm Release',
+                                  ),
                                   details: snapshot.error.toString(),
                                   icon: 'assets/plugins/helm.svg',
                                 ),
@@ -347,30 +351,30 @@ class _PluginHelmDetailsState extends State<PluginHelmDetails> {
                             }),
                           ),
                           DetailsItem(
-                            title: 'Details',
+                            title: t(context, 'Details'),
                             details: [
                               DetailsItemModel(
-                                name: 'Name',
+                                name: t(context, 'Name'),
                                 values: release.name,
                               ),
                               DetailsItemModel(
-                                name: 'Namespace',
+                                name: t(context, 'Namespace'),
                                 values: release.namespace,
                               ),
                               DetailsItemModel(
-                                name: 'Version',
+                                name: t(context, 'Version'),
                                 values: release.version,
                               ),
                               DetailsItemModel(
-                                name: 'Status',
+                                name: t(context, 'Status'),
                                 values: release.info?.status,
                               ),
                               DetailsItemModel(
-                                name: 'Description',
+                                name: t(context, 'Description'),
                                 values: release.info?.description,
                               ),
                               DetailsItemModel(
-                                name: 'First Deployed',
+                                name: t(context, 'First Deployed'),
                                 values: release.info?.firstDeployed != null
                                     ? formatTime(
                                         DateTime.parse(
@@ -380,7 +384,7 @@ class _PluginHelmDetailsState extends State<PluginHelmDetails> {
                                     : null,
                               ),
                               DetailsItemModel(
-                                name: 'Last Deployed',
+                                name: t(context, 'Last Deployed'),
                                 values: release.info?.lastDeployed != null
                                     ? formatTime(
                                         DateTime.parse(
@@ -390,7 +394,7 @@ class _PluginHelmDetailsState extends State<PluginHelmDetails> {
                                     : null,
                               ),
                               DetailsItemModel(
-                                name: 'Notes',
+                                name: t(context, 'Notes'),
                                 values: release.info?.notes,
                               ),
                             ],
@@ -398,198 +402,185 @@ class _PluginHelmDetailsState extends State<PluginHelmDetails> {
                           const SizedBox(height: Constants.spacingMiddle),
                           FutureBuilder(
                             future: _futureFetchHistory,
-                            builder:
-                                (
-                                  BuildContext context,
-                                  AsyncSnapshot<List<Release>> snapshot,
-                                ) {
-                                  if (snapshot.data == null ||
-                                      snapshot.data!.isEmpty) {
-                                    return Container();
-                                  }
+                            builder: (BuildContext context, AsyncSnapshot<List<Release>> snapshot) {
+                              if (snapshot.data == null ||
+                                  snapshot.data!.isEmpty) {
+                                return Container();
+                              }
 
-                                  return Column(
-                                    children: [
-                                      AppVerticalListSimpleWidget(
-                                        title: 'History',
-                                        items: (snapshot.data ?? [])
-                                            .map(
-                                              (
-                                                release,
-                                              ) => AppVerticalListSimpleModel(
-                                                onTap: () {
-                                                  navigate(
-                                                    context,
-                                                    PluginHelmDetails(
-                                                      name: widget.name,
-                                                      namespace:
-                                                          widget.namespace,
-                                                      version: release.version!,
+                              return Column(
+                                children: [
+                                  AppVerticalListSimpleWidget(
+                                    title: t(context, 'History'),
+                                    items: (snapshot.data ?? [])
+                                        .map(
+                                          (
+                                            release,
+                                          ) => AppVerticalListSimpleModel(
+                                            onTap: () {
+                                              navigate(
+                                                context,
+                                                PluginHelmDetails(
+                                                  name: widget.name,
+                                                  namespace: widget.namespace,
+                                                  version: release.version!,
+                                                ),
+                                              );
+                                            },
+                                            children: [
+                                              Expanded(
+                                                child: Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.start,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      Characters(
+                                                            'Revision: ${release.version ?? ''}',
+                                                          )
+                                                          .replaceAll(
+                                                            Characters(''),
+                                                            Characters(
+                                                              '\u{200B}',
+                                                            ),
+                                                          )
+                                                          .toString(),
+                                                      style: primaryTextStyle(
+                                                        context,
+                                                      ),
+                                                      maxLines: 3,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
                                                     ),
-                                                  );
-                                                },
+                                                    Text(
+                                                      Characters(
+                                                            'Updated: ${formatTime(DateTime.parse(release.info?.lastDeployed ?? '-'))}',
+                                                          )
+                                                          .replaceAll(
+                                                            Characters(''),
+                                                            Characters(
+                                                              '\u{200B}',
+                                                            ),
+                                                          )
+                                                          .toString(),
+                                                      style: secondaryTextStyle(
+                                                        context,
+                                                      ),
+                                                      maxLines: 3,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                    ),
+                                                    Text(
+                                                      Characters(
+                                                            'Status: ${release.info?.status ?? '-'}',
+                                                          )
+                                                          .replaceAll(
+                                                            Characters(''),
+                                                            Characters(
+                                                              '\u{200B}',
+                                                            ),
+                                                          )
+                                                          .toString(),
+                                                      style: secondaryTextStyle(
+                                                        context,
+                                                      ),
+                                                      maxLines: 3,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                    ),
+                                                    Text(
+                                                      Characters(
+                                                            'Chart Version: ${release.chart?.metadata?.version ?? '-'}',
+                                                          )
+                                                          .replaceAll(
+                                                            Characters(''),
+                                                            Characters(
+                                                              '\u{200B}',
+                                                            ),
+                                                          )
+                                                          .toString(),
+                                                      style: secondaryTextStyle(
+                                                        context,
+                                                      ),
+                                                      maxLines: 3,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                    ),
+                                                    Text(
+                                                      Characters(
+                                                            'App Version: ${release.chart?.metadata?.appVersion ?? '-'}',
+                                                          )
+                                                          .replaceAll(
+                                                            Characters(''),
+                                                            Characters(
+                                                              '\u{200B}',
+                                                            ),
+                                                          )
+                                                          .toString(),
+                                                      style: secondaryTextStyle(
+                                                        context,
+                                                      ),
+                                                      maxLines: 3,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              Wrap(
                                                 children: [
-                                                  Expanded(
-                                                    child: Column(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .start,
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        Text(
-                                                          Characters(
-                                                                'Revision: ${release.version ?? ''}',
-                                                              )
-                                                              .replaceAll(
-                                                                Characters(''),
-                                                                Characters(
-                                                                  '\u{200B}',
-                                                                ),
-                                                              )
-                                                              .toString(),
-                                                          style:
-                                                              primaryTextStyle(
-                                                                context,
-                                                              ),
-                                                          maxLines: 3,
-                                                          overflow: TextOverflow
-                                                              .ellipsis,
-                                                        ),
-                                                        Text(
-                                                          Characters(
-                                                                'Updated: ${formatTime(DateTime.parse(release.info?.lastDeployed ?? '-'))}',
-                                                              )
-                                                              .replaceAll(
-                                                                Characters(''),
-                                                                Characters(
-                                                                  '\u{200B}',
-                                                                ),
-                                                              )
-                                                              .toString(),
-                                                          style:
-                                                              secondaryTextStyle(
-                                                                context,
-                                                              ),
-                                                          maxLines: 3,
-                                                          overflow: TextOverflow
-                                                              .ellipsis,
-                                                        ),
-                                                        Text(
-                                                          Characters(
-                                                                'Status: ${release.info?.status ?? '-'}',
-                                                              )
-                                                              .replaceAll(
-                                                                Characters(''),
-                                                                Characters(
-                                                                  '\u{200B}',
-                                                                ),
-                                                              )
-                                                              .toString(),
-                                                          style:
-                                                              secondaryTextStyle(
-                                                                context,
-                                                              ),
-                                                          maxLines: 3,
-                                                          overflow: TextOverflow
-                                                              .ellipsis,
-                                                        ),
-                                                        Text(
-                                                          Characters(
-                                                                'Chart Version: ${release.chart?.metadata?.version ?? '-'}',
-                                                              )
-                                                              .replaceAll(
-                                                                Characters(''),
-                                                                Characters(
-                                                                  '\u{200B}',
-                                                                ),
-                                                              )
-                                                              .toString(),
-                                                          style:
-                                                              secondaryTextStyle(
-                                                                context,
-                                                              ),
-                                                          maxLines: 3,
-                                                          overflow: TextOverflow
-                                                              .ellipsis,
-                                                        ),
-                                                        Text(
-                                                          Characters(
-                                                                'App Version: ${release.chart?.metadata?.appVersion ?? '-'}',
-                                                              )
-                                                              .replaceAll(
-                                                                Characters(''),
-                                                                Characters(
-                                                                  '\u{200B}',
-                                                                ),
-                                                              )
-                                                              .toString(),
-                                                          style:
-                                                              secondaryTextStyle(
-                                                                context,
-                                                              ),
-                                                          maxLines: 3,
-                                                          overflow: TextOverflow
-                                                              .ellipsis,
-                                                        ),
-                                                      ],
-                                                    ),
+                                                  const SizedBox(
+                                                    width:
+                                                        Constants.spacingSmall,
                                                   ),
-                                                  Wrap(
-                                                    children: [
-                                                      const SizedBox(
-                                                        width: Constants
-                                                            .spacingSmall,
-                                                      ),
-                                                      Icon(
-                                                        Icons
-                                                            .radio_button_checked,
-                                                        size: 24,
-                                                        color:
-                                                            release.info?.status ==
-                                                                    'deployed' ||
-                                                                release
-                                                                        .info
-                                                                        ?.status ==
-                                                                    'superseded' ||
-                                                                release
-                                                                        .info
-                                                                        ?.status ==
-                                                                    'uninstalled'
-                                                            ? Theme.of(context)
-                                                                  .extension<
-                                                                    CustomColors
-                                                                  >()!
-                                                                  .success
-                                                            : release
-                                                                      .info
-                                                                      ?.status ==
-                                                                  'failed'
-                                                            ? Theme.of(context)
-                                                                  .extension<
-                                                                    CustomColors
-                                                                  >()!
-                                                                  .error
-                                                            : Theme.of(context)
-                                                                  .extension<
-                                                                    CustomColors
-                                                                  >()!
-                                                                  .warning,
-                                                      ),
-                                                    ],
+                                                  Icon(
+                                                    Icons.radio_button_checked,
+                                                    size: 24,
+                                                    color:
+                                                        release.info?.status ==
+                                                                'deployed' ||
+                                                            release
+                                                                    .info
+                                                                    ?.status ==
+                                                                'superseded' ||
+                                                            release
+                                                                    .info
+                                                                    ?.status ==
+                                                                'uninstalled'
+                                                        ? Theme.of(context)
+                                                              .extension<
+                                                                CustomColors
+                                                              >()!
+                                                              .success
+                                                        : release
+                                                                  .info
+                                                                  ?.status ==
+                                                              'failed'
+                                                        ? Theme.of(context)
+                                                              .extension<
+                                                                CustomColors
+                                                              >()!
+                                                              .error
+                                                        : Theme.of(context)
+                                                              .extension<
+                                                                CustomColors
+                                                              >()!
+                                                              .warning,
                                                   ),
                                                 ],
                                               ),
-                                            )
-                                            .toList(),
-                                      ),
-                                      const SizedBox(
-                                        height: Constants.spacingMiddle,
-                                      ),
-                                    ],
-                                  );
-                                },
+                                            ],
+                                          ),
+                                        )
+                                        .toList(),
+                                  ),
+                                  const SizedBox(
+                                    height: Constants.spacingMiddle,
+                                  ),
+                                ],
+                              );
+                            },
                           ),
                           _buildTemplates(release),
                           const SizedBox(height: Constants.spacingMiddle),

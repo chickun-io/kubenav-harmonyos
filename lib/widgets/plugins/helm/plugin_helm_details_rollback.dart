@@ -8,6 +8,7 @@ import 'package:kubenav/repositories/app_repository.dart';
 import 'package:kubenav/repositories/clusters_repository.dart';
 import 'package:kubenav/services/kubernetes_service.dart';
 import 'package:kubenav/utils/constants.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/utils/logger.dart';
 import 'package:kubenav/utils/showmodal.dart';
 import 'package:kubenav/widgets/shared/app_bottom_sheet_widget.dart';
@@ -141,7 +142,7 @@ class _PluginHelmDetailsRollbackState extends State<PluginHelmDetailsRollback> {
       });
       if (mounted) {
         Navigator.pop(context);
-        showSnackbar(context, 'Rollback Failed', err.toString());
+        showSnackbar(context, t(context, 'Rollback Failed'), err.toString());
       }
     }
   }
@@ -166,13 +167,13 @@ class _PluginHelmDetailsRollbackState extends State<PluginHelmDetailsRollback> {
   @override
   Widget build(BuildContext context) {
     return AppBottomSheetWidget(
-      title: 'Rollback',
+      title: t(context, 'Rollback'),
       subtitle: '${widget.namespace}/${widget.name}',
       icon: Icons.history,
       closePressed: () {
         Navigator.pop(context);
       },
-      actionText: 'Rollback',
+      actionText: t(context, 'Rollback'),
       actionPressed: () {
         _rollback();
       },
@@ -195,9 +196,9 @@ class _PluginHelmDetailsRollbackState extends State<PluginHelmDetailsRollback> {
                   autocorrect: false,
                   enableSuggestions: false,
                   maxLines: 1,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     border: OutlineInputBorder(),
-                    labelText: 'Version',
+                    labelText: t(context, 'Version'),
                   ),
                   onFieldSubmitted: (String value) {
                     _rollback();
@@ -208,7 +209,7 @@ class _PluginHelmDetailsRollbackState extends State<PluginHelmDetailsRollback> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const Text('Cleanup On Fail'),
+                    Text(t(context, 'Cleanup On Fail')),
                     Switch(
                       activeThumbColor: Theme.of(context).colorScheme.primary,
                       onChanged: (value) {
@@ -225,7 +226,7 @@ class _PluginHelmDetailsRollbackState extends State<PluginHelmDetailsRollback> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const Text('Dry Run'),
+                    Text(t(context, 'Dry Run')),
                     Switch(
                       activeThumbColor: Theme.of(context).colorScheme.primary,
                       onChanged: (value) {
@@ -242,7 +243,7 @@ class _PluginHelmDetailsRollbackState extends State<PluginHelmDetailsRollback> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const Text('Force'),
+                    Text(t(context, 'Force')),
                     Switch(
                       activeThumbColor: Theme.of(context).colorScheme.primary,
                       onChanged: (value) {
@@ -274,7 +275,7 @@ class _PluginHelmDetailsRollbackState extends State<PluginHelmDetailsRollback> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const Text('Disable Hooks'),
+                    Text(t(context, 'Disable Hooks')),
                     Switch(
                       activeThumbColor: Theme.of(context).colorScheme.primary,
                       onChanged: (value) {
@@ -291,7 +292,7 @@ class _PluginHelmDetailsRollbackState extends State<PluginHelmDetailsRollback> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const Text('Recreate'),
+                    Text(t(context, 'Recreate')),
                     Switch(
                       activeThumbColor: Theme.of(context).colorScheme.primary,
                       onChanged: (value) {
@@ -310,9 +311,9 @@ class _PluginHelmDetailsRollbackState extends State<PluginHelmDetailsRollback> {
                   autocorrect: false,
                   enableSuggestions: false,
                   maxLines: 1,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     border: OutlineInputBorder(),
-                    labelText: 'Timeout',
+                    labelText: t(context, 'Timeout'),
                   ),
                   onFieldSubmitted: (String value) {
                     _rollback();
@@ -323,7 +324,7 @@ class _PluginHelmDetailsRollbackState extends State<PluginHelmDetailsRollback> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const Text('Wait'),
+                    Text(t(context, 'Wait')),
                     Switch(
                       activeThumbColor: Theme.of(context).colorScheme.primary,
                       onChanged: (value) {
@@ -340,7 +341,7 @@ class _PluginHelmDetailsRollbackState extends State<PluginHelmDetailsRollback> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const Text('Wait For Jobs'),
+                    Text(t(context, 'Wait For Jobs')),
                     Switch(
                       activeThumbColor: Theme.of(context).colorScheme.primary,
                       onChanged: (value) {

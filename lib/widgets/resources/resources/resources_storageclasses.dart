@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import 'package:kubenav/models/kubernetes/schema.models.swagger.dart';
 import 'package:kubenav/utils/constants.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/utils/resources.dart';
 import 'package:kubenav/widgets/resources/helpers/details_item.dart';
 import 'package:kubenav/widgets/resources/helpers/details_item_metadata.dart';
@@ -17,8 +18,7 @@ final resourceStorageClass = Resource(
   category: ResourceCategories.configAndStorage,
   plural: 'StorageClasses',
   singular: 'StorageClass',
-  description:
-      'A StorageClass provides a way for administrators to describe the "classes" of storage they offer.',
+  description: 'A StorageClass provides a way for administrators to describe the "classes" of storage they offer.',
   path: '/apis/storage.k8s.io/v1',
   resource: 'storageclasses',
   scope: ResourceScope.cluster,
@@ -72,23 +72,40 @@ final resourceStorageClass = Resource(
           item: item,
           status: status,
           details: [
-            'Provisioner: ${item.provisioner}',
-            'Reclaim Policy: ${item.reclaimPolicy?.value ?? '-'}',
-            'Volume Binding Mode: ${item.volumeBindingMode?.value ?? '-'}',
-            'Allow Volume Expansion: ${item.allowVolumeExpansion != null && item.allowVolumeExpansion == true ? 'True' : 'False'}',
-            'Age: ${getAge(item.metadata?.creationTimestamp)}',
+            tFmt(context, 'Provisioner: {0}', [item.provisioner]),
+            tFmt(context, 'Reclaim Policy: {0}', [
+              item.reclaimPolicy?.value ?? '-',
+            ]),
+            tFmt(context, 'Volume Binding Mode: {0}', [
+              item.volumeBindingMode?.value ?? '-',
+            ]),
+            tFmt(context, 'Allow Volume Expansion: {0}', [
+              item.allowVolumeExpansion != null &&
+                      item.allowVolumeExpansion == true
+                  ? t(context, 'True')
+                  : t(context, 'False'),
+            ]),
+            tFmt(context, 'Age: {0}', [
+              getAge(item.metadata?.creationTimestamp),
+            ]),
           ],
         );
       },
-  previewItemBuilder: (dynamic listItem) {
+  previewItemBuilder: (BuildContext context, dynamic listItem) {
     final item = listItem as IoK8sApiStorageV1StorageClass;
 
     return [
-      'Provisioner: ${item.provisioner}',
-      'Reclaim Policy: ${item.reclaimPolicy?.value ?? '-'}',
-      'Volume Binding Mode: ${item.volumeBindingMode?.value ?? '-'}',
-      'Allow Volume Expansion: ${item.allowVolumeExpansion != null && item.allowVolumeExpansion == true ? 'True' : 'False'}',
-      'Age: ${getAge(item.metadata?.creationTimestamp)}',
+      tFmt(context, 'Provisioner: {0}', [item.provisioner]),
+      tFmt(context, 'Reclaim Policy: {0}', [item.reclaimPolicy?.value ?? '-']),
+      tFmt(context, 'Volume Binding Mode: {0}', [
+        item.volumeBindingMode?.value ?? '-',
+      ]),
+      tFmt(context, 'Allow Volume Expansion: {0}', [
+        item.allowVolumeExpansion != null && item.allowVolumeExpansion == true
+            ? t(context, 'True')
+            : t(context, 'False'),
+      ]),
+      tFmt(context, 'Age: {0}', [getAge(item.metadata?.creationTimestamp)]),
     ];
   },
   detailsItemBuilder: (BuildContext context, Resource resource, dynamic detailsItem) {
@@ -99,10 +116,10 @@ final resourceStorageClass = Resource(
         DetailsItemMetadata(kind: item.kind, metadata: item.metadata),
         const SizedBox(height: Constants.spacingMiddle),
         DetailsItem(
-          title: 'Configuration',
+          title: t(context, 'Configuration'),
           details: [
             DetailsItemModel(
-              name: 'Default',
+              name: t(context, 'Default'),
               values:
                   item.metadata?.annotations != null &&
                       item.metadata!.annotations!.containsKey(
@@ -116,28 +133,34 @@ final resourceStorageClass = Resource(
                   ? 'Yes'
                   : 'No',
             ),
-            DetailsItemModel(name: 'Provisioner', values: item.provisioner),
             DetailsItemModel(
-              name: 'Parameters',
+              name: t(context, 'Provisioner'),
+              values: item.provisioner,
+            ),
+            DetailsItemModel(
+              name: t(context, 'Parameters'),
               values: item.parameters?.entries
                   .map((e) => '${e.key}=${e.value}')
                   .toList(),
             ),
             DetailsItemModel(
-              name: 'Allow Volume Expansion',
+              name: t(context, 'Allow Volume Expansion'),
               values:
                   item.allowVolumeExpansion != null &&
                       item.allowVolumeExpansion == true
-                  ? 'True'
-                  : 'False',
+                  ? t(context, 'True')
+                  : t(context, 'False'),
             ),
-            DetailsItemModel(name: 'Mount Options', values: item.mountOptions),
             DetailsItemModel(
-              name: 'Reclaim Policy',
+              name: t(context, 'Mount Options'),
+              values: item.mountOptions,
+            ),
+            DetailsItemModel(
+              name: t(context, 'Reclaim Policy'),
               values: item.reclaimPolicy?.value,
             ),
             DetailsItemModel(
-              name: 'Volume Bind Mode',
+              name: t(context, 'Volume Bind Mode'),
               values: item.volumeBindingMode?.value,
             ),
           ],

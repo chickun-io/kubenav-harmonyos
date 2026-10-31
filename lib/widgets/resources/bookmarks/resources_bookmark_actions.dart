@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:kubenav/repositories/bookmarks_repository.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/utils/showmodal.dart';
 import 'package:kubenav/utils/themes.dart';
 import 'package:kubenav/widgets/shared/app_actions_widget.dart';
@@ -25,7 +26,7 @@ class ResourcesBookmarkActions extends StatelessWidget {
     return AppActionsWidget(
       actions: [
         AppActionsWidgetAction(
-          title: 'Delete',
+          title: t(context, 'Delete'),
           color: Theme.of(context).extension<CustomColors>()!.error,
           onTap: () async {
             final title =
@@ -37,8 +38,8 @@ class ResourcesBookmarkActions extends StatelessWidget {
             if (context.mounted) {
               showSnackbar(
                 context,
-                'Bookmark Deleted',
-                'Bookmark $title was deleted',
+                t(context, 'Bookmark Deleted'),
+                tFmt(context, 'Bookmark {0} was deleted', [title]),
               );
               Navigator.pop(context);
             }

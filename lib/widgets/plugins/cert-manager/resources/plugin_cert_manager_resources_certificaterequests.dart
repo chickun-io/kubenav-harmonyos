@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import 'package:kubenav/models/kubernetes/schema.models.swagger.dart';
 import 'package:kubenav/utils/constants.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/utils/navigate.dart';
 import 'package:kubenav/utils/resources.dart';
 import 'package:kubenav/widgets/plugins/cert-manager/resources/plugin_cert_manager_resources.dart';
@@ -23,8 +24,7 @@ final Resource certManagerResourceCertificateRequest = Resource(
   category: CertManagerResourceCategories.certificates,
   plural: 'CertificateRequests',
   singular: 'CertificateRequest',
-  description:
-      'A CertificateRequest is used to request a signed certificate from one of the configured issuers',
+  description: 'A CertificateRequest is used to request a signed certificate from one of the configured issuers',
   path: '/apis/cert-manager.io/v1',
   resource: 'certificaterequests',
   scope: ResourceScope.namespaced,
@@ -95,38 +95,92 @@ final Resource certManagerResourceCertificateRequest = Resource(
   toJson: (dynamic item) {
     return json.decode(json.encode(item));
   },
-  listItemBuilder: (BuildContext context, Resource resource, ResourceItem listItem) {
-    final item = listItem.item as IoCertManagerV1CertificateRequest;
-    final status = listItem.status;
+  listItemBuilder:
+      (BuildContext context, Resource resource, ResourceItem listItem) {
+        final item = listItem.item as IoCertManagerV1CertificateRequest;
+        final status = listItem.status;
 
-    return ResourcesListItem(
-      name: item.metadata?.name ?? '',
-      namespace: item.metadata?.namespace ?? '',
-      resource: resource,
-      item: item,
-      status: status,
-      details: [
-        'Namespace: ${item.metadata?.namespace ?? '-'}',
-        'Approved: ${item.status?.conditions != null && item.status!.conditions!.isNotEmpty ? (item.status!.conditions?.where((e) => e.type == 'Approved').firstOrNull?.status ?? '-') : '-'}',
-        'Denied: ${item.status?.conditions != null && item.status!.conditions!.isNotEmpty ? (item.status!.conditions?.where((e) => e.type == 'Denied').firstOrNull?.status ?? '-') : '-'}',
-        'Ready: ${item.status?.conditions != null && item.status!.conditions!.isNotEmpty ? (item.status!.conditions?.where((e) => e.type == 'Ready').firstOrNull?.status ?? '-') : '-'}',
-        'Issuer: ${item.spec?.issuerRef.name ?? '-'}',
-        'Requestor: ${item.spec?.username ?? '-'}',
-        'Age: ${getAge(item.metadata?.creationTimestamp)}',
-      ],
-    );
-  },
-  previewItemBuilder: (dynamic listItem) {
+        return ResourcesListItem(
+          name: item.metadata?.name ?? '',
+          namespace: item.metadata?.namespace ?? '',
+          resource: resource,
+          item: item,
+          status: status,
+          details: [
+            tFmt(context, 'Namespace: {0}', [item.metadata?.namespace ?? '-']),
+            tFmt(context, 'Approved: {0}', [
+              item.status?.conditions != null &&
+                      item.status!.conditions!.isNotEmpty
+                  ? (item.status!.conditions
+                            ?.where((e) => e.type == 'Approved')
+                            .firstOrNull
+                            ?.status ??
+                        '-')
+                  : '-',
+            ]),
+            tFmt(context, 'Denied: {0}', [
+              item.status?.conditions != null &&
+                      item.status!.conditions!.isNotEmpty
+                  ? (item.status!.conditions
+                            ?.where((e) => e.type == 'Denied')
+                            .firstOrNull
+                            ?.status ??
+                        '-')
+                  : '-',
+            ]),
+            tFmt(context, 'Ready: {0}', [
+              item.status?.conditions != null &&
+                      item.status!.conditions!.isNotEmpty
+                  ? (item.status!.conditions
+                            ?.where((e) => e.type == 'Ready')
+                            .firstOrNull
+                            ?.status ??
+                        '-')
+                  : '-',
+            ]),
+            tFmt(context, 'Issuer: {0}', [item.spec?.issuerRef.name ?? '-']),
+            tFmt(context, 'Requestor: {0}', [item.spec?.username ?? '-']),
+            tFmt(context, 'Age: {0}', [
+              getAge(item.metadata?.creationTimestamp),
+            ]),
+          ],
+        );
+      },
+  previewItemBuilder: (BuildContext context, dynamic listItem) {
     final item = listItem as IoCertManagerV1CertificateRequest;
 
     return [
-      'Namespace: ${item.metadata?.namespace ?? '-'}',
-      'Approved: ${item.status?.conditions != null && item.status!.conditions!.isNotEmpty ? (item.status!.conditions?.where((e) => e.type == 'Approved').firstOrNull?.status ?? '-') : '-'}',
-      'Denied: ${item.status?.conditions != null && item.status!.conditions!.isNotEmpty ? (item.status!.conditions?.where((e) => e.type == 'Denied').firstOrNull?.status ?? '-') : '-'}',
-      'Ready: ${item.status?.conditions != null && item.status!.conditions!.isNotEmpty ? (item.status!.conditions?.where((e) => e.type == 'Ready').firstOrNull?.status ?? '-') : '-'}',
-      'Issuer: ${item.spec?.issuerRef.name ?? '-'}',
-      'Requestor: ${item.spec?.username ?? '-'}',
-      'Age: ${getAge(item.metadata?.creationTimestamp)}',
+      tFmt(context, 'Namespace: {0}', [item.metadata?.namespace ?? '-']),
+      tFmt(context, 'Approved: {0}', [
+        item.status?.conditions != null && item.status!.conditions!.isNotEmpty
+            ? (item.status!.conditions
+                      ?.where((e) => e.type == 'Approved')
+                      .firstOrNull
+                      ?.status ??
+                  '-')
+            : '-',
+      ]),
+      tFmt(context, 'Denied: {0}', [
+        item.status?.conditions != null && item.status!.conditions!.isNotEmpty
+            ? (item.status!.conditions
+                      ?.where((e) => e.type == 'Denied')
+                      .firstOrNull
+                      ?.status ??
+                  '-')
+            : '-',
+      ]),
+      tFmt(context, 'Ready: {0}', [
+        item.status?.conditions != null && item.status!.conditions!.isNotEmpty
+            ? (item.status!.conditions
+                      ?.where((e) => e.type == 'Ready')
+                      .firstOrNull
+                      ?.status ??
+                  '-')
+            : '-',
+      ]),
+      tFmt(context, 'Issuer: {0}', [item.spec?.issuerRef.name ?? '-']),
+      tFmt(context, 'Requestor: {0}', [item.spec?.username ?? '-']),
+      tFmt(context, 'Age: {0}', [getAge(item.metadata?.creationTimestamp)]),
     ];
   },
   detailsItemBuilder: (BuildContext context, Resource resource, dynamic detailsItem) {
@@ -151,11 +205,14 @@ final Resource certManagerResourceCertificateRequest = Resource(
         ),
         const SizedBox(height: Constants.spacingMiddle),
         DetailsItem(
-          title: 'Configuration',
+          title: t(context, 'Configuration'),
           details: [
-            DetailsItemModel(name: 'Requestor', values: item.spec?.username),
             DetailsItemModel(
-              name: 'Issuer',
+              name: t(context, 'Requestor'),
+              values: item.spec?.username,
+            ),
+            DetailsItemModel(
+              name: t(context, 'Issuer'),
               values: item.spec?.issuerRef == null
                   ? null
                   : '${item.spec!.issuerRef.kind} (${item.spec!.issuerRef.name})',
@@ -177,16 +234,22 @@ final Resource certManagerResourceCertificateRequest = Resource(
                       );
                     },
             ),
-            DetailsItemModel(name: 'Groups', values: item.spec?.groups),
-            DetailsItemModel(name: 'Request', values: item.spec?.request),
+            DetailsItemModel(
+              name: t(context, 'Groups'),
+              values: item.spec?.groups,
+            ),
+            DetailsItemModel(
+              name: t(context, 'Request'),
+              values: item.spec?.request,
+            ),
           ],
         ),
         const SizedBox(height: Constants.spacingMiddle),
         DetailsItem(
-          title: 'Status',
+          title: t(context, 'Status'),
           details: [
             DetailsItemModel(
-              name: 'Approved',
+              name: t(context, 'Approved'),
               values:
                   item.status?.conditions != null &&
                       item.status!.conditions!.isNotEmpty
@@ -197,7 +260,7 @@ final Resource certManagerResourceCertificateRequest = Resource(
                   : null,
             ),
             DetailsItemModel(
-              name: 'Denied',
+              name: t(context, 'Denied'),
               values:
                   item.status?.conditions != null &&
                       item.status!.conditions!.isNotEmpty
@@ -208,7 +271,7 @@ final Resource certManagerResourceCertificateRequest = Resource(
                   : null,
             ),
             DetailsItemModel(
-              name: 'Ready',
+              name: t(context, 'Ready'),
               values:
                   item.status?.conditions != null &&
                       item.status!.conditions!.isNotEmpty
@@ -219,7 +282,7 @@ final Resource certManagerResourceCertificateRequest = Resource(
                   : null,
             ),
             DetailsItemModel(
-              name: 'Status',
+              name: t(context, 'Status'),
               values:
                   item.status?.conditions != null &&
                       item.status!.conditions!.isNotEmpty
@@ -230,7 +293,7 @@ final Resource certManagerResourceCertificateRequest = Resource(
                   : null,
             ),
             DetailsItemModel(
-              name: 'Certificate',
+              name: t(context, 'Certificate'),
               values: item.status?.certificate,
             ),
           ],

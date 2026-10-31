@@ -11,6 +11,7 @@ import 'package:kubenav/repositories/clusters_repository.dart';
 import 'package:kubenav/services/kubernetes_service.dart';
 import 'package:kubenav/utils/constants.dart';
 import 'package:kubenav/utils/helpers.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/utils/themes.dart';
 import 'package:kubenav/widgets/shared/app_bottom_sheet_widget.dart';
 import 'package:kubenav/widgets/shared/app_error_widget.dart';
@@ -83,12 +84,12 @@ class _AppPrometheusChartWidgetState extends State<AppPrometheusChartWidget> {
 
     return AppBottomSheetWidget(
       title: widget.title,
-      subtitle: 'Unit: ${widget.unit}',
+      subtitle: tFmt(context, 'Unit: {0}', [widget.unit]),
       icon: Icons.area_chart,
       closePressed: () {
         Navigator.pop(context);
       },
-      actionText: 'Close',
+      actionText: t(context, 'Close'),
       actionPressed: () {
         Navigator.pop(context);
       },
@@ -126,9 +127,9 @@ class _AppPrometheusChartWidgetState extends State<AppPrometheusChartWidget> {
                     decoration: BoxDecoration(
                       boxShadow: [
                         BoxShadow(
-                          color: Theme.of(
-                            context,
-                          ).extension<CustomColors>()!.shadow,
+                          color: Theme.of(context)
+                              .extension<CustomColors>()!
+                              .shadow,
                           blurRadius: Constants.sizeBorderBlurRadius,
                           spreadRadius: Constants.sizeBorderSpreadRadius,
                           offset: const Offset(0.0, 0.0),
@@ -152,20 +153,20 @@ class _AppPrometheusChartWidgetState extends State<AppPrometheusChartWidget> {
                                 touchTooltipData: LineTouchTooltipData(
                                   fitInsideHorizontally: true,
                                   fitInsideVertically: true,
-                                  maxContentWidth: MediaQuery.of(
-                                    context,
-                                  ).size.width,
+                                  maxContentWidth: MediaQuery.of(context)
+                                      .size
+                                      .width,
                                   getTooltipColor: (LineBarSpot touchedSpot) {
-                                    return Theme.of(
-                                      context,
-                                    ).extension<CustomColors>()!.message;
+                                    return Theme.of(context)
+                                        .extension<CustomColors>()!
+                                        .message;
                                   },
                                   getTooltipItems: (touchedSpots) {
                                     return touchedSpots.map((
                                       LineBarSpot touchedSpot,
                                     ) {
                                       return LineTooltipItem(
-                                        '${_selectedLabel == '' ? snapshot.data![touchedSpot.barIndex].label : _selectedLabel}: ${NumberFormat.compact(locale: "en_US").format(touchedSpot.y)} ${widget.unit}',
+                                        '${_selectedLabel == '' ? snapshot.data![touchedSpot.barIndex].label : _selectedLabel}: ${NumberFormat.compact(locale: Localizations.localeOf(context).toString()).format(touchedSpot.y)} ${widget.unit}',
                                         TextStyle(
                                           color: Theme.of(context)
                                               .extension<CustomColors>()!
@@ -189,9 +190,9 @@ class _AppPrometheusChartWidgetState extends State<AppPrometheusChartWidget> {
                                     (e) => LineChartBarData(
                                       spots: e.toSpots(),
                                       dotData: const FlDotData(show: false),
-                                      color: Theme.of(
-                                        context,
-                                      ).colorScheme.primary,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .primary,
                                       barWidth: 4,
                                       isCurved: false,
                                     ),
@@ -209,13 +210,12 @@ class _AppPrometheusChartWidgetState extends State<AppPrometheusChartWidget> {
                                   sideTitles: SideTitles(
                                     showTitles: true,
                                     reservedSize: 96,
-                                    getTitlesWidget:
-                                        (double value, TitleMeta meta) {
-                                          return Text(
-                                            '${NumberFormat.compact(locale: "en_US").format(value)} ${widget.unit}',
-                                            style: secondaryTextStyle(context),
-                                          );
-                                        },
+                                    getTitlesWidget: (double value, TitleMeta meta) {
+                                      return Text(
+                                        '${NumberFormat.compact(locale: Localizations.localeOf(context).toString()).format(value)} ${widget.unit}',
+                                        style: secondaryTextStyle(context),
+                                      );
+                                    },
                                   ),
                                 ),
                                 bottomTitles: AxisTitles(
@@ -251,18 +251,18 @@ class _AppPrometheusChartWidgetState extends State<AppPrometheusChartWidget> {
                                 show: true,
                                 getDrawingHorizontalLine: (value) {
                                   return FlLine(
-                                    color: Theme.of(
-                                      context,
-                                    ).extension<CustomColors>()!.textSecondary,
+                                    color: Theme.of(context)
+                                        .extension<CustomColors>()!
+                                        .textSecondary,
                                     strokeWidth: 0.4,
                                     dashArray: [8, 4],
                                   );
                                 },
                                 getDrawingVerticalLine: (value) {
                                   return FlLine(
-                                    color: Theme.of(
-                                      context,
-                                    ).extension<CustomColors>()!.textSecondary,
+                                    color: Theme.of(context)
+                                        .extension<CustomColors>()!
+                                        .textSecondary,
                                     strokeWidth: 0.4,
                                     dashArray: [8, 4],
                                   );
@@ -310,7 +310,7 @@ class _AppPrometheusChartWidgetState extends State<AppPrometheusChartWidget> {
                                   e.data != null &&
                                           e.data!.isNotEmpty &&
                                           e.data![e.data!.length - 1].y != null
-                                      ? '${NumberFormat.compact(locale: "en_US").format(e.data![e.data!.length - 1].y!)} ${widget.unit}'
+                                      ? '${NumberFormat.compact(locale: Localizations.localeOf(context).toString()).format(e.data![e.data!.length - 1].y!)} ${widget.unit}'
                                       : '',
                                   style: secondaryTextStyle(
                                     context,

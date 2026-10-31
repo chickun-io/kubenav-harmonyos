@@ -8,6 +8,7 @@ import 'package:kubenav/repositories/clusters_repository.dart';
 import 'package:kubenav/services/providers/oidc_service.dart';
 import 'package:kubenav/utils/constants.dart';
 import 'package:kubenav/utils/helpers.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/utils/logger.dart';
 import 'package:kubenav/utils/showmodal.dart';
 import 'package:kubenav/utils/themes.dart';
@@ -47,7 +48,7 @@ class _SettingsOIDCProviderState extends State<SettingsOIDCProvider> {
   /// missing the validation of the form will fail.
   String? _validator(String? value) {
     if (value == null || value.isEmpty) {
-      return 'This field is required';
+      return t(context, 'This field is required');
     }
 
     return null;
@@ -86,7 +87,11 @@ class _SettingsOIDCProviderState extends State<SettingsOIDCProvider> {
         err,
       );
       if (mounted) {
-        showSnackbar(context, 'Failed to Open Sign In Url', err.toString());
+        showSnackbar(
+          context,
+          t(context, 'Failed to Open Sign In Url'),
+          err.toString(),
+        );
       }
     }
   }
@@ -116,7 +121,7 @@ class _SettingsOIDCProviderState extends State<SettingsOIDCProvider> {
       if (mounted) {
         showSnackbar(
           context,
-          'Failed to Initialize Device Flow',
+          t(context, 'Failed to Initialize Device Flow'),
           err.toString(),
         );
       }
@@ -138,7 +143,11 @@ class _SettingsOIDCProviderState extends State<SettingsOIDCProvider> {
         err,
       );
       if (mounted) {
-        showSnackbar(context, 'Failed to Verify Device', err.toString());
+        showSnackbar(
+          context,
+          t(context, 'Failed to Verify Device'),
+          err.toString(),
+        );
       }
     }
   }
@@ -241,7 +250,7 @@ class _SettingsOIDCProviderState extends State<SettingsOIDCProvider> {
           if (mounted) {
             showSnackbar(
               context,
-              'Failed to Save Provider Configuration',
+              t(context, 'Failed to Save Provider Configuration'),
               err.toString(),
             );
           }
@@ -372,7 +381,7 @@ class _SettingsOIDCProviderState extends State<SettingsOIDCProvider> {
           if (mounted) {
             showSnackbar(
               context,
-              'Failed to Save Provider Configuration',
+              t(context, 'Failed to Save Provider Configuration'),
               err.toString(),
             );
           }
@@ -391,9 +400,9 @@ class _SettingsOIDCProviderState extends State<SettingsOIDCProvider> {
           autocorrect: false,
           enableSuggestions: false,
           maxLines: 1,
-          decoration: const InputDecoration(
+          decoration: InputDecoration(
             border: OutlineInputBorder(),
-            labelText: 'Client Secret',
+            labelText: t(context, 'Client Secret'),
           ),
         ),
       );
@@ -406,8 +415,11 @@ class _SettingsOIDCProviderState extends State<SettingsOIDCProvider> {
     if (_deviceAuthData != null) {
       return [
         const SizedBox(height: Constants.spacingMiddle),
-        const Text(
-          'Copy the code shown in the input field from below and click the verify button to verify your device.',
+        Text(
+          t(
+            context,
+            'Copy the code shown in the input field from below and click the verify button to verify your device.',
+          ),
         ),
         const SizedBox(height: Constants.spacingMiddle),
         TextFormField(
@@ -417,9 +429,9 @@ class _SettingsOIDCProviderState extends State<SettingsOIDCProvider> {
           enableSuggestions: false,
           maxLines: 1,
           readOnly: true,
-          decoration: const InputDecoration(
+          decoration: InputDecoration(
             border: OutlineInputBorder(),
-            labelText: 'Code',
+            labelText: t(context, 'Code'),
           ),
         ),
         const SizedBox(height: Constants.spacingMiddle),
@@ -434,7 +446,7 @@ class _SettingsOIDCProviderState extends State<SettingsOIDCProvider> {
           ),
           onPressed: _verifyDeviceFlow,
           child: Text(
-            'Verify',
+            t(context, 'Verify'),
             style: primaryTextStyle(
               context,
               color: Theme.of(context).colorScheme.onPrimary,
@@ -447,7 +459,7 @@ class _SettingsOIDCProviderState extends State<SettingsOIDCProvider> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const Text('Use Access Token instead of ID Token'),
+            Text(t(context, 'Use Access Token instead of ID Token')),
             Switch(
               activeThumbColor: Theme.of(context).colorScheme.primary,
               onChanged: (val) => {
@@ -490,15 +502,18 @@ class _SettingsOIDCProviderState extends State<SettingsOIDCProvider> {
           children: [
             Row(
               children: [
-                const Text('Add Default Scopes'),
+                Text(t(context, 'Add Default Scopes')),
                 IconButton(
                   onPressed: () {
                     showDialog(
                       context: context,
                       builder: (context) => AlertDialog(
-                        title: Text('Add Default Scopes'),
+                        title: Text(t(context, 'Add Default Scopes')),
                         content: Text(
-                          'Add the "openid" and "offline_access" scopes.',
+                          t(
+                            context,
+                            'Add the "openid" and "offline_access" scopes.',
+                          ),
                         ),
                       ),
                     );
@@ -530,7 +545,7 @@ class _SettingsOIDCProviderState extends State<SettingsOIDCProvider> {
           ),
           onPressed: _initDeviceFlow,
           child: Text(
-            'Initialize Device Flow',
+            t(context, 'Initialize Device Flow'),
             style: primaryTextStyle(
               context,
               color: Theme.of(context).colorScheme.onPrimary,
@@ -549,7 +564,7 @@ class _SettingsOIDCProviderState extends State<SettingsOIDCProvider> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const Text('PKCE Method'),
+            Text(t(context, 'PKCE Method')),
             DropdownButton(
               value: _pkceMethod,
               underline: Container(
@@ -567,9 +582,9 @@ class _SettingsOIDCProviderState extends State<SettingsOIDCProvider> {
                   child: Text(
                     value,
                     style: TextStyle(
-                      color: Theme.of(
-                        context,
-                      ).extension<CustomColors>()!.textPrimary,
+                      color: Theme.of(context)
+                          .extension<CustomColors>()!
+                          .textPrimary,
                     ),
                   ),
                 );
@@ -601,15 +616,18 @@ class _SettingsOIDCProviderState extends State<SettingsOIDCProvider> {
           children: [
             Row(
               children: [
-                const Text('Add Default Scopes'),
+                Text(t(context, 'Add Default Scopes')),
                 IconButton(
                   onPressed: () {
                     showDialog(
                       context: context,
                       builder: (context) => AlertDialog(
-                        title: Text('Add Default Scopes'),
+                        title: Text(t(context, 'Add Default Scopes')),
                         content: Text(
-                          'Add the "openid" and "offline_access" scopes.',
+                          t(
+                            context,
+                            'Add the "openid" and "offline_access" scopes.',
+                          ),
                         ),
                       ),
                     );
@@ -667,9 +685,9 @@ class _SettingsOIDCProviderState extends State<SettingsOIDCProvider> {
           autocorrect: false,
           enableSuggestions: false,
           maxLines: 1,
-          decoration: const InputDecoration(
+          decoration: InputDecoration(
             border: OutlineInputBorder(),
-            labelText: 'Redirect URL',
+            labelText: t(context, 'Redirect URL'),
           ),
         ),
       ),
@@ -682,9 +700,9 @@ class _SettingsOIDCProviderState extends State<SettingsOIDCProvider> {
           autocorrect: false,
           enableSuggestions: false,
           maxLines: 1,
-          decoration: const InputDecoration(
+          decoration: InputDecoration(
             border: OutlineInputBorder(),
-            labelText: 'State',
+            labelText: t(context, 'State'),
           ),
           validator: _validator,
         ),
@@ -695,7 +713,7 @@ class _SettingsOIDCProviderState extends State<SettingsOIDCProvider> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const Text('Use Access Token instead of ID Token'),
+            Text(t(context, 'Use Access Token instead of ID Token')),
             Switch(
               activeThumbColor: Theme.of(context).colorScheme.primary,
               onChanged: (val) => {
@@ -721,7 +739,7 @@ class _SettingsOIDCProviderState extends State<SettingsOIDCProvider> {
           ),
           onPressed: _signIn,
           child: Text(
-            'Sign In',
+            t(context, 'Sign In'),
             style: primaryTextStyle(
               context,
               color: Theme.of(context).colorScheme.onPrimary,
@@ -738,9 +756,9 @@ class _SettingsOIDCProviderState extends State<SettingsOIDCProvider> {
           autocorrect: false,
           enableSuggestions: false,
           maxLines: 1,
-          decoration: const InputDecoration(
+          decoration: InputDecoration(
             border: OutlineInputBorder(),
-            labelText: 'Code',
+            labelText: t(context, 'Code'),
           ),
         ),
       ),
@@ -820,9 +838,9 @@ class _SettingsOIDCProviderState extends State<SettingsOIDCProvider> {
                   autocorrect: false,
                   enableSuggestions: false,
                   maxLines: 1,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     border: OutlineInputBorder(),
-                    labelText: 'Name',
+                    labelText: t(context, 'Name'),
                   ),
                   validator: _validator,
                 ),
@@ -831,7 +849,7 @@ class _SettingsOIDCProviderState extends State<SettingsOIDCProvider> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const Text('Authentication Flow'),
+                    Text(t(context, 'Authentication Flow')),
                     DropdownButton(
                       value: _flow,
                       underline: Container(
@@ -849,9 +867,9 @@ class _SettingsOIDCProviderState extends State<SettingsOIDCProvider> {
                           child: Text(
                             value.pretty(),
                             style: TextStyle(
-                              color: Theme.of(
-                                context,
-                              ).extension<CustomColors>()!.textPrimary,
+                              color: Theme.of(context)
+                                  .extension<CustomColors>()!
+                                  .textPrimary,
                             ),
                           ),
                         );
@@ -866,9 +884,9 @@ class _SettingsOIDCProviderState extends State<SettingsOIDCProvider> {
                   autocorrect: false,
                   enableSuggestions: false,
                   maxLines: 1,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     border: OutlineInputBorder(),
-                    labelText: 'Discovery URL',
+                    labelText: t(context, 'Discovery URL'),
                   ),
                   validator: _validator,
                 ),
@@ -879,9 +897,9 @@ class _SettingsOIDCProviderState extends State<SettingsOIDCProvider> {
                   autocorrect: false,
                   enableSuggestions: false,
                   maxLines: 1,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     border: OutlineInputBorder(),
-                    labelText: 'Client ID',
+                    labelText: t(context, 'Client ID'),
                   ),
                   validator: _validator,
                 ),

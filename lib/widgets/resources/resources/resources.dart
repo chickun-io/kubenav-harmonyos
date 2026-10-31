@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/widgets/resources/resources/resources_certificatesigningrequests.dart';
 import 'package:kubenav/widgets/resources/resources/resources_clusterrolebindings.dart';
 import 'package:kubenav/widgets/resources/resources/resources_clusterroles.dart';
@@ -98,7 +99,7 @@ class Resource {
   Map<String, dynamic> Function(dynamic item) toJson;
   Widget Function(BuildContext context, Resource resource, ResourceItem item)
   listItemBuilder;
-  List<String> Function(dynamic item) previewItemBuilder;
+  List<String> Function(BuildContext context, dynamic item) previewItemBuilder;
   Widget Function(BuildContext context, Resource resource, dynamic item)
   detailsItemBuilder;
 
@@ -207,16 +208,16 @@ enum ResourceStatus { undefined, success, warning, danger }
 extension ResourceStatusExtension on ResourceStatus {
   /// [toLocalizedString] returns a string for the status of a resource, which
   /// can be used in the UI.
-  String toLocalizedString() {
+  String toLocalizedString(BuildContext context) {
     switch (this) {
       case ResourceStatus.undefined:
-        return 'All';
+        return t(context, 'All');
       case ResourceStatus.success:
-        return 'Healthy';
+        return t(context, 'Healthy');
       case ResourceStatus.warning:
-        return 'Warning';
+        return t(context, 'Warning');
       case ResourceStatus.danger:
-        return 'Unhealthy';
+        return t(context, 'Unhealthy');
     }
   }
 }

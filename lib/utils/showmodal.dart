@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:kubenav/utils/constants.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/utils/themes.dart';
 
 void showModal(BuildContext context, Widget widget, {bool fullScreen = false}) {
@@ -40,6 +41,15 @@ void showActions(BuildContext context, Widget widget) {
 }
 
 void showSnackbar(BuildContext context, String title, String message) {
+  final localizedTitle = t(context, title);
+  final exactMessage = t(context, message);
+  final localizedMessage = exactMessage == message
+      ? message.replaceAll(
+          'An unknown error occured',
+          t(context, 'An unknown error occured'),
+        )
+      : exactMessage;
+
   ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(
       behavior: SnackBarBehavior.floating,
@@ -53,7 +63,7 @@ void showSnackbar(BuildContext context, String title, String message) {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            title,
+            localizedTitle,
             style: TextStyle(
               color: Theme.of(context).extension<CustomColors>()!.onMessage,
             ),
@@ -61,7 +71,7 @@ void showSnackbar(BuildContext context, String title, String message) {
             overflow: TextOverflow.ellipsis,
           ),
           Text(
-            message,
+            localizedMessage,
             style: TextStyle(
               color: Theme.of(context).extension<CustomColors>()!.onMessage,
             ),

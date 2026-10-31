@@ -7,6 +7,7 @@ import 'package:kubenav/repositories/app_repository.dart';
 import 'package:kubenav/repositories/clusters_repository.dart';
 import 'package:kubenav/services/kubernetes_service.dart';
 import 'package:kubenav/utils/constants.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/utils/logger.dart';
 import 'package:kubenav/utils/showmodal.dart';
 import 'package:kubenav/utils/time.dart';
@@ -68,8 +69,11 @@ class _CSRApproveState extends State<CSRApprove> {
       if (mounted) {
         showSnackbar(
           context,
-          '${widget.resource.singular} Approved',
-          'The ${widget.resource.singular} ${widget.name} was approved',
+          tFmt(context, '{0} Approved', [t(context, widget.resource.singular)]),
+          tFmt(context, 'The {0} {1} was approved', [
+            t(context, widget.resource.singular),
+            widget.name,
+          ]),
         );
         Navigator.pop(context);
       }
@@ -85,7 +89,9 @@ class _CSRApproveState extends State<CSRApprove> {
       if (mounted) {
         showSnackbar(
           context,
-          'Failed to Approve ${widget.resource.singular}',
+          tFmt(context, 'Failed to Approve {0}', [
+            t(context, widget.resource.singular),
+          ]),
           err.toString(),
         );
       }
@@ -95,13 +101,13 @@ class _CSRApproveState extends State<CSRApprove> {
   @override
   Widget build(BuildContext context) {
     return AppBottomSheetWidget(
-      title: 'Approve',
+      title: t(context, 'Approve'),
       subtitle: widget.name,
       icon: Icons.task_alt,
       closePressed: () {
         Navigator.pop(context);
       },
-      actionText: 'Approve',
+      actionText: t(context, 'Approve'),
       actionPressed: () {
         _approve();
       },
@@ -115,7 +121,10 @@ class _CSRApproveState extends State<CSRApprove> {
             right: Constants.spacingMiddle,
           ),
           child: Text(
-            'Do you really want to approve the ${widget.resource.singular} ${widget.name}?',
+            tFmt(context, 'Do you really want to approve the {0} {1}?', [
+              t(context, widget.resource.singular),
+              widget.name,
+            ]),
           ),
         ),
       ),

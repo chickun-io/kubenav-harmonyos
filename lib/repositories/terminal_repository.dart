@@ -7,19 +7,21 @@ import 'package:web_socket_channel/io.dart';
 import 'package:xterm/core.dart' as xtermcore;
 import 'package:xterm/xterm.dart' as xterm;
 
+import 'package:kubenav/utils/l10n.dart';
+
 /// [TerminalType] is a `enum`, which defines if a terminal is used to show logs or for connection to a container.
 enum TerminalType { log, logstream, exec }
 
 extension TerminalTypeExtension on TerminalType {
   /// [toLocalizedString] returns a localized string for a source type.
-  String toLocalizedString() {
+  String toLocalizedString(BuildContext context) {
     switch (this) {
       case TerminalType.log:
-        return 'Logs';
+        return t(context, 'Logs');
       case TerminalType.logstream:
-        return 'Logs Stream';
+        return t(context, 'Logs Stream');
       case TerminalType.exec:
-        return 'Terminal';
+        return t(context, 'Terminal');
     }
   }
 }

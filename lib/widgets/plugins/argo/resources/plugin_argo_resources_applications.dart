@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import 'package:kubenav/models/kubernetes/schema.models.swagger.dart';
 import 'package:kubenav/utils/constants.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/utils/navigate.dart';
 import 'package:kubenav/utils/resources.dart';
 import 'package:kubenav/widgets/plugins/argo/resources/plugin_argo_resources.dart';
@@ -77,23 +78,35 @@ final Resource argoResourceApplication = Resource(
           item: item,
           status: status,
           details: [
-            'Namespace: ${item.metadata.namespace ?? '-'}',
-            'App Health: ${item.status?.health?.status ?? '-'}',
-            'Sync Status: ${item.status?.$sync?.status ?? '-'}',
-            'Created At: ${getAge(item.metadata.creationTimestamp)}',
-            'Last Sync: ${getAge(item.status?.operationState?.finishedAt)}',
+            tFmt(context, 'Namespace: {0}', [item.metadata.namespace ?? '-']),
+            tFmt(context, 'App Health: {0}', [
+              item.status?.health?.status ?? '-',
+            ]),
+            tFmt(context, 'Sync Status: {0}', [
+              item.status?.$sync?.status ?? '-',
+            ]),
+            tFmt(context, 'Created At: {0}', [
+              getAge(item.metadata.creationTimestamp),
+            ]),
+            tFmt(context, 'Last Sync: {0}', [
+              getAge(item.status?.operationState?.finishedAt),
+            ]),
           ],
         );
       },
-  previewItemBuilder: (dynamic listItem) {
+  previewItemBuilder: (BuildContext context, dynamic listItem) {
     final item = listItem as IoArgoprojV1alpha1Application;
 
     return [
-      'Namespace: ${item.metadata.namespace ?? '-'}',
-      'App Health: ${item.status?.health?.status ?? '-'}',
-      'Sync Status: ${item.status?.$sync?.status ?? '-'}',
-      'Created At: ${getAge(item.metadata.creationTimestamp)}',
-      'Last Sync: ${getAge(item.status?.operationState?.finishedAt)}',
+      tFmt(context, 'Namespace: {0}', [item.metadata.namespace ?? '-']),
+      tFmt(context, 'App Health: {0}', [item.status?.health?.status ?? '-']),
+      tFmt(context, 'Sync Status: {0}', [item.status?.$sync?.status ?? '-']),
+      tFmt(context, 'Created At: {0}', [
+        getAge(item.metadata.creationTimestamp),
+      ]),
+      tFmt(context, 'Last Sync: {0}', [
+        getAge(item.status?.operationState?.finishedAt),
+      ]),
     ];
   },
   detailsItemBuilder:
@@ -105,90 +118,93 @@ final Resource argoResourceApplication = Resource(
             DetailsItemMetadata(kind: item.kind, metadata: item.metadata),
             const SizedBox(height: Constants.spacingMiddle),
             DetailsItem(
-              title: 'Configuration',
+              title: t(context, 'Configuration'),
               details: [
-                DetailsItemModel(name: 'Project', values: item.spec.project),
                 DetailsItemModel(
-                  name: 'Info',
+                  name: t(context, 'Project'),
+                  values: item.spec.project,
+                ),
+                DetailsItemModel(
+                  name: t(context, 'Info'),
                   values: item.spec.info != null && item.spec.info!.isNotEmpty
                       ? item.spec.info!.map((e) => e.value).toList()
                       : null,
                 ),
                 DetailsItemModel(
-                  name: 'Cluster',
+                  name: t(context, 'Cluster'),
                   values:
                       item.spec.destination.server ??
                       item.spec.destination.name,
                 ),
                 DetailsItemModel(
-                  name: 'Source Type',
+                  name: t(context, 'Source Type'),
                   values: item.status?.sourceType ?? '-',
                 ),
                 DetailsItemModel(
-                  name: 'Repo URL',
+                  name: t(context, 'Repo URL'),
                   values: item.spec.source?.repoURL ?? '-',
                 ),
                 DetailsItemModel(
-                  name: 'Target Revision',
+                  name: t(context, 'Target Revision'),
                   values: item.spec.source?.targetRevision ?? '-',
                 ),
                 DetailsItemModel(
-                  name: 'Path',
+                  name: t(context, 'Path'),
                   values: item.spec.source?.path ?? '-',
                 ),
                 DetailsItemModel(
-                  name: 'Sync Policy',
+                  name: t(context, 'Sync Policy'),
                   values: item.spec.syncPolicy != null
                       ? 'Auto sync enabled'
                       : 'Auto sync disabled',
                 ),
                 DetailsItemModel(
-                  name: 'Prune',
+                  name: t(context, 'Prune'),
                   values: item.spec.syncPolicy?.automated?.prune == true
-                      ? 'True'
-                      : 'False',
+                      ? t(context, 'True')
+                      : t(context, 'False'),
                 ),
                 DetailsItemModel(
-                  name: 'SelfHeal',
+                  name: t(context, 'SelfHeal'),
                   values: item.spec.syncPolicy?.automated?.selfHeal == true
-                      ? 'True'
-                      : 'False',
+                      ? t(context, 'True')
+                      : t(context, 'False'),
                 ),
               ],
             ),
             const SizedBox(height: Constants.spacingMiddle),
             DetailsItem(
-              title: 'Status',
+              title: t(context, 'Status'),
               details: [
                 DetailsItemModel(
-                  name: 'App Health',
+                  name: t(context, 'App Health'),
                   values: item.status?.health?.status,
                 ),
                 DetailsItemModel(
-                  name: 'Sync Status',
+                  name: t(context, 'Sync Status'),
                   values: item.status?.$sync?.status,
                 ),
                 DetailsItemModel(
-                  name: 'Last Sync',
+                  name: t(context, 'Last Sync'),
                   values: getAge(item.status?.operationState?.finishedAt),
                 ),
                 DetailsItemModel(
-                  name: 'Last Reconcile',
+                  name: t(context, 'Last Reconcile'),
                   values: getAge(item.status?.reconciledAt),
                 ),
                 DetailsItemModel(
-                  name: 'Images',
+                  name: t(context, 'Images'),
                   values: item.status?.summary?.images,
                 ),
                 DetailsItemModel(
-                  name: 'URLs',
+                  name: t(context, 'URLs'),
                   values: item.status?.summary?.externalURLs,
                 ),
                 // TODO: this list should link to the customResource widgets for
                 // non-supported resource kinds, it would also be useful to see
                 // health and sync status per resource.
                 DetailsItemModel(
-                  name: 'Resources',
+                  name: t(context, 'Resources'),
                   values: item.status?.resources?.map((e) {
                     return '${e.kind}/${e.name}';
                   }).toList(),

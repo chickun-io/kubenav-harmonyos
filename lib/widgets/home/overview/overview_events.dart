@@ -11,6 +11,7 @@ import 'package:kubenav/repositories/clusters_repository.dart';
 import 'package:kubenav/services/kubernetes_service.dart';
 import 'package:kubenav/utils/constants.dart';
 import 'package:kubenav/utils/helpers.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/widgets/resources/resources/resources.dart';
 import 'package:kubenav/widgets/resources/resources/resources_events.dart';
 import 'package:kubenav/widgets/resources/resources_list.dart';
@@ -97,7 +98,7 @@ class _OverviewEventsState extends State<OverviewEvents> {
       status: event.type == 'Normal'
           ? ResourceStatus.success
           : ResourceStatus.warning,
-      details: resourceEvent.previewItemBuilder(event),
+      details: resourceEvent.previewItemBuilder(context, event),
     );
   }
 
@@ -110,7 +111,7 @@ class _OverviewEventsState extends State<OverviewEvents> {
             children: [
               Expanded(
                 child: Text(
-                  'Warnings',
+                  t(context, 'Warnings'),
                   style: primaryTextStyle(context, size: 18),
                 ),
               ),
@@ -175,7 +176,9 @@ class _OverviewEventsState extends State<OverviewEvents> {
                               right: Constants.spacingMiddle,
                             ),
                             child: AppErrorWidget(
-                              message: 'Failed to Load ${resourceEvent.plural}',
+                              message: tFmt(context, 'Failed to Load {0}', [
+                                t(context, resourceEvent.plural),
+                              ]),
                               details: snapshot.error.toString(),
                               icon:
                                   'assets/resources/${resourceEvent.icon}.svg',

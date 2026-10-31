@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import 'package:kubenav/models/kubernetes/schema.models.swagger.dart';
 import 'package:kubenav/utils/constants.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/utils/resources.dart';
 import 'package:kubenav/widgets/plugins/argo/resources/plugin_argo_resources.dart';
 import 'package:kubenav/widgets/resources/helpers/details_item.dart';
@@ -69,17 +70,21 @@ final Resource argoResourceProject = Resource(
           item: item,
           status: status,
           details: [
-            'Namespace: ${item.metadata.namespace ?? '-'}',
-            'Created At: ${getAge(item.metadata.creationTimestamp)}',
+            tFmt(context, 'Namespace: {0}', [item.metadata.namespace ?? '-']),
+            tFmt(context, 'Created At: {0}', [
+              getAge(item.metadata.creationTimestamp),
+            ]),
           ],
         );
       },
-  previewItemBuilder: (dynamic listItem) {
+  previewItemBuilder: (BuildContext context, dynamic listItem) {
     final item = listItem as IoArgoprojV1alpha1AppProject;
 
     return [
-      'Namespace: ${item.metadata.namespace ?? '-'}',
-      'Created At: ${getAge(item.metadata.creationTimestamp)}',
+      tFmt(context, 'Namespace: {0}', [item.metadata.namespace ?? '-']),
+      tFmt(context, 'Created At: {0}', [
+        getAge(item.metadata.creationTimestamp),
+      ]),
     ];
   },
   detailsItemBuilder:
@@ -91,15 +96,15 @@ final Resource argoResourceProject = Resource(
             DetailsItemMetadata(kind: item.kind, metadata: item.metadata),
             const SizedBox(height: Constants.spacingMiddle),
             DetailsItem(
-              title: 'Details',
+              title: t(context, 'Details'),
               details: [
                 DetailsItemModel(
-                  name: 'Description',
+                  name: t(context, 'Description'),
                   values: item.spec.description,
                 ),
                 // TODO: There are more details to show than just enabled or not
                 DetailsItemModel(
-                  name: 'Sync Windows',
+                  name: t(context, 'Sync Windows'),
                   values:
                       item.spec.syncWindows != null &&
                           item.spec.syncWindows!.isEmpty

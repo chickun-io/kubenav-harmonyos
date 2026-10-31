@@ -1,0 +1,4 @@
+"NSFaceIDUsageDescription" = "保护已配置的集群，防止未经授权的访问";
+"NSLocationWhenInUseUsageDescription" = "外部库需要此权限，应用本身不会使用";
+"NSPhotoLibraryUsageDescription" = "外部库需要此权限，应用本身不会使用";
+"NSCameraUsageDescription" = "外部库需要此权限，应用本身不会使用";

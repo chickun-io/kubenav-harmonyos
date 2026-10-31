@@ -8,6 +8,7 @@ import 'package:kubenav/repositories/app_repository.dart';
 import 'package:kubenav/repositories/clusters_repository.dart';
 import 'package:kubenav/services/kubernetes_service.dart';
 import 'package:kubenav/utils/constants.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/utils/logger.dart';
 import 'package:kubenav/utils/showmodal.dart';
 import 'package:kubenav/utils/themes.dart';
@@ -119,7 +120,7 @@ class _PluginHelmDetailsUninstallState
         Navigator.pop(context);
         showSnackbar(
           context,
-          'Helm Release Uninstalled',
+          t(context, 'Helm Release Uninstalled'),
           message != ''
               ? message
               : 'Helm Release ${widget.namespace}/${widget.name} was uninstalled',
@@ -136,7 +137,7 @@ class _PluginHelmDetailsUninstallState
       });
       if (mounted) {
         Navigator.pop(context);
-        showSnackbar(context, 'Uninstall Failed', err.toString());
+        showSnackbar(context, t(context, 'Uninstall Failed'), err.toString());
       }
     }
   }
@@ -157,13 +158,13 @@ class _PluginHelmDetailsUninstallState
   @override
   Widget build(BuildContext context) {
     return AppBottomSheetWidget(
-      title: 'Uninstall',
+      title: t(context, 'Uninstall'),
       subtitle: '${widget.namespace}/${widget.name}',
       icon: Icons.delete,
       closePressed: () {
         Navigator.pop(context);
       },
-      actionText: 'Uninstall',
+      actionText: t(context, 'Uninstall'),
       actionPressed: () {
         _uninstall();
       },
@@ -184,7 +185,7 @@ class _PluginHelmDetailsUninstallState
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const Text('Cascade'),
+                    Text(t(context, 'Cascade')),
                     DropdownButton(
                       value: _cascade,
                       underline: Container(
@@ -200,33 +201,33 @@ class _PluginHelmDetailsUninstallState
                         DropdownMenuItem(
                           value: 'background',
                           child: Text(
-                            'background',
+                            t(context, 'background'),
                             style: TextStyle(
-                              color: Theme.of(
-                                context,
-                              ).extension<CustomColors>()!.textPrimary,
+                              color: Theme.of(context)
+                                  .extension<CustomColors>()!
+                                  .textPrimary,
                             ),
                           ),
                         ),
                         DropdownMenuItem(
                           value: 'orphan',
                           child: Text(
-                            'orphan',
+                            t(context, 'orphan'),
                             style: TextStyle(
-                              color: Theme.of(
-                                context,
-                              ).extension<CustomColors>()!.textPrimary,
+                              color: Theme.of(context)
+                                  .extension<CustomColors>()!
+                                  .textPrimary,
                             ),
                           ),
                         ),
                         DropdownMenuItem(
                           value: 'foreground',
                           child: Text(
-                            'foreground',
+                            t(context, 'foreground'),
                             style: TextStyle(
-                              color: Theme.of(
-                                context,
-                              ).extension<CustomColors>()!.textPrimary,
+                              color: Theme.of(context)
+                                  .extension<CustomColors>()!
+                                  .textPrimary,
                             ),
                           ),
                         ),
@@ -239,7 +240,7 @@ class _PluginHelmDetailsUninstallState
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const Text('Dry Run'),
+                    Text(t(context, 'Dry Run')),
                     Switch(
                       activeThumbColor: Theme.of(context).colorScheme.primary,
                       onChanged: (value) {
@@ -256,7 +257,7 @@ class _PluginHelmDetailsUninstallState
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const Text('Keep History'),
+                    Text(t(context, 'Keep History')),
                     Switch(
                       activeThumbColor: Theme.of(context).colorScheme.primary,
                       onChanged: (value) {
@@ -273,7 +274,7 @@ class _PluginHelmDetailsUninstallState
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const Text('Disable Hooks'),
+                    Text(t(context, 'Disable Hooks')),
                     Switch(
                       activeThumbColor: Theme.of(context).colorScheme.primary,
                       onChanged: (value) {
@@ -292,9 +293,9 @@ class _PluginHelmDetailsUninstallState
                   autocorrect: false,
                   enableSuggestions: false,
                   maxLines: 1,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     border: OutlineInputBorder(),
-                    labelText: 'Timeout',
+                    labelText: t(context, 'Timeout'),
                   ),
                   onFieldSubmitted: (String value) {
                     _uninstall();
@@ -305,7 +306,7 @@ class _PluginHelmDetailsUninstallState
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const Text('Wait'),
+                    Text(t(context, 'Wait')),
                     Switch(
                       activeThumbColor: Theme.of(context).colorScheme.primary,
                       onChanged: (value) {

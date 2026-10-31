@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import 'package:kubenav/models/kubernetes/schema.models.swagger.dart';
 import 'package:kubenav/utils/constants.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/utils/navigate.dart';
 import 'package:kubenav/utils/resources.dart';
 import 'package:kubenav/widgets/plugins/cert-manager/resources/plugin_cert_manager_resources.dart';
@@ -79,23 +80,25 @@ final Resource certManagerResourceOrder = Resource(
           item: item,
           status: status,
           details: [
-            'Namespace: ${item.metadata.namespace ?? '-'}',
-            'State: ${item.status?.state?.value ?? '-'}',
-            'Reason: ${item.status?.reason ?? '-'}',
-            'Issuer: ${item.spec.issuerRef.name}',
-            'Age: ${getAge(item.metadata.creationTimestamp)}',
+            tFmt(context, 'Namespace: {0}', [item.metadata.namespace ?? '-']),
+            tFmt(context, 'State: {0}', [item.status?.state?.value ?? '-']),
+            tFmt(context, 'Reason: {0}', [item.status?.reason ?? '-']),
+            tFmt(context, 'Issuer: {0}', [item.spec.issuerRef.name]),
+            tFmt(context, 'Age: {0}', [
+              getAge(item.metadata.creationTimestamp),
+            ]),
           ],
         );
       },
-  previewItemBuilder: (dynamic listItem) {
+  previewItemBuilder: (BuildContext context, dynamic listItem) {
     final item = listItem as IoCertManagerAcmeV1Order;
 
     return [
-      'Namespace: ${item.metadata.namespace ?? '-'}',
-      'State: ${item.status?.state?.value ?? '-'}',
-      'Reason: ${item.status?.reason ?? '-'}',
-      'Issuer: ${item.spec.issuerRef.name}',
-      'Age: ${getAge(item.metadata.creationTimestamp)}',
+      tFmt(context, 'Namespace: {0}', [item.metadata.namespace ?? '-']),
+      tFmt(context, 'State: {0}', [item.status?.state?.value ?? '-']),
+      tFmt(context, 'Reason: {0}', [item.status?.reason ?? '-']),
+      tFmt(context, 'Issuer: {0}', [item.spec.issuerRef.name]),
+      tFmt(context, 'Age: {0}', [getAge(item.metadata.creationTimestamp)]),
     ];
   },
   detailsItemBuilder:
@@ -107,10 +110,10 @@ final Resource certManagerResourceOrder = Resource(
             DetailsItemMetadata(kind: item.kind, metadata: item.metadata),
             const SizedBox(height: Constants.spacingMiddle),
             DetailsItem(
-              title: 'Configuration',
+              title: t(context, 'Configuration'),
               details: [
                 DetailsItemModel(
-                  name: 'Issuer',
+                  name: t(context, 'Issuer'),
                   values:
                       '${item.spec.issuerRef.kind} (${item.spec.issuerRef.name})',
                   onTap: (index) {
@@ -128,27 +131,36 @@ final Resource certManagerResourceOrder = Resource(
                     );
                   },
                 ),
-                DetailsItemModel(name: 'DNS Names', values: item.spec.dnsNames),
                 DetailsItemModel(
-                  name: 'IP Addresses',
+                  name: t(context, 'DNS Names'),
+                  values: item.spec.dnsNames,
+                ),
+                DetailsItemModel(
+                  name: t(context, 'IP Addresses'),
                   values: item.spec.ipAddresses,
                 ),
                 DetailsItemModel(
-                  name: 'Common Name',
+                  name: t(context, 'Common Name'),
                   values: item.spec.commonName,
                 ),
-                DetailsItemModel(name: 'Request', values: item.spec.request),
+                DetailsItemModel(
+                  name: t(context, 'Request'),
+                  values: item.spec.request,
+                ),
               ],
             ),
             const SizedBox(height: Constants.spacingMiddle),
             DetailsItem(
-              title: 'Status',
+              title: t(context, 'Status'),
               details: [
                 DetailsItemModel(
-                  name: 'State',
+                  name: t(context, 'State'),
                   values: item.status?.state?.value,
                 ),
-                DetailsItemModel(name: 'Reason', values: item.status?.reason),
+                DetailsItemModel(
+                  name: t(context, 'Reason'),
+                  values: item.status?.reason,
+                ),
               ],
             ),
             const SizedBox(height: Constants.spacingMiddle),

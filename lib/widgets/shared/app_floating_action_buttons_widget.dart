@@ -7,6 +7,7 @@ import 'package:kubenav/repositories/clusters_repository.dart';
 import 'package:kubenav/repositories/portforwarding_repository.dart';
 import 'package:kubenav/repositories/terminal_repository.dart';
 import 'package:kubenav/utils/constants.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/utils/showmodal.dart';
 import 'package:kubenav/widgets/shared/app_portforwarding_sessions_widget.dart';
 import 'package:kubenav/widgets/shared/app_terminals_widget.dart';
@@ -57,7 +58,7 @@ class _AppFloatingActionButtonsWidgetState
       if (mounted) {
         showSnackbar(
           context,
-          'Failed to Show Port Forwarding Sessions',
+          t(context, 'Failed to Show Port Forwarding Sessions'),
           err.toString(),
         );
       }

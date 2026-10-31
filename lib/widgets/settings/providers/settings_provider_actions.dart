@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 
 import 'package:kubenav/models/cluster_provider.dart';
 import 'package:kubenav/repositories/clusters_repository.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/utils/showmodal.dart';
 import 'package:kubenav/utils/themes.dart';
 import 'package:kubenav/widgets/settings/providers/settings_aws_provider_config.dart';
@@ -64,14 +65,18 @@ class SettingsProviderActions extends StatelessWidget {
         Navigator.pop(context);
         showSnackbar(
           context,
-          'Provider Deleted',
-          'The provider ${provider.name} was deleted',
+          t(context, 'Provider Deleted'),
+          tFmt(context, 'The provider {0} was deleted', [provider.name]),
         );
       }
     } catch (err) {
       if (context.mounted) {
         Navigator.pop(context);
-        showSnackbar(context, 'Failed to Delete Provider', err.toString());
+        showSnackbar(
+          context,
+          t(context, 'Failed to Delete Provider'),
+          err.toString(),
+        );
       }
     }
   }
@@ -81,7 +86,7 @@ class SettingsProviderActions extends StatelessWidget {
     return AppActionsWidget(
       actions: [
         AppActionsWidgetAction(
-          title: 'Edit',
+          title: t(context, 'Edit'),
           color: Theme.of(context).colorScheme.primary,
           onTap: () {
             Navigator.pop(context);
@@ -89,7 +94,7 @@ class SettingsProviderActions extends StatelessWidget {
           },
         ),
         AppActionsWidgetAction(
-          title: 'Delete',
+          title: t(context, 'Delete'),
           color: Theme.of(context).extension<CustomColors>()!.error,
           onTap: () {
             _deleteProvider(context);

@@ -6,6 +6,7 @@ import 'package:kubenav/repositories/app_repository.dart';
 import 'package:kubenav/repositories/clusters_repository.dart';
 import 'package:kubenav/services/kubernetes_service.dart';
 import 'package:kubenav/utils/constants.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/utils/logger.dart';
 import 'package:kubenav/utils/showmodal.dart';
 import 'package:kubenav/widgets/resources/resources/resources.dart';
@@ -75,8 +76,14 @@ class _RestartResourceState extends State<RestartResource> {
       if (mounted) {
         showSnackbar(
           context,
-          '${widget.resource.singular} Restarted',
-          'The ${widget.resource.singular} ${widget.namespace}/${widget.name} was restarted',
+          tFmt(context, '{0} Restarted', [
+            t(context, widget.resource.singular),
+          ]),
+          tFmt(context, 'The {0} {1}/{2} was restarted', [
+            t(context, widget.resource.singular),
+            widget.namespace,
+            widget.name,
+          ]),
         );
         Navigator.pop(context);
       }
@@ -92,7 +99,9 @@ class _RestartResourceState extends State<RestartResource> {
       if (mounted) {
         showSnackbar(
           context,
-          'Failed to Restart ${widget.resource.singular}',
+          tFmt(context, 'Failed to Restart {0}', [
+            t(context, widget.resource.singular),
+          ]),
           err.toString(),
         );
       }
@@ -102,13 +111,13 @@ class _RestartResourceState extends State<RestartResource> {
   @override
   Widget build(BuildContext context) {
     return AppBottomSheetWidget(
-      title: 'Restart',
+      title: t(context, 'Restart'),
       subtitle: '${widget.namespace}/${widget.name}',
       icon: Icons.restart_alt,
       closePressed: () {
         Navigator.pop(context);
       },
-      actionText: 'Restart',
+      actionText: t(context, 'Restart'),
       actionPressed: () {
         _restart();
       },
@@ -122,7 +131,15 @@ class _RestartResourceState extends State<RestartResource> {
             right: Constants.spacingMiddle,
           ),
           child: Text(
-            'Do you really want to restart all Pods of the ${widget.resource.singular} ${widget.namespace}/${widget.name}?',
+            tFmt(
+              context,
+              'Do you really want to restart all Pods of the {0} {1}/{2}?',
+              [
+                t(context, widget.resource.singular),
+                widget.namespace,
+                widget.name,
+              ],
+            ),
           ),
         ),
       ),

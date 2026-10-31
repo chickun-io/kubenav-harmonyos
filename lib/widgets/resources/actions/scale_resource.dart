@@ -7,6 +7,7 @@ import 'package:kubenav/repositories/app_repository.dart';
 import 'package:kubenav/repositories/clusters_repository.dart';
 import 'package:kubenav/services/kubernetes_service.dart';
 import 'package:kubenav/utils/constants.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/utils/logger.dart';
 import 'package:kubenav/utils/showmodal.dart';
 import 'package:kubenav/widgets/resources/resources/resources.dart';
@@ -42,7 +43,7 @@ class _ScaleResourceState extends State<ScaleResource> {
   /// If the value is empty or not a number the validation fails.
   String? _validator(String? value) {
     if (value == null || value.isEmpty) {
-      return 'This field is required';
+      return t(context, 'This field is required');
     }
 
     final parsedValue = int.tryParse(value);
@@ -98,8 +99,13 @@ class _ScaleResourceState extends State<ScaleResource> {
         if (mounted) {
           showSnackbar(
             context,
-            '${widget.resource.singular} Scaled',
-            'The ${widget.resource.singular} ${widget.namespace}/${widget.name} was scaled to ${_replicasController.text} replicas.',
+            tFmt(context, '{0} Scaled', [t(context, widget.resource.singular)]),
+            tFmt(context, 'The {0} {1}/{2} was scaled to {3} replicas.', [
+              t(context, widget.resource.singular),
+              widget.namespace,
+              widget.name,
+              _replicasController.text,
+            ]),
           );
           Navigator.pop(context);
         }
@@ -115,7 +121,9 @@ class _ScaleResourceState extends State<ScaleResource> {
         if (mounted) {
           showSnackbar(
             context,
-            'Failed to Scale ${widget.resource.singular}',
+            tFmt(context, 'Failed to Scale {0}', [
+              t(context, widget.resource.singular),
+            ]),
             err.toString(),
           );
         }
@@ -149,13 +157,13 @@ class _ScaleResourceState extends State<ScaleResource> {
   @override
   Widget build(BuildContext context) {
     return AppBottomSheetWidget(
-      title: 'Scale',
+      title: t(context, 'Scale'),
       subtitle: '${widget.namespace}/${widget.name}',
       icon: Icons.difference,
       closePressed: () {
         Navigator.pop(context);
       },
-      actionText: 'Scale',
+      actionText: t(context, 'Scale'),
       actionPressed: () {
         _scale();
       },
@@ -173,7 +181,15 @@ class _ScaleResourceState extends State<ScaleResource> {
             child: Column(
               children: [
                 Text(
-                  'Change the number of replicas for ${widget.resource.singular} ${widget.namespace}/${widget.name}:',
+                  tFmt(
+                    context,
+                    'Change the number of replicas for {0} {1}/{2}:',
+                    [
+                      t(context, widget.resource.singular),
+                      widget.namespace,
+                      widget.name,
+                    ],
+                  ),
                 ),
                 const SizedBox(height: Constants.spacingMiddle),
                 TextFormField(
@@ -182,9 +198,9 @@ class _ScaleResourceState extends State<ScaleResource> {
                   autocorrect: false,
                   enableSuggestions: false,
                   maxLines: 1,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     border: OutlineInputBorder(),
-                    labelText: 'Replicas',
+                    labelText: t(context, 'Replicas'),
                   ),
                   validator: _validator,
                   onFieldSubmitted: (String value) {

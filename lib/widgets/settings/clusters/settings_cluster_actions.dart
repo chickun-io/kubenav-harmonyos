@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:kubenav/models/cluster.dart';
 import 'package:kubenav/repositories/bookmarks_repository.dart';
 import 'package:kubenav/repositories/clusters_repository.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/utils/showmodal.dart';
 import 'package:kubenav/utils/themes.dart';
 import 'package:kubenav/widgets/settings/clusters/settings_edit_cluster.dart';
@@ -44,14 +45,18 @@ class _SettingsClusterActionsState extends State<SettingsClusterActions> {
         Navigator.pop(context);
         showSnackbar(
           context,
-          'Cluster Deleted',
-          'The cluster ${widget.cluster.name} was deleted',
+          t(context, 'Cluster Deleted'),
+          tFmt(context, 'The cluster {0} was deleted', [widget.cluster.name]),
         );
       }
     } catch (err) {
       if (mounted) {
         Navigator.pop(context);
-        showSnackbar(context, 'Failed to Delete Cluster', err.toString());
+        showSnackbar(
+          context,
+          t(context, 'Failed to Delete Cluster'),
+          err.toString(),
+        );
       }
     }
   }
@@ -61,7 +66,7 @@ class _SettingsClusterActionsState extends State<SettingsClusterActions> {
     return AppActionsWidget(
       actions: [
         AppActionsWidgetAction(
-          title: 'Edit',
+          title: t(context, 'Edit'),
           color: Theme.of(context).colorScheme.primary,
           onTap: () {
             Navigator.pop(context);
@@ -69,7 +74,7 @@ class _SettingsClusterActionsState extends State<SettingsClusterActions> {
           },
         ),
         AppActionsWidgetAction(
-          title: 'Delete',
+          title: t(context, 'Delete'),
           color: Theme.of(context).extension<CustomColors>()!.error,
           onTap: () {
             deleteCluster();

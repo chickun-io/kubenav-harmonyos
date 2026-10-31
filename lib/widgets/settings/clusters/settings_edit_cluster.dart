@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:kubenav/models/cluster.dart';
 import 'package:kubenav/repositories/clusters_repository.dart';
 import 'package:kubenav/utils/constants.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/utils/showmodal.dart';
 import 'package:kubenav/widgets/shared/app_bottom_sheet_widget.dart';
 
@@ -40,7 +41,7 @@ class _SettingsEditClusterState extends State<SettingsEditCluster> {
   /// will fail and the cluster will not be edited.
   String? _validator(String? value) {
     if (value == null || value.isEmpty) {
-      return 'This field is required';
+      return t(context, 'This field is required');
     }
 
     return null;
@@ -94,8 +95,8 @@ class _SettingsEditClusterState extends State<SettingsEditCluster> {
         if (mounted) {
           showSnackbar(
             context,
-            'Cluster Saved',
-            'The cluster ${_nameController.text} was saved',
+            t(context, 'Cluster Saved'),
+            tFmt(context, 'The cluster {0} was saved', [_nameController.text]),
           );
           Navigator.pop(context);
         }
@@ -105,7 +106,11 @@ class _SettingsEditClusterState extends State<SettingsEditCluster> {
         _isLoadingAddCluster = false;
       });
       if (mounted) {
-        showSnackbar(context, 'Failed to Save Cluster', err.toString());
+        showSnackbar(
+          context,
+          t(context, 'Failed to Save Cluster'),
+          err.toString(),
+        );
       }
     }
   }
@@ -146,13 +151,13 @@ class _SettingsEditClusterState extends State<SettingsEditCluster> {
   @override
   Widget build(BuildContext context) {
     return AppBottomSheetWidget(
-      title: 'Edit',
-      subtitle: 'Edit ${widget.cluster.name}',
+      title: t(context, 'Edit'),
+      subtitle: tFmt(context, 'Edit {0}', [widget.cluster.name]),
       icon: Icons.edit,
       closePressed: () {
         Navigator.pop(context);
       },
-      actionText: 'Save',
+      actionText: t(context, 'Save'),
       actionPressed: () {
         _editCluster();
       },
@@ -175,9 +180,9 @@ class _SettingsEditClusterState extends State<SettingsEditCluster> {
                   autocorrect: false,
                   enableSuggestions: false,
                   maxLines: null,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     border: OutlineInputBorder(),
-                    labelText: 'Name',
+                    labelText: t(context, 'Name'),
                   ),
                   validator: _validator,
                   onFieldSubmitted: (String value) {
@@ -191,9 +196,9 @@ class _SettingsEditClusterState extends State<SettingsEditCluster> {
                   autocorrect: false,
                   enableSuggestions: false,
                   maxLines: null,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     border: OutlineInputBorder(),
-                    labelText: 'Server',
+                    labelText: t(context, 'Server'),
                   ),
                   validator: _validator,
                   onFieldSubmitted: (String value) {
@@ -222,9 +227,9 @@ class _SettingsEditClusterState extends State<SettingsEditCluster> {
                   autocorrect: false,
                   enableSuggestions: false,
                   maxLines: null,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     border: OutlineInputBorder(),
-                    labelText: 'Certificate Authority Data',
+                    labelText: t(context, 'Certificate Authority Data'),
                   ),
                   onFieldSubmitted: (String value) {
                     _editCluster();
@@ -235,7 +240,7 @@ class _SettingsEditClusterState extends State<SettingsEditCluster> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const Text('Insecure Skip TLS Verify'),
+                    Text(t(context, 'Insecure Skip TLS Verify')),
                     Switch(
                       activeThumbColor: Theme.of(context).colorScheme.primary,
                       onChanged: (value) {
@@ -255,9 +260,9 @@ class _SettingsEditClusterState extends State<SettingsEditCluster> {
                   autocorrect: false,
                   enableSuggestions: false,
                   maxLines: null,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     border: OutlineInputBorder(),
-                    labelText: 'Client Certificate Data',
+                    labelText: t(context, 'Client Certificate Data'),
                   ),
                   onFieldSubmitted: (String value) {
                     _editCluster();
@@ -270,9 +275,9 @@ class _SettingsEditClusterState extends State<SettingsEditCluster> {
                   autocorrect: false,
                   enableSuggestions: false,
                   maxLines: null,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     border: OutlineInputBorder(),
-                    labelText: 'Client Key Data',
+                    labelText: t(context, 'Client Key Data'),
                   ),
                   onFieldSubmitted: (String value) {
                     _editCluster();
@@ -285,9 +290,9 @@ class _SettingsEditClusterState extends State<SettingsEditCluster> {
                   autocorrect: false,
                   enableSuggestions: false,
                   maxLines: null,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     border: OutlineInputBorder(),
-                    labelText: 'Token',
+                    labelText: t(context, 'Token'),
                   ),
                   onFieldSubmitted: (String value) {
                     _editCluster();
@@ -300,9 +305,9 @@ class _SettingsEditClusterState extends State<SettingsEditCluster> {
                   autocorrect: false,
                   enableSuggestions: false,
                   maxLines: null,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     border: OutlineInputBorder(),
-                    labelText: 'Username',
+                    labelText: t(context, 'Username'),
                   ),
                   onFieldSubmitted: (String value) {
                     _editCluster();
@@ -315,9 +320,9 @@ class _SettingsEditClusterState extends State<SettingsEditCluster> {
                   autocorrect: false,
                   enableSuggestions: false,
                   maxLines: null,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     border: OutlineInputBorder(),
-                    labelText: 'Password',
+                    labelText: t(context, 'Password'),
                   ),
                   onFieldSubmitted: (String value) {
                     _editCluster();
@@ -330,9 +335,9 @@ class _SettingsEditClusterState extends State<SettingsEditCluster> {
                   autocorrect: false,
                   enableSuggestions: false,
                   maxLines: null,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     border: OutlineInputBorder(),
-                    labelText: 'Namespace',
+                    labelText: t(context, 'Namespace'),
                   ),
                   onFieldSubmitted: (String value) {
                     _editCluster();

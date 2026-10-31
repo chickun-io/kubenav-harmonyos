@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import 'package:kubenav/models/kubernetes/schema.models.swagger.dart';
 import 'package:kubenav/utils/constants.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/utils/navigate.dart';
 import 'package:kubenav/utils/resources.dart';
 import 'package:kubenav/widgets/plugins/cert-manager/resources/plugin_cert_manager_resources.dart';
@@ -24,8 +25,7 @@ final Resource certManagerResourceCertificate = Resource(
   category: CertManagerResourceCategories.certificates,
   plural: 'Certificates',
   singular: 'Certificate',
-  description:
-      'A Certificate resource should be created to ensure an up to date and signed X.509 certificate is stored in the Kubernetes Secret resource named in spec.secretName',
+  description: 'A Certificate resource should be created to ensure an up to date and signed X.509 certificate is stored in the Kubernetes Secret resource named in spec.secretName',
   path: '/apis/cert-manager.io/v1',
   resource: 'certificates',
   scope: ResourceScope.namespaced,
@@ -90,21 +90,40 @@ final Resource certManagerResourceCertificate = Resource(
           item: item,
           status: status,
           details: [
-            'Namespace: ${item.metadata?.namespace ?? '-'}',
-            'Ready: ${item.status?.conditions != null && item.status!.conditions!.isNotEmpty ? (item.status!.conditions?.where((e) => e.type == 'Ready').firstOrNull?.status ?? '-') : '-'}',
-            'Secret Name: ${item.spec?.secretName ?? '-'}',
-            'Age: ${getAge(item.metadata?.creationTimestamp)}',
+            tFmt(context, 'Namespace: {0}', [item.metadata?.namespace ?? '-']),
+            tFmt(context, 'Ready: {0}', [
+              item.status?.conditions != null &&
+                      item.status!.conditions!.isNotEmpty
+                  ? (item.status!.conditions
+                            ?.where((e) => e.type == 'Ready')
+                            .firstOrNull
+                            ?.status ??
+                        '-')
+                  : '-',
+            ]),
+            tFmt(context, 'Secret Name: {0}', [item.spec?.secretName ?? '-']),
+            tFmt(context, 'Age: {0}', [
+              getAge(item.metadata?.creationTimestamp),
+            ]),
           ],
         );
       },
-  previewItemBuilder: (dynamic listItem) {
+  previewItemBuilder: (BuildContext context, dynamic listItem) {
     final item = listItem as IoCertManagerV1Certificate;
 
     return [
-      'Namespace: ${item.metadata?.namespace ?? '-'}',
-      'Ready: ${item.status?.conditions != null && item.status!.conditions!.isNotEmpty ? (item.status!.conditions?.where((e) => e.type == 'Ready').firstOrNull?.status ?? '-') : '-'}',
-      'Secret Name: ${item.spec?.secretName ?? '-'}',
-      'Age: ${getAge(item.metadata?.creationTimestamp)}',
+      tFmt(context, 'Namespace: {0}', [item.metadata?.namespace ?? '-']),
+      tFmt(context, 'Ready: {0}', [
+        item.status?.conditions != null && item.status!.conditions!.isNotEmpty
+            ? (item.status!.conditions
+                      ?.where((e) => e.type == 'Ready')
+                      .firstOrNull
+                      ?.status ??
+                  '-')
+            : '-',
+      ]),
+      tFmt(context, 'Secret Name: {0}', [item.spec?.secretName ?? '-']),
+      tFmt(context, 'Age: {0}', [getAge(item.metadata?.creationTimestamp)]),
     ];
   },
   detailsItemBuilder: (BuildContext context, Resource resource, dynamic detailsItem) {
@@ -129,10 +148,10 @@ final Resource certManagerResourceCertificate = Resource(
         ),
         const SizedBox(height: Constants.spacingMiddle),
         DetailsItem(
-          title: 'Configuration',
+          title: t(context, 'Configuration'),
           details: [
             DetailsItemModel(
-              name: 'Secret Name',
+              name: t(context, 'Secret Name'),
               values: item.spec?.secretName,
               onTap: item.spec?.secretName == null
                   ? null
@@ -148,26 +167,32 @@ final Resource certManagerResourceCertificate = Resource(
                     },
             ),
             DetailsItemModel(
-              name: 'Literal Subject',
+              name: t(context, 'Literal Subject'),
               values: item.spec?.literalSubject,
             ),
             DetailsItemModel(
-              name: 'Common Name',
+              name: t(context, 'Common Name'),
               values: item.spec?.commonName,
             ),
-            DetailsItemModel(name: 'Duration', values: item.spec?.duration),
             DetailsItemModel(
-              name: 'Renew Before',
+              name: t(context, 'Duration'),
+              values: item.spec?.duration,
+            ),
+            DetailsItemModel(
+              name: t(context, 'Renew Before'),
               values: item.spec?.renewBefore,
             ),
-            DetailsItemModel(name: 'DNS Names', values: item.spec?.dnsNames),
             DetailsItemModel(
-              name: 'IP Addresses',
+              name: t(context, 'DNS Names'),
+              values: item.spec?.dnsNames,
+            ),
+            DetailsItemModel(
+              name: t(context, 'IP Addresses'),
               values: item.spec?.ipAddresses,
             ),
-            DetailsItemModel(name: 'Uris', values: item.spec?.uris),
+            DetailsItemModel(name: t(context, 'Uris'), values: item.spec?.uris),
             DetailsItemModel(
-              name: 'Email Addresses',
+              name: t(context, 'Email Addresses'),
               values: item.spec?.emailAddresses,
             ),
             DetailsItemModel(
@@ -175,15 +200,15 @@ final Resource certManagerResourceCertificate = Resource(
               values: item.spec?.isCA == null
                   ? null
                   : item.spec!.isCA!
-                  ? 'True'
-                  : 'False',
+                  ? t(context, 'True')
+                  : t(context, 'False'),
             ),
             DetailsItemModel(
-              name: 'Usages',
+              name: t(context, 'Usages'),
               values: item.spec?.usages?.map((e) => e.value).toList(),
             ),
             DetailsItemModel(
-              name: 'Issuer',
+              name: t(context, 'Issuer'),
               values: item.spec?.issuerRef == null
                   ? null
                   : '${item.spec!.issuerRef.kind} (${item.spec!.issuerRef.name})',
@@ -208,13 +233,13 @@ final Resource certManagerResourceCertificate = Resource(
           ],
         ),
         const SizedBox(height: Constants.spacingMiddle),
-        _buildX509Subject(item.spec?.subject),
-        _buildPrivateKey(item.spec?.privateKey),
+        _buildX509Subject(context, item.spec?.subject),
+        _buildPrivateKey(context, item.spec?.privateKey),
         DetailsItem(
-          title: 'Status',
+          title: t(context, 'Status'),
           details: [
             DetailsItemModel(
-              name: 'Ready',
+              name: t(context, 'Ready'),
               values:
                   item.status?.conditions != null &&
                       item.status!.conditions!.isNotEmpty
@@ -225,7 +250,7 @@ final Resource certManagerResourceCertificate = Resource(
                   : null,
             ),
             DetailsItemModel(
-              name: 'Status',
+              name: t(context, 'Status'),
               values:
                   item.status?.conditions != null &&
                       item.status!.conditions!.isNotEmpty
@@ -236,20 +261,23 @@ final Resource certManagerResourceCertificate = Resource(
                   : null,
             ),
             DetailsItemModel(
-              name: 'Not Before',
+              name: t(context, 'Not Before'),
               values: item.status?.notBefore,
             ),
-            DetailsItemModel(name: 'Not After', values: item.status?.notAfter),
             DetailsItemModel(
-              name: 'Renewal Time',
+              name: t(context, 'Not After'),
+              values: item.status?.notAfter,
+            ),
+            DetailsItemModel(
+              name: t(context, 'Renewal Time'),
               values: item.status?.renewalTime,
             ),
             DetailsItemModel(
-              name: 'Last Failure Time',
+              name: t(context, 'Last Failure Time'),
               values: item.status?.lastFailureTime,
             ),
             DetailsItemModel(
-              name: 'Failed Issuance Attempts',
+              name: t(context, 'Failed Issuance Attempts'),
               values: item.status?.failedIssuanceAttempts,
             ),
           ],
@@ -287,7 +315,10 @@ final Resource certManagerResourceCertificate = Resource(
   },
 );
 
-Widget _buildX509Subject(IoCertManagerV1Certificate$Spec$Subject? subject) {
+Widget _buildX509Subject(
+  BuildContext context,
+  IoCertManagerV1Certificate$Spec$Subject? subject,
+) {
   if (subject == null) {
     return Container();
   }
@@ -295,25 +326,40 @@ Widget _buildX509Subject(IoCertManagerV1Certificate$Spec$Subject? subject) {
   return Column(
     children: [
       DetailsItem(
-        title: 'X509 Subject',
+        title: t(context, 'X509 Subject'),
         details: [
           DetailsItemModel(
-            name: 'Organizations',
+            name: t(context, 'Organizations'),
             values: subject.organizations,
           ),
-          DetailsItemModel(name: 'Countries', values: subject.countries),
           DetailsItemModel(
-            name: 'Organizational Units',
+            name: t(context, 'Countries'),
+            values: subject.countries,
+          ),
+          DetailsItemModel(
+            name: t(context, 'Organizational Units'),
             values: subject.organizationalUnits,
           ),
-          DetailsItemModel(name: 'Localities', values: subject.localities),
-          DetailsItemModel(name: 'Provinces', values: subject.provinces),
           DetailsItemModel(
-            name: 'Street Addresses',
+            name: t(context, 'Localities'),
+            values: subject.localities,
+          ),
+          DetailsItemModel(
+            name: t(context, 'Provinces'),
+            values: subject.provinces,
+          ),
+          DetailsItemModel(
+            name: t(context, 'Street Addresses'),
             values: subject.streetAddresses,
           ),
-          DetailsItemModel(name: 'Postal Codes', values: subject.postalCodes),
-          DetailsItemModel(name: 'Serial Number', values: subject.serialNumber),
+          DetailsItemModel(
+            name: t(context, 'Postal Codes'),
+            values: subject.postalCodes,
+          ),
+          DetailsItemModel(
+            name: t(context, 'Serial Number'),
+            values: subject.serialNumber,
+          ),
         ],
       ),
       const SizedBox(height: Constants.spacingMiddle),
@@ -322,6 +368,7 @@ Widget _buildX509Subject(IoCertManagerV1Certificate$Spec$Subject? subject) {
 }
 
 Widget _buildPrivateKey(
+  BuildContext context,
   IoCertManagerV1Certificate$Spec$PrivateKey? privateKey,
 ) {
   if (privateKey == null) {
@@ -331,21 +378,21 @@ Widget _buildPrivateKey(
   return Column(
     children: [
       DetailsItem(
-        title: 'Private Key',
+        title: t(context, 'Private Key'),
         details: [
           DetailsItemModel(
-            name: 'Rotation Policy',
+            name: t(context, 'Rotation Policy'),
             values: privateKey.rotationPolicy?.value,
           ),
           DetailsItemModel(
-            name: 'Encoding',
+            name: t(context, 'Encoding'),
             values: privateKey.encoding?.value,
           ),
           DetailsItemModel(
-            name: 'Algorithm',
+            name: t(context, 'Algorithm'),
             values: privateKey.algorithm?.value,
           ),
-          DetailsItemModel(name: 'Size', values: privateKey.size),
+          DetailsItemModel(name: t(context, 'Size'), values: privateKey.size),
         ],
       ),
       const SizedBox(height: Constants.spacingMiddle),

@@ -7,6 +7,7 @@ import 'package:kubenav/repositories/app_repository.dart';
 import 'package:kubenav/repositories/clusters_repository.dart';
 import 'package:kubenav/services/kubernetes_service.dart';
 import 'package:kubenav/utils/constants.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/utils/logger.dart';
 import 'package:kubenav/utils/showmodal.dart';
 import 'package:kubenav/widgets/resources/resources/resources.dart';
@@ -66,8 +67,13 @@ class _NodeUncordonState extends State<NodeUncordon> {
       if (mounted) {
         showSnackbar(
           context,
-          '${widget.resource.singular} Uncordoned',
-          'The ${widget.resource.singular} ${widget.name} was uncordoned',
+          tFmt(context, '{0} Uncordoned', [
+            t(context, widget.resource.singular),
+          ]),
+          tFmt(context, 'The {0} {1} was uncordoned', [
+            t(context, widget.resource.singular),
+            widget.name,
+          ]),
         );
         Navigator.pop(context);
       }
@@ -83,7 +89,9 @@ class _NodeUncordonState extends State<NodeUncordon> {
       if (mounted) {
         showSnackbar(
           context,
-          'Failed to Uncordon ${widget.resource.singular}',
+          tFmt(context, 'Failed to Uncordon {0}', [
+            t(context, widget.resource.singular),
+          ]),
           err.toString(),
         );
       }
@@ -93,13 +101,13 @@ class _NodeUncordonState extends State<NodeUncordon> {
   @override
   Widget build(BuildContext context) {
     return AppBottomSheetWidget(
-      title: 'Uncordon',
+      title: t(context, 'Uncordon'),
       subtitle: widget.name,
       icon: Icons.update,
       closePressed: () {
         Navigator.pop(context);
       },
-      actionText: 'Uncordon',
+      actionText: t(context, 'Uncordon'),
       actionPressed: () {
         _uncordon();
       },
@@ -113,7 +121,10 @@ class _NodeUncordonState extends State<NodeUncordon> {
             right: Constants.spacingMiddle,
           ),
           child: Text(
-            'Do you really want to uncordon the ${widget.resource.singular} ${widget.name}?',
+            tFmt(context, 'Do you really want to uncordon the {0} {1}?', [
+              t(context, widget.resource.singular),
+              widget.name,
+            ]),
           ),
         ),
       ),

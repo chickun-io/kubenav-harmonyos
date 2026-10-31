@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import 'package:kubenav/models/kubernetes/schema.models.swagger.dart';
 import 'package:kubenav/utils/constants.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/utils/resources.dart';
 import 'package:kubenav/widgets/resources/helpers/details_item.dart';
 import 'package:kubenav/widgets/resources/helpers/details_item_conditions.dart';
@@ -16,8 +17,7 @@ final resourceCertificateSigningRequest = Resource(
   category: ResourceCategories.cluster,
   plural: 'CertificateSigningRequests',
   singular: 'CertificateSigningRequest',
-  description:
-      'A CertificateSigningRequest (CSR) resource is used to request that a certificate be signed by a denoted signer, after which the request may be approved or denied before finally being signed.',
+  description: 'A CertificateSigningRequest (CSR) resource is used to request that a certificate be signed by a denoted signer, after which the request may be approved or denied before finally being signed.',
   path: '/apis/certificates.k8s.io/v1',
   resource: 'certificatesigningrequests',
   scope: ResourceScope.cluster,
@@ -46,9 +46,8 @@ final resourceCertificateSigningRequest = Resource(
   },
   decodeList: (String data) {
     final parsed = json.decode(data);
-    return IoK8sApiCertificatesV1CertificateSigningRequestList.fromJson(
-      parsed,
-    ).items;
+    return IoK8sApiCertificatesV1CertificateSigningRequestList.fromJson(parsed)
+        .items;
   },
   getName: (dynamic item) {
     return (item as IoK8sApiCertificatesV1CertificateSigningRequest)
@@ -85,23 +84,33 @@ final resourceCertificateSigningRequest = Resource(
           item: item,
           status: status,
           details: [
-            'Signer Name: ${item.spec.signerName}',
-            'Requestor: ${item.spec.username ?? '-'}',
-            'Requested Duration: ${formatSeconds(item.spec.expirationSeconds)}',
-            'Condition: ${_getCondition(item.status?.conditions)}',
-            'Age: ${getAge(item.metadata?.creationTimestamp)}',
+            tFmt(context, 'Signer Name: {0}', [item.spec.signerName]),
+            tFmt(context, 'Requestor: {0}', [item.spec.username ?? '-']),
+            tFmt(context, 'Requested Duration: {0}', [
+              formatSeconds(item.spec.expirationSeconds),
+            ]),
+            tFmt(context, 'Condition: {0}', [
+              t(context, _getCondition(item.status?.conditions)),
+            ]),
+            tFmt(context, 'Age: {0}', [
+              getAge(item.metadata?.creationTimestamp),
+            ]),
           ],
         );
       },
-  previewItemBuilder: (dynamic listItem) {
+  previewItemBuilder: (BuildContext context, dynamic listItem) {
     final item = listItem as IoK8sApiCertificatesV1CertificateSigningRequest;
 
     return [
-      'Signer Name: ${item.spec.signerName}',
-      'Requestor: ${item.spec.username ?? '-'}',
-      'Requested Duration: ${formatSeconds(item.spec.expirationSeconds)}',
-      'Condition: ${_getCondition(item.status?.conditions)}',
-      'Age: ${getAge(item.metadata?.creationTimestamp)}',
+      tFmt(context, 'Signer Name: {0}', [item.spec.signerName]),
+      tFmt(context, 'Requestor: {0}', [item.spec.username ?? '-']),
+      tFmt(context, 'Requested Duration: {0}', [
+        formatSeconds(item.spec.expirationSeconds),
+      ]),
+      tFmt(context, 'Condition: {0}', [
+        t(context, _getCondition(item.status?.conditions)),
+      ]),
+      tFmt(context, 'Age: {0}', [getAge(item.metadata?.creationTimestamp)]),
     ];
   },
   detailsItemBuilder:
@@ -129,35 +138,44 @@ final resourceCertificateSigningRequest = Resource(
             ),
             const SizedBox(height: Constants.spacingMiddle),
             DetailsItem(
-              title: 'Configuration',
+              title: t(context, 'Configuration'),
               details: [
                 DetailsItemModel(
-                  name: 'Signer Name',
+                  name: t(context, 'Signer Name'),
                   values: item.spec.signerName,
                 ),
-                DetailsItemModel(name: 'Requestor', values: item.spec.username),
                 DetailsItemModel(
-                  name: 'Requested Duration',
+                  name: t(context, 'Requestor'),
+                  values: item.spec.username,
+                ),
+                DetailsItemModel(
+                  name: t(context, 'Requested Duration'),
                   values: formatSeconds(item.spec.expirationSeconds),
                 ),
-                DetailsItemModel(name: 'Request', values: item.spec.request),
-                DetailsItemModel(name: 'Groups', values: item.spec.groups),
                 DetailsItemModel(
-                  name: 'Usages',
+                  name: t(context, 'Request'),
+                  values: item.spec.request,
+                ),
+                DetailsItemModel(
+                  name: t(context, 'Groups'),
+                  values: item.spec.groups,
+                ),
+                DetailsItemModel(
+                  name: t(context, 'Usages'),
                   values: item.spec.usages?.map((e) => e.value).toList(),
                 ),
               ],
             ),
             const SizedBox(height: Constants.spacingMiddle),
             DetailsItem(
-              title: 'Status',
+              title: t(context, 'Status'),
               details: [
                 DetailsItemModel(
-                  name: 'Condition',
-                  values: _getCondition(item.status?.conditions),
+                  name: t(context, 'Condition'),
+                  values: t(context, _getCondition(item.status?.conditions)),
                 ),
                 DetailsItemModel(
-                  name: 'Certificate',
+                  name: t(context, 'Certificate'),
                   values: item.status?.certificate,
                 ),
               ],

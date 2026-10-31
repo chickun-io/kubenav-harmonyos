@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import 'package:kubenav/models/kubernetes/schema.models.swagger.dart';
 import 'package:kubenav/utils/constants.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/utils/resources.dart';
 import 'package:kubenav/widgets/resources/helpers/details_item.dart';
 import 'package:kubenav/widgets/resources/helpers/details_item_metadata.dart';
@@ -15,8 +16,7 @@ final resourceEvent = Resource(
   category: ResourceCategories.cluster,
   plural: 'Events',
   singular: 'Event',
-  description:
-      'Events are automatically created when other resources have state changes, errors, or other messages that should be broadcast to the system.',
+  description: 'Events are automatically created when other resources have state changes, errors, or other messages that should be broadcast to the system.',
   path: '/api/v1',
   resource: 'events',
   scope: ResourceScope.namespaced,
@@ -60,36 +60,55 @@ final resourceEvent = Resource(
   toJson: (dynamic item) {
     return json.decode(json.encode(item));
   },
-  listItemBuilder: (BuildContext context, Resource resource, ResourceItem listItem) {
-    final item = listItem.item as IoK8sApiCoreV1Event;
-    final status = listItem.status;
+  listItemBuilder:
+      (BuildContext context, Resource resource, ResourceItem listItem) {
+        final item = listItem.item as IoK8sApiCoreV1Event;
+        final status = listItem.status;
 
-    return ResourcesListItem(
-      name: item.metadata.name ?? '',
-      namespace: item.metadata.namespace,
-      resource: resource,
-      item: item,
-      status: status,
-      details: [
-        'Namespace: ${item.metadata.namespace ?? '-'}',
-        'Last Seen: ${getAge(item.lastTimestamp ?? item.eventTime ?? item.metadata.creationTimestamp)}',
-        'Type: ${item.type ?? '-'}',
-        'Reason: ${item.reason ?? '-'}',
-        'Object: ${item.involvedObject.kind ?? '-'}/${item.involvedObject.name ?? '-'}',
-        'Message: ${item.message ?? '-'}',
-      ],
-    );
-  },
-  previewItemBuilder: (dynamic listItem) {
+        return ResourcesListItem(
+          name: item.metadata.name ?? '',
+          namespace: item.metadata.namespace,
+          resource: resource,
+          item: item,
+          status: status,
+          details: [
+            tFmt(context, 'Namespace: {0}', [item.metadata.namespace ?? '-']),
+            tFmt(context, 'Last Seen: {0}', [
+              getAge(
+                item.lastTimestamp ??
+                    item.eventTime ??
+                    item.metadata.creationTimestamp,
+              ),
+            ]),
+            tFmt(context, 'Type: {0}', [item.type ?? '-']),
+            tFmt(context, 'Reason: {0}', [item.reason ?? '-']),
+            tFmt(context, 'Object: {0}/{1}', [
+              item.involvedObject.kind ?? '-',
+              item.involvedObject.name ?? '-',
+            ]),
+            tFmt(context, 'Message: {0}', [item.message ?? '-']),
+          ],
+        );
+      },
+  previewItemBuilder: (BuildContext context, dynamic listItem) {
     final item = listItem as IoK8sApiCoreV1Event;
 
     return [
-      'Namespace: ${item.metadata.namespace ?? '-'}',
-      'Last Seen: ${getAge(item.lastTimestamp ?? item.eventTime ?? item.metadata.creationTimestamp)}',
-      'Type: ${item.type ?? '-'}',
-      'Reason: ${item.reason ?? '-'}',
-      'Object: ${item.involvedObject.kind ?? '-'}/${item.involvedObject.name ?? '-'}',
-      'Message: ${item.message ?? '-'}',
+      tFmt(context, 'Namespace: {0}', [item.metadata.namespace ?? '-']),
+      tFmt(context, 'Last Seen: {0}', [
+        getAge(
+          item.lastTimestamp ??
+              item.eventTime ??
+              item.metadata.creationTimestamp,
+        ),
+      ]),
+      tFmt(context, 'Type: {0}', [item.type ?? '-']),
+      tFmt(context, 'Reason: {0}', [item.reason ?? '-']),
+      tFmt(context, 'Object: {0}/{1}', [
+        item.involvedObject.kind ?? '-',
+        item.involvedObject.name ?? '-',
+      ]),
+      tFmt(context, 'Message: {0}', [item.message ?? '-']),
     ];
   },
   detailsItemBuilder:
@@ -101,56 +120,62 @@ final resourceEvent = Resource(
             DetailsItemMetadata(kind: item.kind, metadata: item.metadata),
             const SizedBox(height: Constants.spacingMiddle),
             DetailsItem(
-              title: 'Details',
+              title: t(context, 'Details'),
               details: [
-                DetailsItemModel(name: 'Type', values: item.type),
-                DetailsItemModel(name: 'Reason', values: item.reason),
-                DetailsItemModel(name: 'Message', values: item.message),
+                DetailsItemModel(name: t(context, 'Type'), values: item.type),
                 DetailsItemModel(
-                  name: 'Event Time',
+                  name: t(context, 'Reason'),
+                  values: item.reason,
+                ),
+                DetailsItemModel(
+                  name: t(context, 'Message'),
+                  values: item.message,
+                ),
+                DetailsItemModel(
+                  name: t(context, 'Event Time'),
                   values: getAge(item.eventTime),
                 ),
                 DetailsItemModel(
-                  name: 'Last Seen',
+                  name: t(context, 'Last Seen'),
                   values: getAge(item.lastTimestamp),
                 ),
                 DetailsItemModel(
-                  name: 'First Seen',
+                  name: t(context, 'First Seen'),
                   values: getAge(item.firstTimestamp),
                 ),
-                DetailsItemModel(name: 'Count', values: item.count),
+                DetailsItemModel(name: t(context, 'Count'), values: item.count),
                 DetailsItemModel(
-                  name: 'Source',
+                  name: t(context, 'Source'),
                   values: item.source?.component,
                 ),
                 DetailsItemModel(
-                  name: 'Reporting Component',
+                  name: t(context, 'Reporting Component'),
                   values: item.reportingComponent,
                 ),
               ],
             ),
             const SizedBox(height: Constants.spacingMiddle),
             DetailsItem(
-              title: 'Involved Object',
-              goTo: 'View',
+              title: t(context, 'Involved Object'),
+              goTo: t(context, 'View'),
               goToOnTap: () {
                 goToReference(context, item.involvedObject, null);
               },
               details: [
                 DetailsItemModel(
-                  name: 'API Version',
+                  name: t(context, 'API Version'),
                   values: item.involvedObject.apiVersion,
                 ),
                 DetailsItemModel(
-                  name: 'Kind',
+                  name: t(context, 'Kind'),
                   values: item.involvedObject.kind,
                 ),
                 DetailsItemModel(
-                  name: 'Name',
+                  name: t(context, 'Name'),
                   values: item.involvedObject.name,
                 ),
                 DetailsItemModel(
-                  name: 'Namespace',
+                  name: t(context, 'Namespace'),
                   values: item.involvedObject.namespace,
                 ),
               ],

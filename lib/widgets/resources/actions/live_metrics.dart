@@ -14,6 +14,7 @@ import 'package:kubenav/repositories/clusters_repository.dart';
 import 'package:kubenav/services/kubernetes_service.dart';
 import 'package:kubenav/utils/constants.dart';
 import 'package:kubenav/utils/helpers.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/utils/logger.dart';
 import 'package:kubenav/utils/resources.dart';
 import 'package:kubenav/utils/showmodal.dart';
@@ -237,7 +238,7 @@ class _LiveMetricsState extends State<LiveMetrics> {
       if (podResources != null) {
         if (_containerMetrics.containsKey('Requests')) {
           setState(() {
-            _containerMetrics['Requests']!.add(
+            _containerMetrics[t(context, 'Requests')]!.add(
               DateTime.now().millisecondsSinceEpoch,
               podResources.cpuRequests,
               podResources.memoryRequests,
@@ -245,7 +246,7 @@ class _LiveMetricsState extends State<LiveMetrics> {
           });
         } else {
           setState(() {
-            _containerMetrics['Requests'] = ContainerMetric(
+            _containerMetrics[t(context, 'Requests')] = ContainerMetric(
               initTime: DateTime.now().millisecondsSinceEpoch,
               initCPU: podResources.cpuRequests,
               initMemory: podResources.memoryRequests,
@@ -255,7 +256,7 @@ class _LiveMetricsState extends State<LiveMetrics> {
 
         if (_containerMetrics.containsKey('Limits')) {
           setState(() {
-            _containerMetrics['Limits']!.add(
+            _containerMetrics[t(context, 'Limits')]!.add(
               DateTime.now().millisecondsSinceEpoch,
               podResources.cpuLimits,
               podResources.memoryLimits,
@@ -263,7 +264,7 @@ class _LiveMetricsState extends State<LiveMetrics> {
           });
         } else {
           setState(() {
-            _containerMetrics['Limits'] = ContainerMetric(
+            _containerMetrics[t(context, 'Limits')] = ContainerMetric(
               initTime: DateTime.now().millisecondsSinceEpoch,
               initCPU: podResources.cpuLimits,
               initMemory: podResources.memoryLimits,
@@ -299,13 +300,13 @@ class _LiveMetricsState extends State<LiveMetrics> {
   @override
   Widget build(BuildContext context) {
     return AppBottomSheetWidget(
-      title: 'Live Metrics',
+      title: t(context, 'Live Metrics'),
       subtitle: '${widget.namespace}/${widget.name}',
       icon: Icons.insights,
       closePressed: () {
         Navigator.pop(context);
       },
-      actionText: 'Close',
+      actionText: t(context, 'Close'),
       actionPressed: () {
         Navigator.pop(context);
       },
@@ -361,9 +362,9 @@ class _LiveMetricsState extends State<LiveMetrics> {
                       decoration: BoxDecoration(
                         boxShadow: [
                           BoxShadow(
-                            color: Theme.of(
-                              context,
-                            ).extension<CustomColors>()!.shadow,
+                            color: Theme.of(context)
+                                .extension<CustomColors>()!
+                                .shadow,
                             blurRadius: Constants.sizeBorderBlurRadius,
                             spreadRadius: Constants.sizeBorderSpreadRadius,
                             offset: const Offset(0.0, 0.0),
@@ -388,13 +389,13 @@ class _LiveMetricsState extends State<LiveMetrics> {
                                   touchTooltipData: LineTouchTooltipData(
                                     fitInsideHorizontally: true,
                                     fitInsideVertically: true,
-                                    maxContentWidth: MediaQuery.of(
-                                      context,
-                                    ).size.width,
+                                    maxContentWidth: MediaQuery.of(context)
+                                        .size
+                                        .width,
                                     getTooltipColor: (LineBarSpot touchedSpot) {
-                                      return Theme.of(
-                                        context,
-                                      ).extension<CustomColors>()!.message;
+                                      return Theme.of(context)
+                                          .extension<CustomColors>()!
+                                          .message;
                                     },
                                     getTooltipItems: (touchedSpots) {
                                       return touchedSpots.map((
@@ -425,12 +426,12 @@ class _LiveMetricsState extends State<LiveMetrics> {
                                                   .extension<CustomColors>()!
                                                   .warning
                                             : e.key == 'Limits'
-                                            ? Theme.of(
-                                                context,
-                                              ).extension<CustomColors>()!.error
-                                            : Theme.of(
-                                                context,
-                                              ).colorScheme.primary,
+                                            ? Theme.of(context)
+                                                  .extension<CustomColors>()!
+                                                  .error
+                                            : Theme.of(context)
+                                                  .colorScheme
+                                                  .primary,
                                         barWidth: 4,
                                         isCurved: false,
                                       ),
@@ -558,9 +559,9 @@ class _LiveMetricsState extends State<LiveMetrics> {
                       decoration: BoxDecoration(
                         boxShadow: [
                           BoxShadow(
-                            color: Theme.of(
-                              context,
-                            ).extension<CustomColors>()!.shadow,
+                            color: Theme.of(context)
+                                .extension<CustomColors>()!
+                                .shadow,
                             blurRadius: Constants.sizeBorderBlurRadius,
                             spreadRadius: Constants.sizeBorderSpreadRadius,
                             offset: const Offset(0.0, 0.0),
@@ -585,13 +586,13 @@ class _LiveMetricsState extends State<LiveMetrics> {
                                   touchTooltipData: LineTouchTooltipData(
                                     fitInsideHorizontally: true,
                                     fitInsideVertically: true,
-                                    maxContentWidth: MediaQuery.of(
-                                      context,
-                                    ).size.width,
+                                    maxContentWidth: MediaQuery.of(context)
+                                        .size
+                                        .width,
                                     getTooltipColor: (LineBarSpot touchedSpot) {
-                                      return Theme.of(
-                                        context,
-                                      ).extension<CustomColors>()!.message;
+                                      return Theme.of(context)
+                                          .extension<CustomColors>()!
+                                          .message;
                                     },
                                     getTooltipItems: (touchedSpots) {
                                       return touchedSpots.map((
@@ -622,12 +623,12 @@ class _LiveMetricsState extends State<LiveMetrics> {
                                                   .extension<CustomColors>()!
                                                   .warning
                                             : e.key == 'Limits'
-                                            ? Theme.of(
-                                                context,
-                                              ).extension<CustomColors>()!.error
-                                            : Theme.of(
-                                                context,
-                                              ).colorScheme.primary,
+                                            ? Theme.of(context)
+                                                  .extension<CustomColors>()!
+                                                  .error
+                                            : Theme.of(context)
+                                                  .colorScheme
+                                                  .primary,
                                         barWidth: 4,
                                         isCurved: false,
                                       ),

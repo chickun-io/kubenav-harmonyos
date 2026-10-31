@@ -6,6 +6,7 @@ import 'package:kubenav/repositories/app_repository.dart';
 import 'package:kubenav/repositories/clusters_repository.dart';
 import 'package:kubenav/services/kubernetes_service.dart';
 import 'package:kubenav/utils/constants.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/utils/logger.dart';
 import 'package:kubenav/utils/showmodal.dart';
 import 'package:kubenav/utils/themes.dart';
@@ -77,9 +78,12 @@ class _DeleteResourceState extends State<DeleteResource> {
       if (mounted) {
         showSnackbar(
           context,
-          '${widget.resource.singular} Deleted',
+          tFmt(context, '{0} Deleted', [t(context, widget.resource.singular)]),
           widget.namespace == null
-              ? 'The ${widget.resource.singular} ${widget.name} was deleted'
+              ? tFmt(context, 'The {0} {1} was deleted', [
+                  t(context, widget.resource.singular),
+                  widget.name,
+                ])
               : 'The ${widget.resource.singular} ${widget.namespace}/${widget.name} was deleted',
         );
         Navigator.pop(context);
@@ -96,7 +100,9 @@ class _DeleteResourceState extends State<DeleteResource> {
       if (mounted) {
         showSnackbar(
           context,
-          'Failed to Delete ${widget.resource.singular}',
+          tFmt(context, 'Failed to Delete {0}', [
+            t(context, widget.resource.singular),
+          ]),
           err.toString(),
         );
       }
@@ -106,7 +112,7 @@ class _DeleteResourceState extends State<DeleteResource> {
   @override
   Widget build(BuildContext context) {
     return AppBottomSheetWidget(
-      title: 'Delete',
+      title: t(context, 'Delete'),
       subtitle: widget.namespace == null
           ? widget.name
           : '${widget.namespace}/${widget.name}',
@@ -114,7 +120,7 @@ class _DeleteResourceState extends State<DeleteResource> {
       closePressed: () {
         Navigator.pop(context);
       },
-      actionText: 'Delete',
+      actionText: t(context, 'Delete'),
       actionPressed: () {
         _delete();
       },
@@ -132,10 +138,21 @@ class _DeleteResourceState extends State<DeleteResource> {
               Container(
                 child: widget.namespace != null
                     ? Text(
-                        'Do you really want to delete ${widget.resource.singular} ${widget.namespace}/${widget.name}?',
+                        tFmt(
+                          context,
+                          'Do you really want to delete {0} {1}/{2}?',
+                          [
+                            t(context, widget.resource.singular),
+                            widget.namespace,
+                            widget.name,
+                          ],
+                        ),
                       )
                     : Text(
-                        'Do you really want to delete ${widget.resource.singular} ${widget.name}?',
+                        tFmt(context, 'Do you really want to delete {0} {1}?', [
+                          t(context, widget.resource.singular),
+                          widget.name,
+                        ]),
                       ),
               ),
               const SizedBox(height: Constants.spacingMiddle),
@@ -143,7 +160,7 @@ class _DeleteResourceState extends State<DeleteResource> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  const Text('Force'),
+                  Text(t(context, 'Force')),
                   Switch(
                     activeThumbColor: Theme.of(context).colorScheme.primary,
                     onChanged: (value) {
@@ -160,7 +177,7 @@ class _DeleteResourceState extends State<DeleteResource> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  const Text('Propagation Policy'),
+                  Text(t(context, 'Propagation Policy')),
                   DropdownButton<String?>(
                     value: _propagationPolicy,
                     underline: Container(
@@ -178,42 +195,42 @@ class _DeleteResourceState extends State<DeleteResource> {
                         child: Text(
                           '',
                           style: TextStyle(
-                            color: Theme.of(
-                              context,
-                            ).extension<CustomColors>()!.textPrimary,
+                            color: Theme.of(context)
+                                .extension<CustomColors>()!
+                                .textPrimary,
                           ),
                         ),
                       ),
                       DropdownMenuItem(
                         value: 'Background',
                         child: Text(
-                          'Background',
+                          t(context, 'Background'),
                           style: TextStyle(
-                            color: Theme.of(
-                              context,
-                            ).extension<CustomColors>()!.textPrimary,
+                            color: Theme.of(context)
+                                .extension<CustomColors>()!
+                                .textPrimary,
                           ),
                         ),
                       ),
                       DropdownMenuItem(
                         value: 'Foreground',
                         child: Text(
-                          'Foreground',
+                          t(context, 'Foreground'),
                           style: TextStyle(
-                            color: Theme.of(
-                              context,
-                            ).extension<CustomColors>()!.textPrimary,
+                            color: Theme.of(context)
+                                .extension<CustomColors>()!
+                                .textPrimary,
                           ),
                         ),
                       ),
                       DropdownMenuItem(
                         value: 'Orphan',
                         child: Text(
-                          'Orphan',
+                          t(context, 'Orphan'),
                           style: TextStyle(
-                            color: Theme.of(
-                              context,
-                            ).extension<CustomColors>()!.textPrimary,
+                            color: Theme.of(context)
+                                .extension<CustomColors>()!
+                                .textPrimary,
                           ),
                         ),
                       ),

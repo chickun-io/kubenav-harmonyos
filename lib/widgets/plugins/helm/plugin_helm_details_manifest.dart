@@ -5,6 +5,7 @@ import 'package:highlight/languages/yaml.dart' as highlight_yaml;
 
 import 'package:kubenav/utils/constants.dart';
 import 'package:kubenav/utils/helpers.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/utils/themes.dart';
 import 'package:kubenav/widgets/shared/app_bottom_sheet_widget.dart';
 
@@ -52,13 +53,13 @@ class _PluginHelmDetailsManifestState extends State<PluginHelmDetailsManifest> {
   @override
   Widget build(BuildContext context) {
     return AppBottomSheetWidget(
-      title: 'Manifest',
+      title: t(context, 'Manifest'),
       subtitle: widget.name,
       icon: Icons.description,
       closePressed: () {
         Navigator.pop(context);
       },
-      actionText: 'Close',
+      actionText: t(context, 'Close'),
       actionPressed: () {
         Navigator.pop(context);
       },

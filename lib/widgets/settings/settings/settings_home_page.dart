@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:kubenav/repositories/app_repository.dart';
 import 'package:kubenav/utils/constants.dart';
 import 'package:kubenav/utils/helpers.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/widgets/shared/app_bottom_sheet_widget.dart';
 
 /// The [SettingsHomePage] widget can be used to configure the home page of the
@@ -50,13 +51,13 @@ class _SettingsHomePageState extends State<SettingsHomePage> {
     );
 
     return AppBottomSheetWidget(
-      title: 'Home Page',
-      subtitle: 'Home Page Configuration',
+      title: t(context, 'Home Page'),
+      subtitle: t(context, 'Home Page Configuration'),
       icon: Icons.home,
       closePressed: () {
         Navigator.pop(context);
       },
-      actionText: 'Save',
+      actionText: t(context, 'Save'),
       actionPressed: () {
         if (_homeFormKey.currentState != null &&
             _homeFormKey.currentState!.validate()) {
@@ -88,15 +89,18 @@ class _SettingsHomePageState extends State<SettingsHomePage> {
             ),
             child: Column(
               children: [
-                const Text(
-                  'The following options can be used to configure the home page of the app. You can enable or disable the different components of the home page and you can select the scope for the different components. If you do not have the permissions to list resources in all namespaces of the cluster, you should enable the "Use Selected Namespace" option.',
+                Text(
+                  t(
+                    context,
+                    'The following options can be used to configure the home page of the app. You can enable or disable the different components of the home page and you can select the scope for the different components. If you do not have the permissions to list resources in all namespaces of the cluster, you should enable the "Use Selected Namespace" option.',
+                  ),
                 ),
                 const SizedBox(height: Constants.spacingMiddle),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const Text('Use Selected Namespace'),
+                    Text(t(context, 'Use Selected Namespace')),
                     Switch(
                       activeThumbColor: Theme.of(context).colorScheme.primary,
                       onChanged: (value) {
@@ -112,7 +116,10 @@ class _SettingsHomePageState extends State<SettingsHomePage> {
                 Row(
                   children: [
                     const Expanded(child: Divider(height: 0, thickness: 1.0)),
-                    Text('Components', style: secondaryTextStyle(context)),
+                    Text(
+                      t(context, 'Components'),
+                      style: secondaryTextStyle(context),
+                    ),
                     const Expanded(child: Divider(height: 0, thickness: 1.0)),
                   ],
                 ),
@@ -121,7 +128,7 @@ class _SettingsHomePageState extends State<SettingsHomePage> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const Text('Show Metrics'),
+                    Text(t(context, 'Show Metrics')),
                     Switch(
                       activeThumbColor: Theme.of(context).colorScheme.primary,
                       onChanged: (value) {
@@ -138,7 +145,7 @@ class _SettingsHomePageState extends State<SettingsHomePage> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const Text('Show Warnings'),
+                    Text(t(context, 'Show Warnings')),
                     Switch(
                       activeThumbColor: Theme.of(context).colorScheme.primary,
                       onChanged: (value) {
@@ -154,7 +161,10 @@ class _SettingsHomePageState extends State<SettingsHomePage> {
                 Row(
                   children: [
                     const Expanded(child: Divider(height: 0, thickness: 1.0)),
-                    Text('Workloads', style: secondaryTextStyle(context)),
+                    Text(
+                      t(context, 'Workloads'),
+                      style: secondaryTextStyle(context),
+                    ),
                     const Expanded(child: Divider(height: 0, thickness: 1.0)),
                   ],
                 ),
@@ -163,7 +173,7 @@ class _SettingsHomePageState extends State<SettingsHomePage> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const Text('Show Pods'),
+                    Text(t(context, 'Show Pods')),
                     Switch(
                       activeThumbColor: Theme.of(context).colorScheme.primary,
                       onChanged: (value) {
@@ -180,7 +190,7 @@ class _SettingsHomePageState extends State<SettingsHomePage> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const Text('Show Deployments'),
+                    Text(t(context, 'Show Deployments')),
                     Switch(
                       activeThumbColor: Theme.of(context).colorScheme.primary,
                       onChanged: (value) {
@@ -197,7 +207,7 @@ class _SettingsHomePageState extends State<SettingsHomePage> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const Text('Show StatefulSets'),
+                    Text(t(context, 'Show StatefulSets')),
                     Switch(
                       activeThumbColor: Theme.of(context).colorScheme.primary,
                       onChanged: (value) {
@@ -215,7 +225,7 @@ class _SettingsHomePageState extends State<SettingsHomePage> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const Text('Show DaemonSets'),
+                    Text(t(context, 'Show DaemonSets')),
                     Switch(
                       activeThumbColor: Theme.of(context).colorScheme.primary,
                       onChanged: (value) {
@@ -232,7 +242,7 @@ class _SettingsHomePageState extends State<SettingsHomePage> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const Text('Show Jobs'),
+                    Text(t(context, 'Show Jobs')),
                     Switch(
                       activeThumbColor: Theme.of(context).colorScheme.primary,
                       onChanged: (value) {

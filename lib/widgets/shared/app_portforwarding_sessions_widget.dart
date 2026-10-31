@@ -7,6 +7,7 @@ import 'package:kubenav/repositories/app_repository.dart';
 import 'package:kubenav/repositories/clusters_repository.dart';
 import 'package:kubenav/repositories/portforwarding_repository.dart';
 import 'package:kubenav/utils/helpers.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/utils/showmodal.dart';
 import 'package:kubenav/utils/themes.dart';
 import 'package:kubenav/widgets/shared/app_actions_widget.dart';
@@ -96,7 +97,7 @@ class _AppPortForwardingSessionWidgetState
       if (mounted) {
         showSnackbar(
           context,
-          'Port Forwarding Session was not deleted',
+          t(context, 'Port Forwarding Session was not deleted'),
           err.toString(),
         );
       }
@@ -111,7 +112,7 @@ class _AppPortForwardingSessionWidgetState
     return AppActionsWidget(
       actions: [
         AppActionsWidgetAction(
-          title: 'Open',
+          title: t(context, 'Open'),
           color: Theme.of(context).colorScheme.primary,
           onTap: () {
             Navigator.pop(context);
@@ -121,7 +122,7 @@ class _AppPortForwardingSessionWidgetState
           },
         ),
         AppActionsWidgetAction(
-          title: 'Copy',
+          title: t(context, 'Copy'),
           color: Theme.of(context).colorScheme.primary,
           onTap: () {
             Navigator.pop(context);
@@ -134,7 +135,7 @@ class _AppPortForwardingSessionWidgetState
           },
         ),
         AppActionsWidgetAction(
-          title: 'Delete',
+          title: t(context, 'Delete'),
           color: Theme.of(context).extension<CustomColors>()!.error,
           onTap: () {
             _deleteSession();

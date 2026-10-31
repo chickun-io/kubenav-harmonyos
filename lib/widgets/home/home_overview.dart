@@ -6,6 +6,7 @@ import 'package:kubenav/repositories/app_repository.dart';
 import 'package:kubenav/repositories/clusters_repository.dart';
 import 'package:kubenav/utils/constants.dart';
 import 'package:kubenav/utils/custom_icons.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/utils/showmodal.dart';
 import 'package:kubenav/widgets/home/overview/overview_actions.dart';
 import 'package:kubenav/widgets/home/overview/overview_events.dart';
@@ -92,9 +93,9 @@ class HomeOverview extends StatelessWidget {
               ),
             ),
             Text(
-              Characters(
-                activeCluster?.name ?? 'No Active Cluster',
-              ).replaceAll(Characters(''), Characters('\u{200B}')).toString(),
+              Characters(activeCluster?.name ?? t(context, 'No Active Cluster'))
+                  .replaceAll(Characters(''), Characters('\u{200B}'))
+                  .toString(),
               textAlign: TextAlign.center,
               style: const TextStyle(
                 fontSize: 14,

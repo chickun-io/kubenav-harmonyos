@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:kubenav/models/kubernetes/schema.models.swagger.dart';
 import 'package:kubenav/models/plugins/prometheus.dart';
 import 'package:kubenav/utils/constants.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/utils/resources.dart';
 import 'package:kubenav/widgets/resources/helpers/details_item.dart';
 import 'package:kubenav/widgets/resources/helpers/details_item_conditions.dart';
@@ -20,15 +21,13 @@ final resourceStatefulSet = Resource(
   category: ResourceCategories.workload,
   plural: 'StatefulSets',
   singular: 'StatefulSet',
-  description:
-      'StatefulSet is the workload API object used to manage stateful applications.',
+  description: 'StatefulSet is the workload API object used to manage stateful applications.',
   path: '/apis/apps/v1',
   resource: 'statefulsets',
   scope: ResourceScope.namespaced,
   additionalPrinterColumns: [],
   icon: 'statefulsets',
-  template:
-      '{"apiVersion":"apps/v1","kind":"StatefulSet","metadata":{"name":"","namespace":""},"spec":{"replicas":1,"selector":{"matchLabels":{"app":"nginx"}},"serviceName":"nginx","template":{"metadata":{"labels":{"app":"nginx"},"name":"nginx"},"spec":{"containers":[{"name":"nginx","image":"nginx:1.14.2"}]}}}}',
+  template: '{"apiVersion":"apps/v1","kind":"StatefulSet","metadata":{"name":"","namespace":""},"spec":{"replicas":1,"selector":{"matchLabels":{"app":"nginx"}},"serviceName":"nginx","template":{"metadata":{"labels":{"app":"nginx"},"name":"nginx"},"spec":{"containers":[{"name":"nginx","image":"nginx:1.14.2"}]}}}}',
   decodeListData: (ResourcesListData data) {
     final parsed = json.decode(data.list);
     final items = IoK8sApiAppsV1StatefulSetList.fromJson(parsed).items;
@@ -82,161 +81,166 @@ final resourceStatefulSet = Resource(
           item: item,
           status: status,
           details: [
-            'Namespace: ${item.metadata?.namespace ?? '-'}',
-            'Replicas: ${item.status?.replicas ?? 0}',
-            'Ready: ${item.status?.readyReplicas ?? 0}',
-            'Updated: ${item.status?.updatedReplicas ?? 0}',
-            'Age: ${getAge(item.metadata?.creationTimestamp)}',
+            tFmt(context, 'Namespace: {0}', [item.metadata?.namespace ?? '-']),
+            tFmt(context, 'Replicas: {0}', [item.status?.replicas ?? 0]),
+            tFmt(context, 'Ready: {0}', [item.status?.readyReplicas ?? 0]),
+            tFmt(context, 'Updated: {0}', [item.status?.updatedReplicas ?? 0]),
+            tFmt(context, 'Age: {0}', [
+              getAge(item.metadata?.creationTimestamp),
+            ]),
           ],
         );
       },
-  previewItemBuilder: (dynamic listItem) {
+  previewItemBuilder: (BuildContext context, dynamic listItem) {
     final item = listItem as IoK8sApiAppsV1StatefulSet;
 
     return [
-      'Namespace: ${item.metadata?.namespace ?? '-'}',
-      'Replicas: ${item.status?.replicas ?? 0}',
-      'Ready: ${item.status?.readyReplicas ?? 0}',
-      'Updated: ${item.status?.updatedReplicas ?? 0}',
-      'Age: ${getAge(item.metadata?.creationTimestamp)}',
+      tFmt(context, 'Namespace: {0}', [item.metadata?.namespace ?? '-']),
+      tFmt(context, 'Replicas: {0}', [item.status?.replicas ?? 0]),
+      tFmt(context, 'Ready: {0}', [item.status?.readyReplicas ?? 0]),
+      tFmt(context, 'Updated: {0}', [item.status?.updatedReplicas ?? 0]),
+      tFmt(context, 'Age: {0}', [getAge(item.metadata?.creationTimestamp)]),
     ];
   },
-  detailsItemBuilder: (BuildContext context, Resource resource, dynamic detailsItem) {
-    final item = detailsItem as IoK8sApiAppsV1StatefulSet;
+  detailsItemBuilder:
+      (BuildContext context, Resource resource, dynamic detailsItem) {
+        final item = detailsItem as IoK8sApiAppsV1StatefulSet;
 
-    return Column(
-      children: [
-        DetailsItemMetadata(kind: item.kind, metadata: item.metadata),
-        DetailsItemConditions(
-          conditions: item.status?.conditions
-              ?.map(
-                (e) => IoK8sApimachineryPkgApisMetaV1Condition(
-                  lastTransitionTime: e.lastTransitionTime ?? DateTime.now(),
-                  message: e.message ?? '',
-                  observedGeneration: null,
-                  reason: e.reason ?? '',
-                  status: e.status,
-                  type: e.type,
-                ),
-              )
-              .toList(),
-        ),
-        const SizedBox(height: Constants.spacingMiddle),
-        DetailsItem(
-          title: 'Configuration',
-          details: [
-            DetailsItemModel(name: 'Replicas', values: item.spec?.replicas),
-            DetailsItemModel(
-              name: 'Revision History Limit',
-              values: item.spec?.revisionHistoryLimit,
-            ),
-            DetailsItemModel(
-              name: 'Min. Ready Seconds',
-              values: item.spec?.minReadySeconds,
-            ),
-            DetailsItemModel(
-              name: 'Update Strategy',
-              values: item.spec?.updateStrategy?.type?.value,
-            ),
-            DetailsItemModel(
-              name: 'Pod Management Policy',
-              values: item.spec?.podManagementPolicy?.value,
-            ),
-            DetailsItemModel(
-              name: 'Service Name',
-              values: item.spec?.serviceName,
-            ),
-            DetailsItemModel(
-              name: 'Selector',
-              values: item.spec?.selector.matchLabels?.entries
-                  .map((matchLabel) => '${matchLabel.key}=${matchLabel.value}')
+        return Column(
+          children: [
+            DetailsItemMetadata(kind: item.kind, metadata: item.metadata),
+            DetailsItemConditions(
+              conditions: item.status?.conditions
+                  ?.map(
+                    (e) => IoK8sApimachineryPkgApisMetaV1Condition(
+                      lastTransitionTime:
+                          e.lastTransitionTime ?? DateTime.now(),
+                      message: e.message ?? '',
+                      observedGeneration: null,
+                      reason: e.reason ?? '',
+                      status: e.status,
+                      type: e.type,
+                    ),
+                  )
                   .toList(),
             ),
-          ],
-        ),
-        const SizedBox(height: Constants.spacingMiddle),
-        DetailsItem(
-          title: 'Status',
-          details: [
-            DetailsItemModel(
-              name: 'Desired Replicas',
-              values: item.status?.replicas,
-            ),
-            DetailsItemModel(
-              name: 'Ready Replicas',
-              values: item.status?.readyReplicas,
-            ),
-            DetailsItemModel(
-              name: 'Available Replicas',
-              values: item.status?.availableReplicas,
-            ),
-            DetailsItemModel(
-              name: 'Updated Replicas',
-              values: item.status?.updatedReplicas,
-            ),
-            DetailsItemModel(
-              name: 'Current Revision',
-              values: item.status?.currentRevision,
-            ),
-            DetailsItemModel(
-              name: 'Updated Revision',
-              values: item.status?.updateRevision,
-            ),
-            DetailsItemModel(
-              name: 'Observed Generation',
-              values: item.status?.observedGeneration,
-            ),
-          ],
-        ),
-        const SizedBox(height: Constants.spacingMiddle),
-        DetailsResourcesPreview(
-          resource: resourcePod,
-          namespace: item.metadata?.namespace,
-          selector: getSelector(item.spec?.selector),
-          filter: null,
-        ),
-        const SizedBox(height: Constants.spacingMiddle),
-        DetailsResourcesPreview(
-          resource: resourceEvent,
-          namespace: item.metadata?.namespace,
-          selector:
-              'fieldSelector=involvedObject.name=${item.metadata?.name ?? ''}',
-          filter: null,
-        ),
-        const SizedBox(height: Constants.spacingMiddle),
-        AppPrometheusChartsWidget(
-          item: item,
-          toJson: resource.toJson,
-          defaultCharts: [
-            Chart(
-              title: 'Pods',
-              unit: '',
-              queries: [
-                Query(
-                  query:
-                      'kube_statefulset_replicas{namespace="{{with .metadata}}{{with .namespace}}{{.}}{{end}}{{end}}", statefulset="{{with .metadata}}{{with .name}}{{.}}{{end}}{{end}}"}',
-                  label: 'Desired',
+            const SizedBox(height: Constants.spacingMiddle),
+            DetailsItem(
+              title: t(context, 'Configuration'),
+              details: [
+                DetailsItemModel(
+                  name: t(context, 'Replicas'),
+                  values: item.spec?.replicas,
                 ),
-                Query(
-                  query:
-                      'kube_statefulset_status_replicas_current{namespace="{{with .metadata}}{{with .namespace}}{{.}}{{end}}{{end}}", statefulset="{{with .metadata}}{{with .name}}{{.}}{{end}}{{end}}"}',
-                  label: 'Current',
+                DetailsItemModel(
+                  name: t(context, 'Revision History Limit'),
+                  values: item.spec?.revisionHistoryLimit,
                 ),
-                Query(
-                  query:
-                      'kube_statefulset_status_replicas_ready{namespace="{{with .metadata}}{{with .namespace}}{{.}}{{end}}{{end}}", statefulset="{{with .metadata}}{{with .name}}{{.}}{{end}}{{end}}"}',
-                  label: 'Ready',
+                DetailsItemModel(
+                  name: t(context, 'Min. Ready Seconds'),
+                  values: item.spec?.minReadySeconds,
                 ),
-                Query(
-                  query:
-                      'kube_statefulset_status_replicas_updated{namespace="{{with .metadata}}{{with .namespace}}{{.}}{{end}}{{end}}", statefulset="{{with .metadata}}{{with .name}}{{.}}{{end}}{{end}}"}',
-                  label: 'Updated',
+                DetailsItemModel(
+                  name: t(context, 'Update Strategy'),
+                  values: item.spec?.updateStrategy?.type?.value,
+                ),
+                DetailsItemModel(
+                  name: t(context, 'Pod Management Policy'),
+                  values: item.spec?.podManagementPolicy?.value,
+                ),
+                DetailsItemModel(
+                  name: t(context, 'Service Name'),
+                  values: item.spec?.serviceName,
+                ),
+                DetailsItemModel(
+                  name: t(context, 'Selector'),
+                  values: item.spec?.selector.matchLabels?.entries
+                      .map(
+                        (matchLabel) => '${matchLabel.key}=${matchLabel.value}',
+                      )
+                      .toList(),
+                ),
+              ],
+            ),
+            const SizedBox(height: Constants.spacingMiddle),
+            DetailsItem(
+              title: t(context, 'Status'),
+              details: [
+                DetailsItemModel(
+                  name: t(context, 'Desired Replicas'),
+                  values: item.status?.replicas,
+                ),
+                DetailsItemModel(
+                  name: t(context, 'Ready Replicas'),
+                  values: item.status?.readyReplicas,
+                ),
+                DetailsItemModel(
+                  name: t(context, 'Available Replicas'),
+                  values: item.status?.availableReplicas,
+                ),
+                DetailsItemModel(
+                  name: t(context, 'Updated Replicas'),
+                  values: item.status?.updatedReplicas,
+                ),
+                DetailsItemModel(
+                  name: t(context, 'Current Revision'),
+                  values: item.status?.currentRevision,
+                ),
+                DetailsItemModel(
+                  name: t(context, 'Updated Revision'),
+                  values: item.status?.updateRevision,
+                ),
+                DetailsItemModel(
+                  name: t(context, 'Observed Generation'),
+                  values: item.status?.observedGeneration,
+                ),
+              ],
+            ),
+            const SizedBox(height: Constants.spacingMiddle),
+            DetailsResourcesPreview(
+              resource: resourcePod,
+              namespace: item.metadata?.namespace,
+              selector: getSelector(item.spec?.selector),
+              filter: null,
+            ),
+            const SizedBox(height: Constants.spacingMiddle),
+            DetailsResourcesPreview(
+              resource: resourceEvent,
+              namespace: item.metadata?.namespace,
+              selector:
+                  'fieldSelector=involvedObject.name=${item.metadata?.name ?? ''}',
+              filter: null,
+            ),
+            const SizedBox(height: Constants.spacingMiddle),
+            AppPrometheusChartsWidget(
+              item: item,
+              toJson: resource.toJson,
+              defaultCharts: [
+                Chart(
+                  title: t(context, 'Pods'),
+                  unit: '',
+                  queries: [
+                    Query(
+                      query: 'kube_statefulset_replicas{namespace="{{with .metadata}}{{with .namespace}}{{.}}{{end}}{{end}}", statefulset="{{with .metadata}}{{with .name}}{{.}}{{end}}{{end}}"}',
+                      label: t(context, 'Desired'),
+                    ),
+                    Query(
+                      query: 'kube_statefulset_status_replicas_current{namespace="{{with .metadata}}{{with .namespace}}{{.}}{{end}}{{end}}", statefulset="{{with .metadata}}{{with .name}}{{.}}{{end}}{{end}}"}',
+                      label: t(context, 'Current'),
+                    ),
+                    Query(
+                      query: 'kube_statefulset_status_replicas_ready{namespace="{{with .metadata}}{{with .namespace}}{{.}}{{end}}{{end}}", statefulset="{{with .metadata}}{{with .name}}{{.}}{{end}}{{end}}"}',
+                      label: t(context, 'Ready'),
+                    ),
+                    Query(
+                      query: 'kube_statefulset_status_replicas_updated{namespace="{{with .metadata}}{{with .namespace}}{{.}}{{end}}{{end}}", statefulset="{{with .metadata}}{{with .name}}{{.}}{{end}}{{end}}"}',
+                      label: t(context, 'Updated'),
+                    ),
+                  ],
                 ),
               ],
             ),
           ],
-        ),
-      ],
-    );
-  },
+        );
+      },
 );

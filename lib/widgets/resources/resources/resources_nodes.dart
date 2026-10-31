@@ -9,6 +9,7 @@ import 'package:kubenav/models/kubernetes_extensions/node_metrics.dart';
 import 'package:kubenav/models/plugins/prometheus.dart';
 import 'package:kubenav/utils/constants.dart';
 import 'package:kubenav/utils/helpers.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/utils/resources.dart';
 import 'package:kubenav/utils/showmodal.dart';
 import 'package:kubenav/utils/themes.dart';
@@ -82,32 +83,42 @@ final resourceNode = Resource(
   toJson: (dynamic item) {
     return json.decode(json.encode(item));
   },
-  listItemBuilder: (BuildContext context, Resource resource, ResourceItem listItem) {
-    final item = listItem.item as IoK8sApiCoreV1Node;
-    final status = listItem.status;
+  listItemBuilder:
+      (BuildContext context, Resource resource, ResourceItem listItem) {
+        final item = listItem.item as IoK8sApiCoreV1Node;
+        final status = listItem.status;
 
-    final nodeStatus = _getNodeStatus(item);
-    final roles = item.metadata?.labels?['kubernetes.azure.com/role'] ?? '-';
-    final version = item.status?.nodeInfo?.kubeletVersion ?? '-';
-    final nodeAllocatableResources = getAllocatableResources(item);
+        final nodeStatus = _getNodeStatus(item);
+        final roles =
+            item.metadata?.labels?['kubernetes.azure.com/role'] ?? '-';
+        final version = item.status?.nodeInfo?.kubeletVersion ?? '-';
+        final nodeAllocatableResources = getAllocatableResources(item);
 
-    return ResourcesListItem(
-      name: item.metadata?.name ?? '',
-      namespace: item.metadata?.namespace,
-      resource: resource,
-      item: item,
-      status: status,
-      details: [
-        'Status: $nodeStatus',
-        'Roles: $roles',
-        'Version: $version',
-        'Age: ${getAge(item.metadata?.creationTimestamp)}',
-        'CPU: ${listItem.metrics?.cpu ?? '-'} / ${nodeAllocatableResources?.cpu ?? '-'}',
-        'Memory: ${listItem.metrics?.memory ?? '-'} / ${nodeAllocatableResources?.memory ?? '-'}',
-      ],
-    );
-  },
-  previewItemBuilder: (dynamic listItem) {
+        return ResourcesListItem(
+          name: item.metadata?.name ?? '',
+          namespace: item.metadata?.namespace,
+          resource: resource,
+          item: item,
+          status: status,
+          details: [
+            tFmt(context, 'Status: {0}', [nodeStatus]),
+            tFmt(context, 'Roles: {0}', [roles]),
+            tFmt(context, 'Version: {0}', [version]),
+            tFmt(context, 'Age: {0}', [
+              getAge(item.metadata?.creationTimestamp),
+            ]),
+            tFmt(context, 'CPU: {0} / {1}', [
+              listItem.metrics?.cpu ?? '-',
+              nodeAllocatableResources?.cpu ?? '-',
+            ]),
+            tFmt(context, 'Memory: {0} / {1}', [
+              listItem.metrics?.memory ?? '-',
+              nodeAllocatableResources?.memory ?? '-',
+            ]),
+          ],
+        );
+      },
+  previewItemBuilder: (BuildContext context, dynamic listItem) {
     final item = listItem as IoK8sApiCoreV1Node;
 
     final nodeStatus = _getNodeStatus(item);
@@ -115,284 +126,290 @@ final resourceNode = Resource(
     final version = item.status?.nodeInfo?.kubeletVersion ?? '-';
 
     return [
-      'Status: $nodeStatus',
-      'Roles: $roles',
-      'Version: $version',
-      'Age: ${getAge(item.metadata?.creationTimestamp)}',
+      tFmt(context, 'Status: {0}', [nodeStatus]),
+      tFmt(context, 'Roles: {0}', [roles]),
+      tFmt(context, 'Version: {0}', [version]),
+      tFmt(context, 'Age: {0}', [getAge(item.metadata?.creationTimestamp)]),
     ];
   },
-  detailsItemBuilder: (BuildContext context, Resource resource, dynamic detailsItem) {
-    final item = detailsItem as IoK8sApiCoreV1Node;
+  detailsItemBuilder:
+      (BuildContext context, Resource resource, dynamic detailsItem) {
+        final item = detailsItem as IoK8sApiCoreV1Node;
 
-    return Column(
-      children: [
-        DetailsItemMetadata(kind: item.kind, metadata: item.metadata),
-        DetailsItemConditions(
-          conditions: item.status?.conditions
-              ?.map(
-                (e) => IoK8sApimachineryPkgApisMetaV1Condition(
-                  lastTransitionTime: e.lastTransitionTime ?? DateTime.now(),
-                  message: e.message ?? '',
-                  observedGeneration: null,
-                  reason: e.reason ?? '',
-                  status: e.status,
-                  type: e.type,
-                ),
-              )
-              .toList(),
-        ),
-        const SizedBox(height: Constants.spacingMiddle),
-        DetailsItem(
-          title: 'Configuration',
-          details: [
-            DetailsItemModel(
-              name: 'Architecture',
-              values: item.status?.nodeInfo?.architecture,
-            ),
-            DetailsItemModel(
-              name: 'Boot ID',
-              values: item.status?.nodeInfo?.bootID,
-            ),
-            DetailsItemModel(
-              name: 'Container Runtime Version',
-              values: item.status?.nodeInfo?.containerRuntimeVersion,
-            ),
-            DetailsItemModel(
-              name: 'Kernel Version',
-              values: item.status?.nodeInfo?.kernelVersion,
-            ),
-            DetailsItemModel(
-              name: 'KubeProxy Version',
-              values: item.status?.nodeInfo?.kubeProxyVersion,
-            ),
-            DetailsItemModel(
-              name: 'Kubelet Version',
-              values: item.status?.nodeInfo?.kubeletVersion,
-            ),
-            DetailsItemModel(
-              name: 'Machine ID',
-              values: item.status?.nodeInfo?.machineID,
-            ),
-            DetailsItemModel(
-              name: 'Operating System',
-              values: item.status?.nodeInfo?.operatingSystem,
-            ),
-            DetailsItemModel(
-              name: 'OS Image',
-              values: item.status?.nodeInfo?.osImage,
-            ),
-            DetailsItemModel(name: 'Pod CIDR', values: item.spec?.podCIDR),
-            DetailsItemModel(name: 'Pod CIDRs', values: item.spec?.podCIDRs),
-            DetailsItemModel(
-              name: 'System UUID',
-              values: item.status?.nodeInfo?.systemUUID,
-            ),
-          ],
-        ),
-        const SizedBox(height: Constants.spacingMiddle),
-        DetailsItem(
-          title: 'Status',
-          details: [
-            DetailsItemModel(
-              name: 'Status',
-              values: item.status?.conditions
-                  ?.where((condition) => condition.status == 'True')
-                  .map((condition) => condition.type)
-                  .toList(),
-            ),
-            DetailsItemModel(
-              name: 'Addresses',
-              values: item.status?.addresses
-                  ?.map((address) => '${address.type}: ${address.address}')
-                  .toList(),
-            ),
-          ],
-        ),
-        const SizedBox(height: Constants.spacingMiddle),
-        OverviewMetrics(nodeName: item.metadata?.name),
-        const SizedBox(height: Constants.spacingMiddle),
-        DetailsItem(
-          title: 'Resources',
-          details:
-              item.status?.allocatable?.entries
-                  .map(
-                    (allocatable) => DetailsItemModel(
-                      name: allocatable.key,
-                      values: allocatable.value,
-                      onTap: (index) {
-                        showSnackbar(
-                          context,
-                          allocatable.key,
-                          'Allocatable: ${allocatable.value}\nCapacity: ${item.status?.capacity != null && item.status!.capacity!.containsKey(allocatable.key) ? item.status!.capacity![allocatable.key] : '-'}',
-                        );
-                      },
-                    ),
-                  )
-                  .toList() ??
-              [],
-        ),
-        const SizedBox(height: Constants.spacingMiddle),
-        AppVerticalListSimpleWidget(
-          title: 'Images',
-          items:
-              item.status?.images
+        return Column(
+          children: [
+            DetailsItemMetadata(kind: item.kind, metadata: item.metadata),
+            DetailsItemConditions(
+              conditions: item.status?.conditions
                   ?.map(
-                    (image) => AppVerticalListSimpleModel(
-                      onTap: () {
-                        showSnackbar(
-                          context,
-                          'Names',
-                          image.names?.join('\n') ?? '-',
-                        );
-                      },
-                      children: [
-                        Container(
-                          decoration: BoxDecoration(
-                            color: Theme.of(context).colorScheme.primary,
-                            borderRadius: const BorderRadius.all(
-                              Radius.circular(Constants.sizeBorderRadius),
-                            ),
-                          ),
-                          height: 54,
-                          width: 54,
-                          padding: const EdgeInsets.all(
-                            Constants.spacingIcon54x54,
-                          ),
-                          child: SvgPicture.asset(
-                            'assets/resources/containers.svg',
-                          ),
-                        ),
-                        const SizedBox(width: Constants.spacingSmall),
-                        Expanded(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                image.names?.firstOrNull ?? '-',
-                                style: primaryTextStyle(context),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                              Text(
-                                image.sizeBytes != null
-                                    ? formatBytes(image.sizeBytes!)
-                                    : '-',
-                                style: secondaryTextStyle(context),
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(width: Constants.spacingSmall),
-                        Icon(
-                          Icons.arrow_forward_ios,
-                          color: Theme.of(context)
-                              .extension<CustomColors>()!
-                              .textSecondary
-                              .withValues(alpha: Constants.opacityIcon),
-                          size: 24,
-                        ),
-                      ],
+                    (e) => IoK8sApimachineryPkgApisMetaV1Condition(
+                      lastTransitionTime:
+                          e.lastTransitionTime ?? DateTime.now(),
+                      message: e.message ?? '',
+                      observedGeneration: null,
+                      reason: e.reason ?? '',
+                      status: e.status,
+                      type: e.type,
                     ),
                   )
-                  .toList() ??
-              [],
-        ),
-        const SizedBox(height: Constants.spacingMiddle),
-        DetailsResourcesPreview(
-          resource: resourcePod,
-          namespace: null,
-          selector: 'fieldSelector=spec.nodeName=${item.metadata?.name}',
-          filter: null,
-        ),
-        const SizedBox(height: Constants.spacingMiddle),
-        DetailsResourcesPreview(
-          resource: resourceEvent,
-          namespace: item.metadata?.namespace,
-          selector:
-              'fieldSelector=involvedObject.name=${item.metadata?.name ?? ''}',
-          filter: null,
-        ),
-        const SizedBox(height: Constants.spacingMiddle),
-        AppPrometheusChartsWidget(
-          item: item,
-          toJson: resource.toJson,
-          defaultCharts: [
-            Chart(
-              title: 'CPU Usage',
-              unit: 'm',
-              queries: [
-                Query(
-                  query:
-                      'sum(rate(container_cpu_usage_seconds_total{node="{{with .metadata}}{{with .name}}{{.}}{{end}}{{end}}", container!="", container!="POD"}[2m])) * 1000',
-                  label: 'Usage',
+                  .toList(),
+            ),
+            const SizedBox(height: Constants.spacingMiddle),
+            DetailsItem(
+              title: t(context, 'Configuration'),
+              details: [
+                DetailsItemModel(
+                  name: t(context, 'Architecture'),
+                  values: item.status?.nodeInfo?.architecture,
                 ),
-                Query(
-                  query:
-                      'sum(kube_pod_container_resource_requests{node="{{with .metadata}}{{with .name}}{{.}}{{end}}{{end}}", resource="cpu", container!="", container!="POD"}) * 1000',
-                  label: 'Requests',
+                DetailsItemModel(
+                  name: t(context, 'Boot ID'),
+                  values: item.status?.nodeInfo?.bootID,
                 ),
-                Query(
-                  query:
-                      'sum(kube_pod_container_resource_limits{node="{{with .metadata}}{{with .name}}{{.}}{{end}}{{end}}", resource="cpu", container!="", container!="POD"}) * 1000',
-                  label: 'Limits',
+                DetailsItemModel(
+                  name: t(context, 'Container Runtime Version'),
+                  values: item.status?.nodeInfo?.containerRuntimeVersion,
                 ),
-                Query(
-                  query:
-                      'sum(kube_node_status_allocatable{node="{{with .metadata}}{{with .name}}{{.}}{{end}}{{end}}", resource="cpu"}) * 1000',
-                  label: 'Allocatable',
+                DetailsItemModel(
+                  name: t(context, 'Kernel Version'),
+                  values: item.status?.nodeInfo?.kernelVersion,
+                ),
+                DetailsItemModel(
+                  name: t(context, 'KubeProxy Version'),
+                  values: item.status?.nodeInfo?.kubeProxyVersion,
+                ),
+                DetailsItemModel(
+                  name: t(context, 'Kubelet Version'),
+                  values: item.status?.nodeInfo?.kubeletVersion,
+                ),
+                DetailsItemModel(
+                  name: t(context, 'Machine ID'),
+                  values: item.status?.nodeInfo?.machineID,
+                ),
+                DetailsItemModel(
+                  name: t(context, 'Operating System'),
+                  values: item.status?.nodeInfo?.operatingSystem,
+                ),
+                DetailsItemModel(
+                  name: t(context, 'OS Image'),
+                  values: item.status?.nodeInfo?.osImage,
+                ),
+                DetailsItemModel(
+                  name: t(context, 'Pod CIDR'),
+                  values: item.spec?.podCIDR,
+                ),
+                DetailsItemModel(
+                  name: t(context, 'Pod CIDRs'),
+                  values: item.spec?.podCIDRs,
+                ),
+                DetailsItemModel(
+                  name: t(context, 'System UUID'),
+                  values: item.status?.nodeInfo?.systemUUID,
                 ),
               ],
             ),
-            Chart(
-              title: 'Memory Usage',
-              unit: 'GiB',
-              queries: [
-                Query(
-                  query:
-                      '(sum(container_memory_working_set_bytes{node="{{with .metadata}}{{with .name}}{{.}}{{end}}{{end}}", container!="", container!="POD"})) / 1024 / 1024 / 1024',
-                  label: 'Usage',
+            const SizedBox(height: Constants.spacingMiddle),
+            DetailsItem(
+              title: t(context, 'Status'),
+              details: [
+                DetailsItemModel(
+                  name: t(context, 'Status'),
+                  values: item.status?.conditions
+                      ?.where((condition) => condition.status == 'True')
+                      .map((condition) => condition.type)
+                      .toList(),
                 ),
-                Query(
-                  query:
-                      '(sum(kube_pod_container_resource_requests{node="{{with .metadata}}{{with .name}}{{.}}{{end}}{{end}}", resource="memory", container!="", container!="POD"})) / 1024 / 1024 / 1024',
-                  label: 'Requests',
-                ),
-                Query(
-                  query:
-                      '(sum(kube_pod_container_resource_limits{node="{{with .metadata}}{{with .name}}{{.}}{{end}}{{end}}", resource="memory", container!="", container!="POD"})) / 1024 / 1024 / 1024',
-                  label: 'Limits',
-                ),
-                Query(
-                  query:
-                      '(sum(kube_node_status_allocatable{node="{{with .metadata}}{{with .name}}{{.}}{{end}}{{end}}", resource="memory"})) / 1024 / 1024 / 1024',
-                  label: 'Allocatable',
+                DetailsItemModel(
+                  name: t(context, 'Addresses'),
+                  values: item.status?.addresses
+                      ?.map((address) => '${address.type}: ${address.address}')
+                      .toList(),
                 ),
               ],
             ),
-            Chart(
-              title: 'Pods',
-              unit: '',
-              queries: [
-                Query(
-                  query:
-                      'count(kube_pod_info{node="{{with .metadata}}{{with .name}}{{.}}{{end}}{{end}}"})',
-                  label: 'Current',
+            const SizedBox(height: Constants.spacingMiddle),
+            OverviewMetrics(nodeName: item.metadata?.name),
+            const SizedBox(height: Constants.spacingMiddle),
+            DetailsItem(
+              title: t(context, 'Resources'),
+              details:
+                  item.status?.allocatable?.entries
+                      .map(
+                        (allocatable) => DetailsItemModel(
+                          name: allocatable.key,
+                          values: allocatable.value,
+                          onTap: (index) {
+                            showSnackbar(
+                              context,
+                              allocatable.key,
+                              tFmt(context, 'Allocatable: {0}\nCapacity: {1}', [
+                                allocatable.value,
+                                item.status?.capacity != null &&
+                                        item.status!.capacity!.containsKey(
+                                          allocatable.key,
+                                        )
+                                    ? item.status!.capacity![allocatable.key]
+                                    : '-',
+                              ]),
+                            );
+                          },
+                        ),
+                      )
+                      .toList() ??
+                  [],
+            ),
+            const SizedBox(height: Constants.spacingMiddle),
+            AppVerticalListSimpleWidget(
+              title: t(context, 'Images'),
+              items:
+                  item.status?.images
+                      ?.map(
+                        (image) => AppVerticalListSimpleModel(
+                          onTap: () {
+                            showSnackbar(
+                              context,
+                              t(context, 'Names'),
+                              image.names?.join('\n') ?? '-',
+                            );
+                          },
+                          children: [
+                            Container(
+                              decoration: BoxDecoration(
+                                color: Theme.of(context).colorScheme.primary,
+                                borderRadius: const BorderRadius.all(
+                                  Radius.circular(Constants.sizeBorderRadius),
+                                ),
+                              ),
+                              height: 54,
+                              width: 54,
+                              padding: const EdgeInsets.all(
+                                Constants.spacingIcon54x54,
+                              ),
+                              child: SvgPicture.asset(
+                                'assets/resources/containers.svg',
+                              ),
+                            ),
+                            const SizedBox(width: Constants.spacingSmall),
+                            Expanded(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    image.names?.firstOrNull ?? '-',
+                                    style: primaryTextStyle(context),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  Text(
+                                    image.sizeBytes != null
+                                        ? formatBytes(image.sizeBytes!)
+                                        : '-',
+                                    style: secondaryTextStyle(context),
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(width: Constants.spacingSmall),
+                            Icon(
+                              Icons.arrow_forward_ios,
+                              color: Theme.of(context)
+                                  .extension<CustomColors>()!
+                                  .textSecondary
+                                  .withValues(alpha: Constants.opacityIcon),
+                              size: 24,
+                            ),
+                          ],
+                        ),
+                      )
+                      .toList() ??
+                  [],
+            ),
+            const SizedBox(height: Constants.spacingMiddle),
+            DetailsResourcesPreview(
+              resource: resourcePod,
+              namespace: null,
+              selector: 'fieldSelector=spec.nodeName=${item.metadata?.name}',
+              filter: null,
+            ),
+            const SizedBox(height: Constants.spacingMiddle),
+            DetailsResourcesPreview(
+              resource: resourceEvent,
+              namespace: item.metadata?.namespace,
+              selector:
+                  'fieldSelector=involvedObject.name=${item.metadata?.name ?? ''}',
+              filter: null,
+            ),
+            const SizedBox(height: Constants.spacingMiddle),
+            AppPrometheusChartsWidget(
+              item: item,
+              toJson: resource.toJson,
+              defaultCharts: [
+                Chart(
+                  title: t(context, 'CPU Usage'),
+                  unit: 'm',
+                  queries: [
+                    Query(
+                      query: 'sum(rate(container_cpu_usage_seconds_total{node="{{with .metadata}}{{with .name}}{{.}}{{end}}{{end}}", container!="", container!="POD"}[2m])) * 1000',
+                      label: t(context, 'Usage'),
+                    ),
+                    Query(
+                      query: 'sum(kube_pod_container_resource_requests{node="{{with .metadata}}{{with .name}}{{.}}{{end}}{{end}}", resource="cpu", container!="", container!="POD"}) * 1000',
+                      label: t(context, 'Requests'),
+                    ),
+                    Query(
+                      query: 'sum(kube_pod_container_resource_limits{node="{{with .metadata}}{{with .name}}{{.}}{{end}}{{end}}", resource="cpu", container!="", container!="POD"}) * 1000',
+                      label: t(context, 'Limits'),
+                    ),
+                    Query(
+                      query: 'sum(kube_node_status_allocatable{node="{{with .metadata}}{{with .name}}{{.}}{{end}}{{end}}", resource="cpu"}) * 1000',
+                      label: t(context, 'Allocatable'),
+                    ),
+                  ],
                 ),
-                Query(
-                  query:
-                      'sum(kube_node_status_allocatable{node="{{with .metadata}}{{with .name}}{{.}}{{end}}{{end}}", resource="pods"})',
-                  label: 'Allocatable',
+                Chart(
+                  title: t(context, 'Memory Usage'),
+                  unit: 'GiB',
+                  queries: [
+                    Query(
+                      query: '(sum(container_memory_working_set_bytes{node="{{with .metadata}}{{with .name}}{{.}}{{end}}{{end}}", container!="", container!="POD"})) / 1024 / 1024 / 1024',
+                      label: t(context, 'Usage'),
+                    ),
+                    Query(
+                      query: '(sum(kube_pod_container_resource_requests{node="{{with .metadata}}{{with .name}}{{.}}{{end}}{{end}}", resource="memory", container!="", container!="POD"})) / 1024 / 1024 / 1024',
+                      label: t(context, 'Requests'),
+                    ),
+                    Query(
+                      query: '(sum(kube_pod_container_resource_limits{node="{{with .metadata}}{{with .name}}{{.}}{{end}}{{end}}", resource="memory", container!="", container!="POD"})) / 1024 / 1024 / 1024',
+                      label: t(context, 'Limits'),
+                    ),
+                    Query(
+                      query: '(sum(kube_node_status_allocatable{node="{{with .metadata}}{{with .name}}{{.}}{{end}}{{end}}", resource="memory"})) / 1024 / 1024 / 1024',
+                      label: t(context, 'Allocatable'),
+                    ),
+                  ],
+                ),
+                Chart(
+                  title: t(context, 'Pods'),
+                  unit: '',
+                  queries: [
+                    Query(
+                      query: 'count(kube_pod_info{node="{{with .metadata}}{{with .name}}{{.}}{{end}}{{end}}"})',
+                      label: t(context, 'Current'),
+                    ),
+                    Query(
+                      query: 'sum(kube_node_status_allocatable{node="{{with .metadata}}{{with .name}}{{.}}{{end}}{{end}}", resource="pods"})',
+                      label: t(context, 'Allocatable'),
+                    ),
+                  ],
                 ),
               ],
             ),
           ],
-        ),
-      ],
-    );
-  },
+        );
+      },
 );
 
 bool _isNodeReady(List<IoK8sApiCoreV1NodeCondition> conditions) {

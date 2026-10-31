@@ -7,6 +7,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:kubenav/models/kubernetes/schema.models.swagger.dart';
 import 'package:kubenav/utils/constants.dart';
 import 'package:kubenav/utils/helpers.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/utils/resources.dart';
 import 'package:kubenav/utils/showmodal.dart';
 import 'package:kubenav/widgets/resources/helpers/details_item_metadata.dart';
@@ -76,99 +77,132 @@ final resourceRole = Resource(
           item: item,
           status: status,
           details: [
-            'Rules: ${item.rules?.length ?? '-'}',
-            'Age: ${getAge(item.metadata?.creationTimestamp)}',
+            tFmt(context, 'Rules: {0}', [item.rules?.length ?? '-']),
+            tFmt(context, 'Age: {0}', [
+              getAge(item.metadata?.creationTimestamp),
+            ]),
           ],
         );
       },
-  previewItemBuilder: (dynamic listItem) {
+  previewItemBuilder: (BuildContext context, dynamic listItem) {
     final item = listItem as IoK8sApiRbacV1Role;
 
     return [
-      'Rules: ${item.rules?.length ?? '-'}',
-      'Age: ${getAge(item.metadata?.creationTimestamp)}',
+      tFmt(context, 'Rules: {0}', [item.rules?.length ?? '-']),
+      tFmt(context, 'Age: {0}', [getAge(item.metadata?.creationTimestamp)]),
     ];
   },
-  detailsItemBuilder: (BuildContext context, Resource resource, dynamic detailsItem) {
-    final item = detailsItem as IoK8sApiRbacV1Role;
+  detailsItemBuilder:
+      (BuildContext context, Resource resource, dynamic detailsItem) {
+        final item = detailsItem as IoK8sApiRbacV1Role;
 
-    final rules = formatRules(item.rules ?? []);
+        final rules = formatRules(item.rules ?? []);
 
-    return Column(
-      children: [
-        DetailsItemMetadata(kind: item.kind, metadata: item.metadata),
-        const SizedBox(height: Constants.spacingMiddle),
-        AppVerticalListSimpleWidget(
-          title: 'Rules',
-          items: rules
-              .map(
-                (rule) => AppVerticalListSimpleModel(
-                  onTap: () {
-                    showSnackbar(
-                      context,
-                      rule.resource,
-                      'Non-Resource URLs: ${rule.nonResourceURLs.isNotEmpty ? rule.nonResourceURLs.join(', ') : '-'}\nResource Names: ${rule.resourceNames.isNotEmpty ? rule.resourceNames.join(', ') : '-'}\nVerbs: ${rule.verbs.isNotEmpty ? rule.verbs.join(', ') : '-'}',
-                    );
-                  },
-                  children: [
-                    Container(
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).colorScheme.primary,
-                        borderRadius: const BorderRadius.all(
-                          Radius.circular(Constants.sizeBorderRadius),
+        return Column(
+          children: [
+            DetailsItemMetadata(kind: item.kind, metadata: item.metadata),
+            const SizedBox(height: Constants.spacingMiddle),
+            AppVerticalListSimpleWidget(
+              title: t(context, 'Rules'),
+              items: rules
+                  .map(
+                    (rule) => AppVerticalListSimpleModel(
+                      onTap: () {
+                        showSnackbar(
+                          context,
+                          rule.resource,
+                          tFmt(
+                            context,
+                            'Non-Resource URLs: {0}\nResource Names: {1}\nVerbs: {2}',
+                            [
+                              rule.nonResourceURLs.isNotEmpty
+                                  ? rule.nonResourceURLs.join(', ')
+                                  : '-',
+                              rule.resourceNames.isNotEmpty
+                                  ? rule.resourceNames.join(', ')
+                                  : '-',
+                              rule.verbs.isNotEmpty
+                                  ? rule.verbs.join(', ')
+                                  : '-',
+                            ],
+                          ),
+                        );
+                      },
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).colorScheme.primary,
+                            borderRadius: const BorderRadius.all(
+                              Radius.circular(Constants.sizeBorderRadius),
+                            ),
+                          ),
+                          height: 54,
+                          width: 54,
+                          padding: const EdgeInsets.all(
+                            Constants.spacingIcon54x54,
+                          ),
+                          child: SvgPicture.asset('assets/resources/roles.svg'),
                         ),
-                      ),
-                      height: 54,
-                      width: 54,
-                      padding: const EdgeInsets.all(Constants.spacingIcon54x54),
-                      child: SvgPicture.asset('assets/resources/roles.svg'),
-                    ),
-                    const SizedBox(width: Constants.spacingSmall),
-                    Expanded(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            Characters(rule.resource)
-                                .replaceAll(
-                                  Characters(''),
-                                  Characters('\u{200B}'),
-                                )
-                                .toString(),
-                            style: primaryTextStyle(context),
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
+                        const SizedBox(width: Constants.spacingSmall),
+                        Expanded(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                Characters(rule.resource)
+                                    .replaceAll(
+                                      Characters(''),
+                                      Characters('\u{200B}'),
+                                    )
+                                    .toString(),
+                                style: primaryTextStyle(context),
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              Text(
+                                tFmt(
+                                  context,
+                                  'Non-Resource URLs: {0}\nResource Names: {1}\nVerbs: {2}',
+                                  [
+                                    rule.nonResourceURLs.isNotEmpty
+                                        ? rule.nonResourceURLs.join(', ')
+                                        : '-',
+                                    rule.resourceNames.isNotEmpty
+                                        ? rule.resourceNames.join(', ')
+                                        : '-',
+                                    rule.verbs.isNotEmpty
+                                        ? rule.verbs.join(', ')
+                                        : '-',
+                                  ],
+                                ),
+                                style: secondaryTextStyle(context),
+                                maxLines: 3,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ],
                           ),
-                          Text(
-                            'Non-Resource URLs: ${rule.nonResourceURLs.isNotEmpty ? rule.nonResourceURLs.join(', ') : '-'}\nResource Names: ${rule.resourceNames.isNotEmpty ? rule.resourceNames.join(', ') : '-'}\nVerbs: ${rule.verbs.isNotEmpty ? rule.verbs.join(', ') : '-'}',
-                            style: secondaryTextStyle(context),
-                            maxLines: 3,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-              )
-              .toList(),
-        ),
-        const SizedBox(height: Constants.spacingMiddle),
-        DetailsResourcesPreview(
-          resource: resourceEvent,
-          namespace: item.metadata?.namespace,
-          selector:
-              'fieldSelector=involvedObject.name=${item.metadata?.name ?? ''}',
-          filter: null,
-        ),
-        const SizedBox(height: Constants.spacingMiddle),
-        AppPrometheusChartsWidget(
-          item: item,
-          toJson: resource.toJson,
-          defaultCharts: const [],
-        ),
-      ],
-    );
-  },
+                  )
+                  .toList(),
+            ),
+            const SizedBox(height: Constants.spacingMiddle),
+            DetailsResourcesPreview(
+              resource: resourceEvent,
+              namespace: item.metadata?.namespace,
+              selector:
+                  'fieldSelector=involvedObject.name=${item.metadata?.name ?? ''}',
+              filter: null,
+            ),
+            const SizedBox(height: Constants.spacingMiddle),
+            AppPrometheusChartsWidget(
+              item: item,
+              toJson: resource.toJson,
+              defaultCharts: const [],
+            ),
+          ],
+        );
+      },
 );

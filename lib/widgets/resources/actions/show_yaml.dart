@@ -13,6 +13,7 @@ import 'package:kubenav/repositories/app_repository.dart';
 import 'package:kubenav/services/helpers_service.dart';
 import 'package:kubenav/utils/constants.dart';
 import 'package:kubenav/utils/helpers.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/utils/logger.dart';
 import 'package:kubenav/utils/showmodal.dart';
 import 'package:kubenav/utils/themes.dart';
@@ -101,8 +102,11 @@ class _ShowYamlState extends State<ShowYaml> {
       if (mounted) {
         showSnackbar(
           context,
-          'Manifest Exported',
-          'The manifest was exported as ${widget.name}.${appRepository.settings.editorFormat}',
+          t(context, 'Manifest Exported'),
+          tFmt(context, 'The manifest was exported as {0}.{1}', [
+            widget.name,
+            appRepository.settings.editorFormat,
+          ]),
         );
         Navigator.pop(context);
       }
@@ -112,7 +116,7 @@ class _ShowYamlState extends State<ShowYaml> {
         _isLoading = false;
       });
       if (mounted) {
-        showSnackbar(context, 'Export Failed', err.toString());
+        showSnackbar(context, t(context, 'Export Failed'), err.toString());
       }
     }
   }
@@ -145,7 +149,7 @@ class _ShowYamlState extends State<ShowYaml> {
       closePressed: () {
         Navigator.pop(context);
       },
-      actionText: 'Export',
+      actionText: t(context, 'Export'),
       actionPressed: () {
         _export();
       },

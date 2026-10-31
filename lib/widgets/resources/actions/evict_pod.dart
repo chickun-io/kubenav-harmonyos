@@ -6,6 +6,7 @@ import 'package:kubenav/repositories/app_repository.dart';
 import 'package:kubenav/repositories/clusters_repository.dart';
 import 'package:kubenav/services/kubernetes_service.dart';
 import 'package:kubenav/utils/constants.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/utils/logger.dart';
 import 'package:kubenav/utils/showmodal.dart';
 import 'package:kubenav/widgets/resources/resources/resources.dart';
@@ -69,8 +70,12 @@ class _EvictPodState extends State<EvictPod> {
       if (mounted) {
         showSnackbar(
           context,
-          '${widget.resource.singular} Evicted',
-          'The ${widget.resource.singular} ${widget.namespace}/${widget.name} was evicted',
+          tFmt(context, '{0} Evicted', [t(context, widget.resource.singular)]),
+          tFmt(context, 'The {0} {1}/{2} was evicted', [
+            t(context, widget.resource.singular),
+            widget.namespace,
+            widget.name,
+          ]),
         );
         Navigator.pop(context);
       }
@@ -86,7 +91,9 @@ class _EvictPodState extends State<EvictPod> {
       if (mounted) {
         showSnackbar(
           context,
-          'Failed to Evict ${widget.resource.singular}',
+          tFmt(context, 'Failed to Evict {0}', [
+            t(context, widget.resource.singular),
+          ]),
           err.toString(),
         );
       }
@@ -96,13 +103,15 @@ class _EvictPodState extends State<EvictPod> {
   @override
   Widget build(BuildContext context) {
     return AppBottomSheetWidget(
-      title: 'Evict',
+      title: t(context, 'Evict'),
       subtitle: '${widget.namespace}/${widget.name}',
       icon: Icons.delete_forever,
       closePressed: () {
         Navigator.pop(context);
       },
-      actionText: 'Evict ${widget.resource.singular}',
+      actionText: tFmt(context, 'Evict {0}', [
+        t(context, widget.resource.singular),
+      ]),
       actionPressed: () {
         _evict();
       },
@@ -116,7 +125,10 @@ class _EvictPodState extends State<EvictPod> {
             right: Constants.spacingMiddle,
           ),
           child: Text(
-            'Do you really want to evict the ${widget.resource.singular} ${widget.name}?',
+            tFmt(context, 'Do you really want to evict the {0} {1}?', [
+              t(context, widget.resource.singular),
+              widget.name,
+            ]),
           ),
         ),
       ),

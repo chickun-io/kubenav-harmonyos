@@ -7,6 +7,7 @@ import 'package:kubenav/models/cluster_provider.dart';
 import 'package:kubenav/repositories/clusters_repository.dart';
 import 'package:kubenav/services/providers/aws_service.dart';
 import 'package:kubenav/utils/constants.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/utils/showmodal.dart';
 import 'package:kubenav/utils/themes.dart';
 import 'package:kubenav/widgets/settings/clusters/settings_add_cluster_aws.dart';
@@ -35,7 +36,7 @@ class _SettingsAWSProviderState extends State<SettingsAWSProvider> {
   /// missing the validation of the form will fail.
   String? _validator(String? value) {
     if (value == null || value.isEmpty) {
-      return 'This field is required';
+      return t(context, 'This field is required');
     }
 
     return null;
@@ -100,7 +101,7 @@ class _SettingsAWSProviderState extends State<SettingsAWSProvider> {
       if (mounted) {
         showSnackbar(
           context,
-          'Failed to Save Provider Configuration',
+          t(context, 'Failed to Save Provider Configuration'),
           err.toString(),
         );
       }
@@ -162,9 +163,9 @@ class _SettingsAWSProviderState extends State<SettingsAWSProvider> {
                   autocorrect: false,
                   enableSuggestions: false,
                   maxLines: 1,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     border: OutlineInputBorder(),
-                    labelText: 'Name',
+                    labelText: t(context, 'Name'),
                   ),
                   validator: _validator,
                 ),
@@ -175,9 +176,9 @@ class _SettingsAWSProviderState extends State<SettingsAWSProvider> {
                   autocorrect: false,
                   enableSuggestions: false,
                   maxLines: 1,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     border: OutlineInputBorder(),
-                    labelText: 'Access Key ID',
+                    labelText: t(context, 'Access Key ID'),
                   ),
                   validator: _validator,
                 ),
@@ -199,7 +200,7 @@ class _SettingsAWSProviderState extends State<SettingsAWSProvider> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const Text('Region'),
+                    Text(t(context, 'Region')),
                     DropdownButton(
                       value: _region,
                       underline: Container(
@@ -217,9 +218,9 @@ class _SettingsAWSProviderState extends State<SettingsAWSProvider> {
                           child: Text(
                             value,
                             style: TextStyle(
-                              color: Theme.of(
-                                context,
-                              ).extension<CustomColors>()!.textPrimary,
+                              color: Theme.of(context)
+                                  .extension<CustomColors>()!
+                                  .textPrimary,
                             ),
                           ),
                         );

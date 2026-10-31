@@ -8,6 +8,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:kubenav/models/kubernetes/schema.models.swagger.dart';
 import 'package:kubenav/utils/constants.dart';
 import 'package:kubenav/utils/helpers.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/utils/resources.dart';
 import 'package:kubenav/utils/showmodal.dart';
 import 'package:kubenav/utils/themes.dart';
@@ -24,8 +25,7 @@ final resourceConfigMap = Resource(
   category: ResourceCategories.configAndStorage,
   plural: 'ConfigMaps',
   singular: 'ConfigMap',
-  description:
-      'A ConfigMap is an API object used to store non-confidential data in key-value pairs.',
+  description: 'A ConfigMap is an API object used to store non-confidential data in key-value pairs.',
   path: '/api/v1',
   resource: 'configmaps',
   scope: ResourceScope.namespaced,
@@ -79,19 +79,21 @@ final resourceConfigMap = Resource(
           item: item,
           status: status,
           details: [
-            'Namespace: ${item.metadata?.namespace ?? '-'}',
-            'Data: ${item.data?.entries.length}',
-            'Age: ${getAge(item.metadata?.creationTimestamp)}',
+            tFmt(context, 'Namespace: {0}', [item.metadata?.namespace ?? '-']),
+            tFmt(context, 'Data: {0}', [item.data?.entries.length]),
+            tFmt(context, 'Age: {0}', [
+              getAge(item.metadata?.creationTimestamp),
+            ]),
           ],
         );
       },
-  previewItemBuilder: (dynamic listItem) {
+  previewItemBuilder: (BuildContext context, dynamic listItem) {
     final item = listItem as IoK8sApiCoreV1ConfigMap;
 
     return [
-      'Namespace: ${item.metadata?.namespace ?? '-'}',
-      'Data: ${item.data?.entries.length}',
-      'Age: ${getAge(item.metadata?.creationTimestamp)}',
+      tFmt(context, 'Namespace: {0}', [item.metadata?.namespace ?? '-']),
+      tFmt(context, 'Data: {0}', [item.data?.entries.length]),
+      tFmt(context, 'Age: {0}', [getAge(item.metadata?.creationTimestamp)]),
     ];
   },
   detailsItemBuilder:
@@ -103,7 +105,7 @@ final resourceConfigMap = Resource(
             DetailsItemMetadata(kind: item.kind, metadata: item.metadata),
             const SizedBox(height: Constants.spacingMiddle),
             AppVerticalListSimpleWidget(
-              title: 'Data',
+              title: t(context, 'Data'),
               items:
                   item.data?.entries
                       .map(
@@ -189,12 +191,12 @@ final resourceConfigMap = Resource(
 Widget _buildBottomSheet(BuildContext context, String key, String value) {
   return AppBottomSheetWidget(
     title: key,
-    subtitle: 'Data',
+    subtitle: t(context, 'Data'),
     icon: 'assets/resources/configmaps.svg',
     closePressed: () {
       Navigator.pop(context);
     },
-    actionText: 'Copy',
+    actionText: t(context, 'Copy'),
     actionPressed: () {
       Clipboard.setData(ClipboardData(text: value));
       Navigator.pop(context);

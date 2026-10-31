@@ -6,6 +6,7 @@ import 'package:kubenav/repositories/sponsor_repository.dart';
 import 'package:kubenav/utils/constants.dart';
 import 'package:kubenav/utils/custom_icons.dart';
 import 'package:kubenav/utils/helpers.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/utils/navigate.dart';
 import 'package:kubenav/utils/showmodal.dart';
 import 'package:kubenav/widgets/plugins/plugins.dart';
@@ -31,7 +32,7 @@ class OverviewActions extends StatelessWidget {
             sponsorRepository.products.isNotEmpty &&
             !sponsorRepository.isSponsor)
         ? AppResourceActionsModel(
-            title: 'Sponsor',
+            title: t(context, 'Sponsor'),
             icon: Icons.favorite,
             onTap: () {
               showActions(
@@ -52,28 +53,28 @@ class OverviewActions extends StatelessWidget {
       mode: AppResourceActionsMode.header,
       actions: [
         AppResourceActionsModel(
-          title: 'Resources',
+          title: t(context, 'Resources'),
           icon: CustomIcons.kubernetes,
           onTap: () {
             navigate(context, const Resources(), Constants.pageIndexResources);
           },
         ),
         AppResourceActionsModel(
-          title: 'Plugins',
+          title: t(context, 'Plugins'),
           icon: Icons.extension,
           onTap: () {
             navigate(context, const Plugins(), Constants.pageIndexPlugins);
           },
         ),
         AppResourceActionsModel(
-          title: 'Settings',
+          title: t(context, 'Settings'),
           icon: Icons.settings,
           onTap: () {
             navigate(context, const Settings(), Constants.pageIndexSettings);
           },
         ),
         AppResourceActionsModel(
-          title: 'Clusters',
+          title: t(context, 'Clusters'),
           icon: CustomIcons.clusters,
           onTap: () {
             navigate(
@@ -84,7 +85,7 @@ class OverviewActions extends StatelessWidget {
           },
         ),
         AppResourceActionsModel(
-          title: 'Bookmarks',
+          title: t(context, 'Bookmarks'),
           icon: Icons.bookmark,
           onTap: () {
             navigate(

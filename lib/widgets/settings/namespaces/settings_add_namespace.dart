@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 
 import 'package:kubenav/repositories/app_repository.dart';
 import 'package:kubenav/utils/constants.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/widgets/shared/app_bottom_sheet_widget.dart';
 
 /// The [SettingsAddNamespace] can be used to add a new namespace to the list of
@@ -24,7 +25,7 @@ class _SettingsAddNamespaceState extends State<SettingsAddNamespace> {
   /// [_namespaceController]. If the value is empty the validation fails.
   String? _validator(String? value) {
     if (value == null || value.isEmpty) {
-      return 'This field is required';
+      return t(context, 'This field is required');
     }
 
     return null;
@@ -38,13 +39,16 @@ class _SettingsAddNamespaceState extends State<SettingsAddNamespace> {
     );
 
     return AppBottomSheetWidget(
-      title: 'Add Namespace',
-      subtitle: 'Add one of your favorite Namespaces for faster access',
+      title: t(context, 'Add Namespace'),
+      subtitle: t(
+        context,
+        'Add one of your favorite Namespaces for faster access',
+      ),
       icon: Icons.difference,
       closePressed: () {
         Navigator.pop(context);
       },
-      actionText: 'Add Namespace',
+      actionText: t(context, 'Add Namespace'),
       actionPressed: () async {
         if (_namespaceFormKey.currentState != null &&
             _namespaceFormKey.currentState!.validate()) {
@@ -68,8 +72,11 @@ class _SettingsAddNamespaceState extends State<SettingsAddNamespace> {
             ),
             child: Column(
               children: [
-                const Text(
-                  'Enter the name of one of your favorite namespaces for faster access:',
+                Text(
+                  t(
+                    context,
+                    'Enter the name of one of your favorite namespaces for faster access:',
+                  ),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(top: Constants.spacingMiddle),
@@ -79,9 +86,9 @@ class _SettingsAddNamespaceState extends State<SettingsAddNamespace> {
                     autocorrect: false,
                     enableSuggestions: false,
                     maxLines: 1,
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
                       border: OutlineInputBorder(),
-                      labelText: 'Namespace',
+                      labelText: t(context, 'Namespace'),
                     ),
                     validator: _validator,
                     onFieldSubmitted: (String value) async {

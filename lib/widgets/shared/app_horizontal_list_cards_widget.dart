@@ -92,9 +92,9 @@ class AppHorizontalListCardsWidget extends StatelessWidget {
       children: subtitle
           .map(
             (e) => Text(
-              Characters(
-                e,
-              ).replaceAll(Characters(''), Characters('\u{200B}')).toString(),
+              Characters(e)
+                  .replaceAll(Characters(''), Characters('\u{200B}'))
+                  .toString(),
               overflow: TextOverflow.ellipsis,
               maxLines: 1,
               style: secondaryTextStyle(context),
@@ -150,9 +150,9 @@ class AppHorizontalListCardsWidget extends StatelessWidget {
                 decoration: BoxDecoration(
                   boxShadow: [
                     BoxShadow(
-                      color: Theme.of(
-                        context,
-                      ).extension<CustomColors>()!.shadow,
+                      color: Theme.of(context)
+                          .extension<CustomColors>()!
+                          .shadow,
                       blurRadius: Constants.sizeBorderBlurRadius,
                       spreadRadius: Constants.sizeBorderSpreadRadius,
                       offset: const Offset(0.0, 0.0),

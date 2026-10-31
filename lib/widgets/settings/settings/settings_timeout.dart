@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 
 import 'package:kubenav/repositories/app_repository.dart';
 import 'package:kubenav/utils/constants.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/widgets/shared/app_bottom_sheet_widget.dart';
 
 /// The [SettingsTimeout] widget allows a user to change the timeout for all
@@ -25,7 +26,7 @@ class _SettingsTimeoutState extends State<SettingsTimeout> {
   /// If the value is empty or not a number the validation fails.
   String? _validator(String? value) {
     if (value == null || value.isEmpty) {
-      return 'This field is required';
+      return t(context, 'This field is required');
     }
 
     final parsedValue = int.tryParse(value);
@@ -60,13 +61,13 @@ class _SettingsTimeoutState extends State<SettingsTimeout> {
     );
 
     return AppBottomSheetWidget(
-      title: 'Timeout',
-      subtitle: 'Timeout for requests against the Kubernetes API',
+      title: t(context, 'Timeout'),
+      subtitle: t(context, 'Timeout for requests against the Kubernetes API'),
       icon: Icons.schedule,
       closePressed: () {
         Navigator.pop(context);
       },
-      actionText: 'Save',
+      actionText: t(context, 'Save'),
       actionPressed: () {
         if (_timeoutFormKey.currentState != null &&
             _timeoutFormKey.currentState!.validate()) {
@@ -87,8 +88,11 @@ class _SettingsTimeoutState extends State<SettingsTimeout> {
             ),
             child: Column(
               children: [
-                const Text(
-                  'Set the timeout for requests against the Kubernetes API in seconds. A value of "0" means no timeout:',
+                Text(
+                  t(
+                    context,
+                    'Set the timeout for requests against the Kubernetes API in seconds. A value of "0" means no timeout:',
+                  ),
                 ),
                 const SizedBox(height: Constants.spacingMiddle),
                 TextFormField(
@@ -97,9 +101,9 @@ class _SettingsTimeoutState extends State<SettingsTimeout> {
                   autocorrect: false,
                   enableSuggestions: false,
                   maxLines: 1,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     border: OutlineInputBorder(),
-                    labelText: 'Timeout',
+                    labelText: t(context, 'Timeout'),
                   ),
                   validator: _validator,
                   onFieldSubmitted: (String value) {

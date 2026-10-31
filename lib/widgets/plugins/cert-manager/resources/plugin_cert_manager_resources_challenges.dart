@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import 'package:kubenav/models/kubernetes/schema.models.swagger.dart';
 import 'package:kubenav/utils/constants.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/utils/navigate.dart';
 import 'package:kubenav/utils/resources.dart';
 import 'package:kubenav/widgets/plugins/cert-manager/resources/plugin_cert_manager_resources.dart';
@@ -21,8 +22,7 @@ final Resource certManagerResourceChallenge = Resource(
   category: CertManagerResourceCategories.acme,
   plural: 'Challenges',
   singular: 'Challenge',
-  description:
-      'Challenge is a type to represent a Challenge request with an ACME server',
+  description: 'Challenge is a type to represent a Challenge request with an ACME server',
   path: '/apis/acme.cert-manager.io/v1',
   resource: 'challenges',
   scope: ResourceScope.namespaced,
@@ -80,23 +80,25 @@ final Resource certManagerResourceChallenge = Resource(
           item: item,
           status: status,
           details: [
-            'Namespace: ${item.metadata.namespace ?? '-'}',
-            'State: ${item.status?.state?.value ?? '-'}',
-            'Reason: ${item.status?.reason ?? '-'}',
-            'DNS Name: ${item.spec.dnsName}',
-            'Age: ${getAge(item.metadata.creationTimestamp)}',
+            tFmt(context, 'Namespace: {0}', [item.metadata.namespace ?? '-']),
+            tFmt(context, 'State: {0}', [item.status?.state?.value ?? '-']),
+            tFmt(context, 'Reason: {0}', [item.status?.reason ?? '-']),
+            tFmt(context, 'DNS Name: {0}', [item.spec.dnsName]),
+            tFmt(context, 'Age: {0}', [
+              getAge(item.metadata.creationTimestamp),
+            ]),
           ],
         );
       },
-  previewItemBuilder: (dynamic listItem) {
+  previewItemBuilder: (BuildContext context, dynamic listItem) {
     final item = listItem as IoCertManagerAcmeV1Challenge;
 
     return [
-      'Namespace: ${item.metadata.namespace ?? '-'}',
-      'State: ${item.status?.state?.value ?? '-'}',
-      'Reason: ${item.status?.reason ?? '-'}',
-      'DNS Name: ${item.spec.dnsName}',
-      'Age: ${getAge(item.metadata.creationTimestamp)}',
+      tFmt(context, 'Namespace: {0}', [item.metadata.namespace ?? '-']),
+      tFmt(context, 'State: {0}', [item.status?.state?.value ?? '-']),
+      tFmt(context, 'Reason: {0}', [item.status?.reason ?? '-']),
+      tFmt(context, 'DNS Name: {0}', [item.spec.dnsName]),
+      tFmt(context, 'Age: {0}', [getAge(item.metadata.creationTimestamp)]),
     ];
   },
   detailsItemBuilder:
@@ -108,10 +110,10 @@ final Resource certManagerResourceChallenge = Resource(
             DetailsItemMetadata(kind: item.kind, metadata: item.metadata),
             const SizedBox(height: Constants.spacingMiddle),
             DetailsItem(
-              title: 'Configuration',
+              title: t(context, 'Configuration'),
               details: [
                 DetailsItemModel(
-                  name: 'Issuer',
+                  name: t(context, 'Issuer'),
                   values:
                       '${item.spec.issuerRef.kind} (${item.spec.issuerRef.name})',
                   onTap: (index) {
@@ -129,26 +131,44 @@ final Resource certManagerResourceChallenge = Resource(
                     );
                   },
                 ),
-                DetailsItemModel(name: 'DNS Name', values: item.spec.dnsName),
-                DetailsItemModel(name: 'Url', values: item.spec.url),
                 DetailsItemModel(
-                  name: 'Authorization Url',
+                  name: t(context, 'DNS Name'),
+                  values: item.spec.dnsName,
+                ),
+                DetailsItemModel(
+                  name: t(context, 'Url'),
+                  values: item.spec.url,
+                ),
+                DetailsItemModel(
+                  name: t(context, 'Authorization Url'),
                   values: item.spec.authorizationURL,
                 ),
-                DetailsItemModel(name: 'Wildcard', values: item.spec.wildcard),
-                DetailsItemModel(name: 'Token', values: item.spec.token),
-                DetailsItemModel(name: 'Key', values: item.spec.key),
+                DetailsItemModel(
+                  name: t(context, 'Wildcard'),
+                  values: item.spec.wildcard,
+                ),
+                DetailsItemModel(
+                  name: t(context, 'Token'),
+                  values: item.spec.token,
+                ),
+                DetailsItemModel(
+                  name: t(context, 'Key'),
+                  values: item.spec.key,
+                ),
               ],
             ),
             const SizedBox(height: Constants.spacingMiddle),
             DetailsItem(
-              title: 'Status',
+              title: t(context, 'Status'),
               details: [
                 DetailsItemModel(
-                  name: 'State',
+                  name: t(context, 'State'),
                   values: item.status?.state?.value,
                 ),
-                DetailsItemModel(name: 'Reason', values: item.status?.reason),
+                DetailsItemModel(
+                  name: t(context, 'Reason'),
+                  values: item.status?.reason,
+                ),
               ],
             ),
             const SizedBox(height: Constants.spacingMiddle),

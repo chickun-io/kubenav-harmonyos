@@ -6,6 +6,7 @@ import 'package:kubenav/repositories/clusters_repository.dart';
 import 'package:kubenav/utils/constants.dart';
 import 'package:kubenav/utils/custom_icons.dart';
 import 'package:kubenav/utils/helpers.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/widgets/shared/app_bottom_sheet_widget.dart';
 import 'package:kubenav/widgets/shared/app_list_item.dart';
 
@@ -42,13 +43,13 @@ class _AppClustersWidgetState extends State<AppClustersWidget> {
     );
 
     return AppBottomSheetWidget(
-      title: 'Clusters',
-      subtitle: 'Select the Active Cluster',
+      title: t(context, 'Clusters'),
+      subtitle: t(context, 'Select the Active Cluster'),
       icon: CustomIcons.clusters,
       closePressed: () {
         Navigator.pop(context);
       },
-      actionText: 'Close',
+      actionText: t(context, 'Close'),
       actionPressed: () {
         Navigator.pop(context);
       },

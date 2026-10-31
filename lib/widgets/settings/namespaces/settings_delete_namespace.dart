@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:kubenav/repositories/app_repository.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/utils/showmodal.dart';
 import 'package:kubenav/utils/themes.dart';
 import 'package:kubenav/widgets/shared/app_actions_widget.dart';
@@ -24,14 +25,14 @@ class SettingsDeleteNamespace extends StatelessWidget {
     return AppActionsWidget(
       actions: [
         AppActionsWidgetAction(
-          title: 'Delete',
+          title: t(context, 'Delete'),
           color: Theme.of(context).extension<CustomColors>()!.error,
           onTap: () {
             appRepository.deleteNamespace(namespace);
             showSnackbar(
               context,
-              'Namespace Deleted',
-              'The Namespace $namespace was deleted',
+              t(context, 'Namespace Deleted'),
+              tFmt(context, 'The Namespace {0} was deleted', [namespace]),
             );
             Navigator.pop(context);
           },

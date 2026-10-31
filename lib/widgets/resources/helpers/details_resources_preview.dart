@@ -8,6 +8,7 @@ import 'package:kubenav/repositories/clusters_repository.dart';
 import 'package:kubenav/services/kubernetes_service.dart';
 import 'package:kubenav/utils/constants.dart';
 import 'package:kubenav/utils/helpers.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/utils/navigate.dart';
 import 'package:kubenav/widgets/resources/resources/resources.dart';
 import 'package:kubenav/widgets/resources/resources_details.dart';
@@ -88,7 +89,7 @@ class _DetailsResourcesPreviewState extends State<DetailsResourcesPreview> {
               Expanded(
                 flex: 1,
                 child: Text(
-                  widget.resource.plural,
+                  t(context, widget.resource.plural),
                   style: primaryTextStyle(context, size: 18),
                 ),
               ),
@@ -133,7 +134,9 @@ class _DetailsResourcesPreviewState extends State<DetailsResourcesPreview> {
             if (snapshot.hasError) {
               return buildContainer(
                 AppErrorWidget(
-                  message: 'Failed to Load ${widget.resource.plural}',
+                  message: tFmt(context, 'Failed to Load {0}', [
+                    t(context, widget.resource.plural),
+                  ]),
                   details: snapshot.error.toString(),
                   icon: 'assets/resources/${widget.resource.icon}.svg',
                 ),
@@ -143,21 +146,27 @@ class _DetailsResourcesPreviewState extends State<DetailsResourcesPreview> {
             if (snapshot.data == null || snapshot.data!.isEmpty) {
               return buildContainer(
                 AppErrorWidget(
-                  message: 'No ${widget.resource.plural} Found',
-                  details:
-                      'No ${widget.resource.plural} were found for the provided filter',
+                  message: tFmt(context, 'No {0} Found', [
+                    t(context, widget.resource.plural),
+                  ]),
+                  details: tFmt(
+                    context,
+                    'No {0} were found for the provided filter',
+                    [t(context, widget.resource.plural)],
+                  ),
                   icon: 'assets/resources/${widget.resource.icon}.svg',
                 ),
               );
             }
 
             return AppHorizontalListCardsWidget(
-              title: widget.resource.plural,
+              title: t(context, widget.resource.plural),
               cards: List.generate(
                 snapshot.data!.length,
                 (index) => AppHorizontalListCardsModel(
                   title: widget.resource.getName(snapshot.data![index]),
                   subtitle: widget.resource.previewItemBuilder(
+                    context,
                     snapshot.data![index],
                   ),
                   image: 'assets/resources/${widget.resource.icon}.svg',

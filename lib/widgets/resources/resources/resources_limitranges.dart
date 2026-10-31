@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:kubenav/models/kubernetes/schema.models.swagger.dart';
 import 'package:kubenav/models/plugins/prometheus.dart';
 import 'package:kubenav/utils/constants.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/utils/resources.dart';
 import 'package:kubenav/widgets/resources/helpers/details_item.dart';
 import 'package:kubenav/widgets/resources/helpers/details_item_metadata.dart';
@@ -18,8 +19,7 @@ final resourceLimitRange = Resource(
   category: ResourceCategories.configAndStorage,
   plural: 'LimitRanges',
   singular: 'LimitRange',
-  description:
-      'A LimitRange is a policy to constrain the resource allocations (limits and requests) that you can specify for each applicable object kind in a namespace.',
+  description: 'A LimitRange is a policy to constrain the resource allocations (limits and requests) that you can specify for each applicable object kind in a namespace.',
   path: '/api/v1',
   resource: 'limitranges',
   scope: ResourceScope.namespaced,
@@ -73,19 +73,21 @@ final resourceLimitRange = Resource(
           item: item,
           status: status,
           details: [
-            'Namespace: ${item.metadata?.namespace ?? '-'}',
-            'Limits: ${item.spec?.limits.length ?? '-'}',
-            'Age: ${getAge(item.metadata?.creationTimestamp)}',
+            tFmt(context, 'Namespace: {0}', [item.metadata?.namespace ?? '-']),
+            tFmt(context, 'Limits: {0}', [item.spec?.limits.length ?? '-']),
+            tFmt(context, 'Age: {0}', [
+              getAge(item.metadata?.creationTimestamp),
+            ]),
           ],
         );
       },
-  previewItemBuilder: (dynamic listItem) {
+  previewItemBuilder: (BuildContext context, dynamic listItem) {
     final item = listItem as IoK8sApiCoreV1LimitRange;
 
     return [
-      'Namespace: ${item.metadata?.namespace ?? '-'}',
-      'Limits: ${item.spec?.limits.length ?? '-'}',
-      'Age: ${getAge(item.metadata?.creationTimestamp)}',
+      tFmt(context, 'Namespace: {0}', [item.metadata?.namespace ?? '-']),
+      tFmt(context, 'Limits: {0}', [item.spec?.limits.length ?? '-']),
+      tFmt(context, 'Age: {0}', [getAge(item.metadata?.creationTimestamp)]),
     ];
   },
   detailsItemBuilder: (BuildContext context, Resource resource, dynamic detailsItem) {
@@ -95,7 +97,7 @@ final resourceLimitRange = Resource(
       children: [
         DetailsItemMetadata(kind: item.kind, metadata: item.metadata),
         const SizedBox(height: Constants.spacingMiddle),
-        ..._buildLimits(item.spec?.limits),
+        ..._buildLimits(context, item.spec?.limits),
         DetailsResourcesPreview(
           resource: resourceEvent,
           namespace: item.metadata?.namespace,
@@ -128,7 +130,10 @@ final resourceLimitRange = Resource(
   },
 );
 
-List<Widget> _buildLimits(List<IoK8sApiCoreV1LimitRangeItem>? limits) {
+List<Widget> _buildLimits(
+  BuildContext context,
+  List<IoK8sApiCoreV1LimitRangeItem>? limits,
+) {
   final List<Widget> widgets = [];
 
   if (limits == null) {
@@ -138,29 +143,29 @@ List<Widget> _buildLimits(List<IoK8sApiCoreV1LimitRangeItem>? limits) {
   for (var i = 0; i < limits.length; i++) {
     widgets.add(
       DetailsItem(
-        title: 'Limit ${i + 1}',
+        title: tFmt(context, 'Limit {0}', [i + 1]),
         details: [
-          DetailsItemModel(name: 'Type', values: limits[i].type),
+          DetailsItemModel(name: t(context, 'Type'), values: limits[i].type),
           DetailsItemModel(
-            name: 'Defaults',
+            name: t(context, 'Defaults'),
             values: limits[i].$default?.entries.map((e) {
               return '${e.key}: ${e.value}';
             }).toList(),
           ),
           DetailsItemModel(
-            name: 'Default Requests',
+            name: t(context, 'Default Requests'),
             values: limits[i].defaultRequest?.entries.map((e) {
               return '${e.key}: ${e.value}';
             }).toList(),
           ),
           DetailsItemModel(
-            name: 'Max',
+            name: t(context, 'Max'),
             values: limits[i].max?.entries.map((e) {
               return '${e.key}: ${e.value}';
             }).toList(),
           ),
           DetailsItemModel(
-            name: 'Min',
+            name: t(context, 'Min'),
             values: limits[i].min?.entries.map((e) {
               return '${e.key}: ${e.value}';
             }).toList(),

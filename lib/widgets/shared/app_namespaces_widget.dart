@@ -12,6 +12,7 @@ import 'package:kubenav/services/kubernetes_service.dart';
 import 'package:kubenav/utils/constants.dart';
 import 'package:kubenav/utils/custom_icons.dart';
 import 'package:kubenav/utils/helpers.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/utils/showmodal.dart';
 import 'package:kubenav/widgets/shared/app_bottom_sheet_widget.dart';
 import 'package:kubenav/widgets/shared/app_error_widget.dart';
@@ -108,7 +109,11 @@ class _AppNamespacesWidgetState extends State<AppNamespacesWidget> {
       }
     } catch (err) {
       if (mounted) {
-        showSnackbar(context, 'Failed to Change Namespace', err.toString());
+        showSnackbar(
+          context,
+          t(context, 'Failed to Change Namespace'),
+          err.toString(),
+        );
       }
     }
   }
@@ -134,7 +139,7 @@ class _AppNamespacesWidgetState extends State<AppNamespacesWidget> {
           children: [
             Expanded(
               child: Text(
-                'Favorites',
+                t(context, 'Favorites'),
                 style: primaryTextStyle(context, size: 18),
               ),
             ),
@@ -161,7 +166,7 @@ class _AppNamespacesWidgetState extends State<AppNamespacesWidget> {
             Expanded(
               flex: 1,
               child: Text(
-                'All Namespaces',
+                t(context, 'All Namespaces'),
                 style: normalTextStyle(context),
                 overflow: TextOverflow.ellipsis,
               ),
@@ -221,7 +226,7 @@ class _AppNamespacesWidgetState extends State<AppNamespacesWidget> {
           children: [
             Expanded(
               child: Text(
-                'Namespaces',
+                t(context, 'Namespaces'),
                 style: primaryTextStyle(context, size: 18),
               ),
             ),
@@ -247,13 +252,13 @@ class _AppNamespacesWidgetState extends State<AppNamespacesWidget> {
     );
 
     return AppBottomSheetWidget(
-      title: 'Namespaces',
-      subtitle: 'Select the Active Namespace',
+      title: t(context, 'Namespaces'),
+      subtitle: t(context, 'Select the Active Namespace'),
       icon: CustomIcons.namespaces,
       closePressed: () {
         Navigator.pop(context);
       },
-      actionText: 'Close',
+      actionText: t(context, 'Close'),
       actionPressed: () {
         Navigator.pop(context);
       },
@@ -325,9 +330,9 @@ class _AppNamespacesWidgetState extends State<AppNamespacesWidget> {
                             autocorrect: false,
                             enableSuggestions: false,
                             maxLines: 1,
-                            decoration: const InputDecoration(
+                            decoration: InputDecoration(
                               border: OutlineInputBorder(),
-                              labelText: 'Filter',
+                              labelText: t(context, 'Filter'),
                             ),
                           ),
                           const SizedBox(height: Constants.spacingMiddle),
@@ -362,9 +367,9 @@ class _AppNamespacesWidgetState extends State<AppNamespacesWidget> {
                                           ? Icons.radio_button_checked
                                           : Icons.radio_button_unchecked,
                                       size: 24,
-                                      color: Theme.of(
-                                        context,
-                                      ).colorScheme.primary,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .primary,
                                     ),
                                     const SizedBox(
                                       width: Constants.spacingSmall,

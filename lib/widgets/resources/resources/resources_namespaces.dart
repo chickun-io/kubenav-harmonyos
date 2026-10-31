@@ -6,6 +6,7 @@ import 'package:kubenav/models/kubernetes/schema.enums.swagger.dart' as enums;
 import 'package:kubenav/models/kubernetes/schema.models.swagger.dart';
 import 'package:kubenav/models/plugins/prometheus.dart';
 import 'package:kubenav/utils/constants.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/utils/resources.dart';
 import 'package:kubenav/widgets/resources/helpers/details_item.dart';
 import 'package:kubenav/widgets/resources/helpers/details_item_conditions.dart';
@@ -24,8 +25,7 @@ final resourceNamespace = Resource(
   category: ResourceCategories.cluster,
   plural: 'Namespaces',
   singular: 'Namespace',
-  description:
-      'Namespaces provides a mechanism for isolating groups of resources within a single cluster.',
+  description: 'Namespaces provides a mechanism for isolating groups of resources within a single cluster.',
   path: '/api/v1',
   resource: 'namespaces',
   scope: ResourceScope.cluster,
@@ -83,159 +83,157 @@ final resourceNamespace = Resource(
           item: item,
           status: status,
           details: [
-            'Status: ${item.status?.phase?.value ?? '-'}',
-            'Age: ${getAge(item.metadata?.creationTimestamp)}',
+            tFmt(context, 'Status: {0}', [item.status?.phase?.value ?? '-']),
+            tFmt(context, 'Age: {0}', [
+              getAge(item.metadata?.creationTimestamp),
+            ]),
           ],
         );
       },
-  previewItemBuilder: (dynamic listItem) {
+  previewItemBuilder: (BuildContext context, dynamic listItem) {
     final item = listItem as IoK8sApiCoreV1Namespace;
 
     return [
-      'Status: ${item.status?.phase ?? '-'}',
-      'Age: ${getAge(item.metadata?.creationTimestamp)}',
+      tFmt(context, 'Status: {0}', [item.status?.phase ?? '-']),
+      tFmt(context, 'Age: {0}', [getAge(item.metadata?.creationTimestamp)]),
     ];
   },
-  detailsItemBuilder: (BuildContext context, Resource resource, dynamic detailsItem) {
-    final item = detailsItem as IoK8sApiCoreV1Namespace;
+  detailsItemBuilder:
+      (BuildContext context, Resource resource, dynamic detailsItem) {
+        final item = detailsItem as IoK8sApiCoreV1Namespace;
 
-    return Column(
-      children: [
-        DetailsItemMetadata(kind: item.kind, metadata: item.metadata),
-        DetailsItemConditions(
-          conditions: item.status?.conditions
-              ?.map(
-                (e) => IoK8sApimachineryPkgApisMetaV1Condition(
-                  lastTransitionTime: e.lastTransitionTime ?? DateTime.now(),
-                  message: e.message ?? '',
-                  observedGeneration: null,
-                  reason: e.reason ?? '',
-                  status: e.status,
-                  type: e.type,
-                ),
-              )
-              .toList(),
-        ),
-        const SizedBox(height: Constants.spacingMiddle),
-        DetailsItem(
-          title: 'Status',
-          details: [
-            DetailsItemModel(name: 'Phase', values: item.status!.phase?.value),
-          ],
-        ),
-        const SizedBox(height: Constants.spacingMiddle),
-        DetailsResourcesPreview(
-          resource: resourceCronJob,
-          namespace: item.metadata?.name,
-          selector: '',
-          filter: null,
-        ),
-        const SizedBox(height: Constants.spacingMiddle),
-        DetailsResourcesPreview(
-          resource: resourceDeployment,
-          namespace: item.metadata?.name,
-          selector: '',
-          filter: null,
-        ),
-        const SizedBox(height: Constants.spacingMiddle),
-        DetailsResourcesPreview(
-          resource: resourcePod,
-          namespace: item.metadata?.name,
-          selector: '',
-          filter: null,
-        ),
-        const SizedBox(height: Constants.spacingMiddle),
-        DetailsResourcesPreview(
-          resource: resourceStatefulSet,
-          namespace: item.metadata?.name,
-          selector: '',
-          filter: null,
-        ),
-        const SizedBox(height: Constants.spacingMiddle),
-        DetailsResourcesPreview(
-          resource: resourceEvent,
-          namespace: item.metadata?.namespace,
-          selector:
-              'fieldSelector=involvedObject.name=${item.metadata?.name ?? ''}',
-          filter: null,
-        ),
-        const SizedBox(height: Constants.spacingMiddle),
-        AppPrometheusChartsWidget(
-          item: item,
-          toJson: resource.toJson,
-          defaultCharts: [
-            Chart(
-              title: 'Total CPU Usage',
-              unit: 'm',
-              queries: [
-                Query(
-                  query:
-                      'sum(rate(container_cpu_usage_seconds_total{namespace="{{with .metadata}}{{with .name}}{{.}}{{end}}{{end}}", container!="", container!="POD"}[2m])) * 1000',
-                  label: 'Usage',
-                ),
-                Query(
-                  query:
-                      'sum(kube_pod_container_resource_requests{namespace="{{with .metadata}}{{with .name}}{{.}}{{end}}{{end}}", resource="cpu", container!="", container!="POD"}) * 1000',
-                  label: 'Requests',
-                ),
-                Query(
-                  query:
-                      'sum(kube_pod_container_resource_limits{namespace="{{with .metadata}}{{with .name}}{{.}}{{end}}{{end}}", resource="cpu", container!="", container!="POD"}) * 1000',
-                  label: 'Limits',
+        return Column(
+          children: [
+            DetailsItemMetadata(kind: item.kind, metadata: item.metadata),
+            DetailsItemConditions(
+              conditions: item.status?.conditions
+                  ?.map(
+                    (e) => IoK8sApimachineryPkgApisMetaV1Condition(
+                      lastTransitionTime:
+                          e.lastTransitionTime ?? DateTime.now(),
+                      message: e.message ?? '',
+                      observedGeneration: null,
+                      reason: e.reason ?? '',
+                      status: e.status,
+                      type: e.type,
+                    ),
+                  )
+                  .toList(),
+            ),
+            const SizedBox(height: Constants.spacingMiddle),
+            DetailsItem(
+              title: t(context, 'Status'),
+              details: [
+                DetailsItemModel(
+                  name: t(context, 'Phase'),
+                  values: item.status!.phase?.value,
                 ),
               ],
             ),
-            Chart(
-              title: 'Total Memory Usage',
-              unit: 'MiB',
-              queries: [
-                Query(
-                  query:
-                      '(sum(container_memory_working_set_bytes{namespace="{{with .metadata}}{{with .name}}{{.}}{{end}}{{end}}", container!="", container!="POD"})) / 1024 / 1024',
-                  label: 'Usage',
-                ),
-                Query(
-                  query:
-                      '(sum(kube_pod_container_resource_requests{namespace="{{with .metadata}}{{with .name}}{{.}}{{end}}{{end}}", resource="memory", container!="", container!="POD"})) / 1024 / 1024',
-                  label: 'Requests',
-                ),
-                Query(
-                  query:
-                      '(sum(kube_pod_container_resource_limits{namespace="{{with .metadata}}{{with .name}}{{.}}{{end}}{{end}}", resource="memory", container!="", container!="POD"})) / 1024 / 1024',
-                  label: 'Limits',
-                ),
-              ],
+            const SizedBox(height: Constants.spacingMiddle),
+            DetailsResourcesPreview(
+              resource: resourceCronJob,
+              namespace: item.metadata?.name,
+              selector: '',
+              filter: null,
             ),
-            Chart(
-              title: 'Total Network I/O',
-              unit: 'MiB',
-              queries: [
-                Query(
-                  query:
-                      'sum(rate(container_network_receive_bytes_total{namespace="{{with .metadata}}{{with .name}}{{.}}{{end}}{{end}}"}[2m])) / 1024 / 1024',
-                  label: 'Received',
-                ),
-                Query(
-                  query:
-                      '-sum(rate(container_network_transmit_bytes_total{namespace="{{with .metadata}}{{with .name}}{{.}}{{end}}{{end}}"}[2m])) / 1024 / 1024',
-                  label: 'Transmitted',
-                ),
-              ],
+            const SizedBox(height: Constants.spacingMiddle),
+            DetailsResourcesPreview(
+              resource: resourceDeployment,
+              namespace: item.metadata?.name,
+              selector: '',
+              filter: null,
             ),
-            Chart(
-              title: 'Total Restarts',
-              unit: '',
-              queries: [
-                Query(
-                  query:
-                      'sum(kube_pod_container_status_restarts_total{namespace="{{with .metadata}}{{with .name}}{{.}}{{end}}{{end}}", container!="", container!="POD"}) by (pod)',
-                  label: 'Restarts',
+            const SizedBox(height: Constants.spacingMiddle),
+            DetailsResourcesPreview(
+              resource: resourcePod,
+              namespace: item.metadata?.name,
+              selector: '',
+              filter: null,
+            ),
+            const SizedBox(height: Constants.spacingMiddle),
+            DetailsResourcesPreview(
+              resource: resourceStatefulSet,
+              namespace: item.metadata?.name,
+              selector: '',
+              filter: null,
+            ),
+            const SizedBox(height: Constants.spacingMiddle),
+            DetailsResourcesPreview(
+              resource: resourceEvent,
+              namespace: item.metadata?.namespace,
+              selector:
+                  'fieldSelector=involvedObject.name=${item.metadata?.name ?? ''}',
+              filter: null,
+            ),
+            const SizedBox(height: Constants.spacingMiddle),
+            AppPrometheusChartsWidget(
+              item: item,
+              toJson: resource.toJson,
+              defaultCharts: [
+                Chart(
+                  title: t(context, 'Total CPU Usage'),
+                  unit: 'm',
+                  queries: [
+                    Query(
+                      query: 'sum(rate(container_cpu_usage_seconds_total{namespace="{{with .metadata}}{{with .name}}{{.}}{{end}}{{end}}", container!="", container!="POD"}[2m])) * 1000',
+                      label: t(context, 'Usage'),
+                    ),
+                    Query(
+                      query: 'sum(kube_pod_container_resource_requests{namespace="{{with .metadata}}{{with .name}}{{.}}{{end}}{{end}}", resource="cpu", container!="", container!="POD"}) * 1000',
+                      label: t(context, 'Requests'),
+                    ),
+                    Query(
+                      query: 'sum(kube_pod_container_resource_limits{namespace="{{with .metadata}}{{with .name}}{{.}}{{end}}{{end}}", resource="cpu", container!="", container!="POD"}) * 1000',
+                      label: t(context, 'Limits'),
+                    ),
+                  ],
+                ),
+                Chart(
+                  title: t(context, 'Total Memory Usage'),
+                  unit: 'MiB',
+                  queries: [
+                    Query(
+                      query: '(sum(container_memory_working_set_bytes{namespace="{{with .metadata}}{{with .name}}{{.}}{{end}}{{end}}", container!="", container!="POD"})) / 1024 / 1024',
+                      label: t(context, 'Usage'),
+                    ),
+                    Query(
+                      query: '(sum(kube_pod_container_resource_requests{namespace="{{with .metadata}}{{with .name}}{{.}}{{end}}{{end}}", resource="memory", container!="", container!="POD"})) / 1024 / 1024',
+                      label: t(context, 'Requests'),
+                    ),
+                    Query(
+                      query: '(sum(kube_pod_container_resource_limits{namespace="{{with .metadata}}{{with .name}}{{.}}{{end}}{{end}}", resource="memory", container!="", container!="POD"})) / 1024 / 1024',
+                      label: t(context, 'Limits'),
+                    ),
+                  ],
+                ),
+                Chart(
+                  title: t(context, 'Total Network I/O'),
+                  unit: 'MiB',
+                  queries: [
+                    Query(
+                      query: 'sum(rate(container_network_receive_bytes_total{namespace="{{with .metadata}}{{with .name}}{{.}}{{end}}{{end}}"}[2m])) / 1024 / 1024',
+                      label: t(context, 'Received'),
+                    ),
+                    Query(
+                      query: '-sum(rate(container_network_transmit_bytes_total{namespace="{{with .metadata}}{{with .name}}{{.}}{{end}}{{end}}"}[2m])) / 1024 / 1024',
+                      label: t(context, 'Transmitted'),
+                    ),
+                  ],
+                ),
+                Chart(
+                  title: t(context, 'Total Restarts'),
+                  unit: '',
+                  queries: [
+                    Query(
+                      query: 'sum(kube_pod_container_status_restarts_total{namespace="{{with .metadata}}{{with .name}}{{.}}{{end}}{{end}}", container!="", container!="POD"}) by (pod)',
+                      label: t(context, 'Restarts'),
+                    ),
+                  ],
                 ),
               ],
             ),
           ],
-        ),
-      ],
-    );
-  },
+        );
+      },
 );

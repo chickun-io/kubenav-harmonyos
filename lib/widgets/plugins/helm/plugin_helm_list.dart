@@ -9,6 +9,7 @@ import 'package:kubenav/services/kubernetes_service.dart';
 import 'package:kubenav/utils/constants.dart';
 import 'package:kubenav/utils/custom_icons.dart';
 import 'package:kubenav/utils/helpers.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/utils/navigate.dart';
 import 'package:kubenav/utils/resources.dart';
 import 'package:kubenav/utils/showmodal.dart';
@@ -86,7 +87,7 @@ class _PluginHelmListState extends State<PluginHelmList> {
       slidableActions: [
         AppListItemSlidableAction(
           icon: Icons.more_horiz,
-          label: 'More',
+          label: t(context, 'More'),
           backgroundColor: Theme.of(context).colorScheme.primary,
           foregroundColor: Theme.of(context).colorScheme.onPrimary,
           onTap: (BuildContext context) {
@@ -224,9 +225,9 @@ class _PluginHelmListState extends State<PluginHelmList> {
         title: Column(
           children: [
             Text(
-              Characters(
-                'Helm Charts',
-              ).replaceAll(Characters(''), Characters('\u{200B}')).toString(),
+              Characters('Helm Charts')
+                  .replaceAll(Characters(''), Characters('\u{200B}'))
+                  .toString(),
               textAlign: TextAlign.center,
               style: const TextStyle(
                 fontSize: 20,
@@ -297,7 +298,10 @@ class _PluginHelmListState extends State<PluginHelmList> {
                                       Constants.spacingMiddle,
                                     ),
                                     child: AppErrorWidget(
-                                      message: 'Failed to Load Helm Releases',
+                                      message: t(
+                                        context,
+                                        'Failed to Load Helm Releases',
+                                      ),
                                       details: snapshot.error.toString(),
                                       icon: 'assets/plugins/helm.svg',
                                     ),
@@ -313,7 +317,7 @@ class _PluginHelmListState extends State<PluginHelmList> {
                                 mode: AppResourceActionsMode.header,
                                 actions: [
                                   AppResourceActionsModel(
-                                    title: 'Refresh',
+                                    title: t(context, 'Refresh'),
                                     icon: Icons.refresh,
                                     onTap: () {
                                       setState(() {

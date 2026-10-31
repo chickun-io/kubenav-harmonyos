@@ -8,6 +8,7 @@ import 'package:kubenav/repositories/clusters_repository.dart';
 import 'package:kubenav/services/providers/rancher_service.dart';
 import 'package:kubenav/utils/constants.dart';
 import 'package:kubenav/utils/helpers.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/utils/logger.dart';
 import 'package:kubenav/utils/showmodal.dart';
 import 'package:kubenav/widgets/settings/clusters/settings_add_cluster_rancher.dart';
@@ -37,7 +38,7 @@ class _SettingsRancherProviderState extends State<SettingsRancherProvider> {
   /// missing the validation of the form will fail.
   String? _validator(String? value) {
     if (value == null || value.isEmpty) {
-      return 'This field is required';
+      return t(context, 'This field is required');
     }
 
     return null;
@@ -66,7 +67,7 @@ class _SettingsRancherProviderState extends State<SettingsRancherProvider> {
         _isLoading = false;
       });
       if (mounted) {
-        showSnackbar(context, 'Sign In Failed', err.toString());
+        showSnackbar(context, t(context, 'Sign In Failed'), err.toString());
       }
     }
   }
@@ -132,7 +133,7 @@ class _SettingsRancherProviderState extends State<SettingsRancherProvider> {
       if (mounted) {
         showSnackbar(
           context,
-          'Failed to Save Provider Configuration',
+          t(context, 'Failed to Save Provider Configuration'),
           err.toString(),
         );
       }
@@ -196,9 +197,9 @@ class _SettingsRancherProviderState extends State<SettingsRancherProvider> {
                   autocorrect: false,
                   enableSuggestions: false,
                   maxLines: 1,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     border: OutlineInputBorder(),
-                    labelText: 'Name',
+                    labelText: t(context, 'Name'),
                   ),
                   validator: _validator,
                 ),
@@ -220,7 +221,7 @@ class _SettingsRancherProviderState extends State<SettingsRancherProvider> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const Text('Allow Insecure Connections'),
+                    Text(t(context, 'Allow Insecure Connections')),
                     Switch(
                       activeThumbColor: Theme.of(context).colorScheme.primary,
                       onChanged: (value) {
@@ -240,9 +241,9 @@ class _SettingsRancherProviderState extends State<SettingsRancherProvider> {
                   autocorrect: false,
                   enableSuggestions: false,
                   maxLines: 1,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     border: OutlineInputBorder(),
-                    labelText: 'Username',
+                    labelText: t(context, 'Username'),
                   ),
                   validator: _validator,
                 ),
@@ -253,9 +254,9 @@ class _SettingsRancherProviderState extends State<SettingsRancherProvider> {
                   autocorrect: false,
                   enableSuggestions: false,
                   maxLines: 1,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     border: OutlineInputBorder(),
-                    labelText: 'Password',
+                    labelText: t(context, 'Password'),
                   ),
                   validator: _validator,
                 ),
@@ -273,7 +274,7 @@ class _SettingsRancherProviderState extends State<SettingsRancherProvider> {
                   ),
                   onPressed: _signIn,
                   child: Text(
-                    'Sign In',
+                    t(context, 'Sign In'),
                     style: primaryTextStyle(
                       context,
                       color: Theme.of(context).colorScheme.onPrimary,

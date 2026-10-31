@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:kubenav/repositories/app_repository.dart';
 import 'package:kubenav/utils/constants.dart';
 import 'package:kubenav/utils/helpers.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/widgets/shared/app_bottom_sheet_widget.dart';
 
 /// The [SettingsPrometheus] widget can be used to enable the Prometheus plugin,
@@ -40,7 +41,7 @@ class _SettingsPrometheusState extends State<SettingsPrometheus> {
   /// If the value is empty or not a number the validation fails.
   String? _portValidator(String? value) {
     if (value == null || value.isEmpty) {
-      return 'This field is required';
+      return t(context, 'This field is required');
     }
 
     final parsedValue = int.tryParse(value);
@@ -127,12 +128,12 @@ class _SettingsPrometheusState extends State<SettingsPrometheus> {
   Widget build(BuildContext context) {
     return AppBottomSheetWidget(
       title: 'Prometheus',
-      subtitle: 'Prometheus configuration',
+      subtitle: t(context, 'Prometheus configuration'),
       icon: 'assets/plugins/prometheus.svg',
       closePressed: () {
         Navigator.pop(context);
       },
-      actionText: 'Save',
+      actionText: t(context, 'Save'),
       actionPressed: () {
         _save();
       },
@@ -149,15 +150,18 @@ class _SettingsPrometheusState extends State<SettingsPrometheus> {
             ),
             child: Column(
               children: [
-                const Text(
-                  'You can specify the address of a Prometheus instance, or if your Prometheus instance is not reachable via a public address you can specify a namespace, label selector, container and port running inside your cluster',
+                Text(
+                  t(
+                    context,
+                    'You can specify the address of a Prometheus instance, or if your Prometheus instance is not reachable via a public address you can specify a namespace, label selector, container and port running inside your cluster',
+                  ),
                 ),
                 const SizedBox(height: Constants.spacingMiddle),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const Text('Enabled'),
+                    Text(t(context, 'Enabled')),
                     Switch(
                       activeThumbColor: Theme.of(context).colorScheme.primary,
                       onChanged: (value) {
@@ -176,9 +180,9 @@ class _SettingsPrometheusState extends State<SettingsPrometheus> {
                   autocorrect: false,
                   enableSuggestions: false,
                   maxLines: 1,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     border: OutlineInputBorder(),
-                    labelText: 'Address',
+                    labelText: t(context, 'Address'),
                   ),
                   onFieldSubmitted: (String value) {
                     _save();
@@ -189,7 +193,7 @@ class _SettingsPrometheusState extends State<SettingsPrometheus> {
                   children: [
                     const Expanded(child: Divider(height: 0, thickness: 1.0)),
                     Text(
-                      'In-Cluster Configuration',
+                      t(context, 'In-Cluster Configuration'),
                       style: secondaryTextStyle(context),
                     ),
                     const Expanded(child: Divider(height: 0, thickness: 1.0)),
@@ -202,9 +206,9 @@ class _SettingsPrometheusState extends State<SettingsPrometheus> {
                   autocorrect: false,
                   enableSuggestions: false,
                   maxLines: 1,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     border: OutlineInputBorder(),
-                    labelText: 'Namespace',
+                    labelText: t(context, 'Namespace'),
                   ),
                   onFieldSubmitted: (String value) {
                     _save();
@@ -217,9 +221,9 @@ class _SettingsPrometheusState extends State<SettingsPrometheus> {
                   autocorrect: false,
                   enableSuggestions: false,
                   maxLines: 1,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     border: OutlineInputBorder(),
-                    labelText: 'Label Selector',
+                    labelText: t(context, 'Label Selector'),
                   ),
                   onFieldSubmitted: (String value) {
                     _save();
@@ -232,9 +236,9 @@ class _SettingsPrometheusState extends State<SettingsPrometheus> {
                   autocorrect: false,
                   enableSuggestions: false,
                   maxLines: 1,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     border: OutlineInputBorder(),
-                    labelText: 'Container',
+                    labelText: t(context, 'Container'),
                   ),
                   onFieldSubmitted: (String value) {
                     _save();
@@ -247,9 +251,9 @@ class _SettingsPrometheusState extends State<SettingsPrometheus> {
                   autocorrect: false,
                   enableSuggestions: false,
                   maxLines: 1,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     border: OutlineInputBorder(),
-                    labelText: 'Port',
+                    labelText: t(context, 'Port'),
                   ),
                   validator: _portValidator,
                   onFieldSubmitted: (String value) {
@@ -263,9 +267,9 @@ class _SettingsPrometheusState extends State<SettingsPrometheus> {
                   autocorrect: false,
                   enableSuggestions: false,
                   maxLines: 1,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     border: OutlineInputBorder(),
-                    labelText: 'Path',
+                    labelText: t(context, 'Path'),
                   ),
                   onFieldSubmitted: (String value) {
                     _save();
@@ -275,7 +279,10 @@ class _SettingsPrometheusState extends State<SettingsPrometheus> {
                 Row(
                   children: [
                     const Expanded(child: Divider(height: 0, thickness: 1.0)),
-                    Text('Credentials', style: secondaryTextStyle(context)),
+                    Text(
+                      t(context, 'Credentials'),
+                      style: secondaryTextStyle(context),
+                    ),
                     const Expanded(child: Divider(height: 0, thickness: 1.0)),
                   ],
                 ),
@@ -286,9 +293,9 @@ class _SettingsPrometheusState extends State<SettingsPrometheus> {
                   autocorrect: false,
                   enableSuggestions: false,
                   maxLines: 1,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     border: OutlineInputBorder(),
-                    labelText: 'Username',
+                    labelText: t(context, 'Username'),
                   ),
                   onFieldSubmitted: (String value) {
                     _save();
@@ -301,9 +308,9 @@ class _SettingsPrometheusState extends State<SettingsPrometheus> {
                   autocorrect: false,
                   enableSuggestions: false,
                   maxLines: 1,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     border: OutlineInputBorder(),
-                    labelText: 'Password',
+                    labelText: t(context, 'Password'),
                   ),
                   onFieldSubmitted: (String value) {
                     _save();
@@ -316,9 +323,9 @@ class _SettingsPrometheusState extends State<SettingsPrometheus> {
                   autocorrect: false,
                   enableSuggestions: false,
                   maxLines: 1,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     border: OutlineInputBorder(),
-                    labelText: 'Token',
+                    labelText: t(context, 'Token'),
                   ),
                   onFieldSubmitted: (String value) {
                     _save();
@@ -331,9 +338,9 @@ class _SettingsPrometheusState extends State<SettingsPrometheus> {
                   autocorrect: false,
                   enableSuggestions: false,
                   maxLines: null,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     border: OutlineInputBorder(),
-                    labelText: 'Certificate Authority',
+                    labelText: t(context, 'Certificate Authority'),
                   ),
                   onFieldSubmitted: (String value) {
                     _save();
@@ -343,7 +350,7 @@ class _SettingsPrometheusState extends State<SettingsPrometheus> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const Text('Insecure Skip TLS Verify'),
+                    Text(t(context, 'Insecure Skip TLS Verify')),
                     Switch(
                       activeThumbColor: Theme.of(context).colorScheme.primary,
                       onChanged: (value) {

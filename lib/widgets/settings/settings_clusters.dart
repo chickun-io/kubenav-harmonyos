@@ -6,6 +6,7 @@ import 'package:kubenav/models/cluster_provider.dart';
 import 'package:kubenav/repositories/clusters_repository.dart';
 import 'package:kubenav/utils/constants.dart';
 import 'package:kubenav/utils/helpers.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/utils/showmodal.dart';
 import 'package:kubenav/widgets/settings/clusters/settings_add_cluster_kubeconfig.dart';
 import 'package:kubenav/widgets/settings/clusters/settings_add_cluster_manual.dart';
@@ -88,7 +89,7 @@ class _SettingsClustersState extends State<SettingsClusters> {
   /// sheet, which can be used to add a cluster using the selected provider.
   Widget buildProviders(BuildContext context) {
     return AppHorizontalListCardsWidget(
-      title: 'Add Cluster',
+      title: t(context, 'Add Cluster'),
       cards: List.generate(
         ClusterProviderType.values.length,
         (index) => AppHorizontalListCardsModel(
@@ -114,7 +115,7 @@ class _SettingsClustersState extends State<SettingsClusters> {
     );
 
     return Scaffold(
-      appBar: AppBar(centerTitle: true, title: const Text('Clusters')),
+      appBar: AppBar(centerTitle: true, title: Text(t(context, 'Clusters'))),
       bottomNavigationBar: const AppBottomNavigationBarWidget(),
       floatingActionButton: const AppFloatingActionButtonsWidget(),
       body: SafeArea(
@@ -134,7 +135,7 @@ class _SettingsClustersState extends State<SettingsClusters> {
                   children: [
                     Expanded(
                       child: Text(
-                        'Clusters',
+                        t(context, 'Clusters'),
                         style: primaryTextStyle(context, size: 18),
                       ),
                     ),
@@ -153,7 +154,7 @@ class _SettingsClustersState extends State<SettingsClusters> {
                           ),
                           const SizedBox(width: Constants.spacingExtraSmall),
                           Text(
-                            'Sort',
+                            t(context, 'Sort'),
                             style: secondaryTextStyle(
                               context,
                               color: Theme.of(context).colorScheme.primary,

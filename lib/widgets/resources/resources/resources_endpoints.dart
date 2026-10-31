@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:kubenav/models/kubernetes/schema.models.swagger.dart';
 import 'package:kubenav/models/plugins/prometheus.dart';
 import 'package:kubenav/utils/constants.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/utils/resources.dart';
 import 'package:kubenav/widgets/resources/helpers/details_item.dart';
 import 'package:kubenav/widgets/resources/helpers/details_item_metadata.dart';
@@ -18,8 +19,7 @@ final resourceEndpoint = Resource(
   category: ResourceCategories.discoveryandloadbalancing,
   plural: 'Endpoints',
   singular: 'Endpoint',
-  description:
-      'An Endpoint is an resource that gets IP addresses of one or more pods dynamically assigned to it, along with a port.',
+  description: 'An Endpoint is an resource that gets IP addresses of one or more pods dynamically assigned to it, along with a port.',
   path: '/api/v1',
   resource: 'endpoints',
   scope: ResourceScope.namespaced,
@@ -88,13 +88,17 @@ final resourceEndpoint = Resource(
           item: item,
           status: status,
           details: [
-            'Namespace: ${item.metadata?.namespace ?? '-'}',
-            'Endpoints: ${ips != null && ips.isNotEmpty ? ips.join(', ') : '-'}',
-            'Age: ${getAge(item.metadata?.creationTimestamp)}',
+            tFmt(context, 'Namespace: {0}', [item.metadata?.namespace ?? '-']),
+            tFmt(context, 'Endpoints: {0}', [
+              ips != null && ips.isNotEmpty ? ips.join(', ') : '-',
+            ]),
+            tFmt(context, 'Age: {0}', [
+              getAge(item.metadata?.creationTimestamp),
+            ]),
           ],
         );
       },
-  previewItemBuilder: (dynamic listItem) {
+  previewItemBuilder: (BuildContext context, dynamic listItem) {
     final item = listItem as IoK8sApiCoreV1Endpoints;
 
     final ips = item.subsets
@@ -105,52 +109,53 @@ final resourceEndpoint = Resource(
         .toList();
 
     return [
-      'Namespace: ${item.metadata?.namespace ?? '-'}',
-      'Endpoints: ${ips != null && ips.isNotEmpty ? ips.join(', ') : '-'}',
-      'Age: ${getAge(item.metadata?.creationTimestamp)}',
+      tFmt(context, 'Namespace: {0}', [item.metadata?.namespace ?? '-']),
+      tFmt(context, 'Endpoints: {0}', [
+        ips != null && ips.isNotEmpty ? ips.join(', ') : '-',
+      ]),
+      tFmt(context, 'Age: {0}', [getAge(item.metadata?.creationTimestamp)]),
     ];
   },
-  detailsItemBuilder: (BuildContext context, Resource resource, dynamic detailsItem) {
-    final item = detailsItem as IoK8sApiCoreV1Endpoints;
+  detailsItemBuilder:
+      (BuildContext context, Resource resource, dynamic detailsItem) {
+        final item = detailsItem as IoK8sApiCoreV1Endpoints;
 
-    return Column(
-      children: [
-        DetailsItemMetadata(kind: item.kind, metadata: item.metadata),
-        ..._buildSubsets(context, item),
-        const SizedBox(height: Constants.spacingMiddle),
-        DetailsResourcesPreview(
-          resource: resourceEvent,
-          namespace: item.metadata?.namespace,
-          selector:
-              'fieldSelector=involvedObject.name=${item.metadata?.name ?? ''}',
-          filter: null,
-        ),
-        const SizedBox(height: Constants.spacingMiddle),
-        AppPrometheusChartsWidget(
-          item: item,
-          toJson: resource.toJson,
-          defaultCharts: [
-            Chart(
-              title: 'Addresses',
-              unit: '',
-              queries: [
-                Query(
-                  query:
-                      'kube_endpoint_address_available{namespace="{{with .metadata}}{{with .namespace}}{{.}}{{end}}{{end}}", endpoint="{{with .metadata}}{{with .name}}{{.}}{{end}}{{end}}"}',
-                  label: 'Available',
-                ),
-                Query(
-                  query:
-                      'kube_endpoint_address_not_ready{namespace="{{with .metadata}}{{with .namespace}}{{.}}{{end}}{{end}}", endpoint="{{with .metadata}}{{with .name}}{{.}}{{end}}{{end}}"}',
-                  label: 'Not Ready',
+        return Column(
+          children: [
+            DetailsItemMetadata(kind: item.kind, metadata: item.metadata),
+            ..._buildSubsets(context, item),
+            const SizedBox(height: Constants.spacingMiddle),
+            DetailsResourcesPreview(
+              resource: resourceEvent,
+              namespace: item.metadata?.namespace,
+              selector:
+                  'fieldSelector=involvedObject.name=${item.metadata?.name ?? ''}',
+              filter: null,
+            ),
+            const SizedBox(height: Constants.spacingMiddle),
+            AppPrometheusChartsWidget(
+              item: item,
+              toJson: resource.toJson,
+              defaultCharts: [
+                Chart(
+                  title: t(context, 'Addresses'),
+                  unit: '',
+                  queries: [
+                    Query(
+                      query: 'kube_endpoint_address_available{namespace="{{with .metadata}}{{with .namespace}}{{.}}{{end}}{{end}}", endpoint="{{with .metadata}}{{with .name}}{{.}}{{end}}{{end}}"}',
+                      label: t(context, 'Available'),
+                    ),
+                    Query(
+                      query: 'kube_endpoint_address_not_ready{namespace="{{with .metadata}}{{with .namespace}}{{.}}{{end}}{{end}}", endpoint="{{with .metadata}}{{with .name}}{{.}}{{end}}{{end}}"}',
+                      label: t(context, 'Not Ready'),
+                    ),
+                  ],
                 ),
               ],
             ),
           ],
-        ),
-      ],
-    );
-  },
+        );
+      },
 );
 
 List<Widget> _buildSubsets(
@@ -163,10 +168,10 @@ List<Widget> _buildSubsets(
     ruleWidgets.add(const SizedBox(height: Constants.spacingMiddle));
     ruleWidgets.add(
       DetailsItem(
-        title: 'Subset ${i + 1}',
+        title: tFmt(context, 'Subset {0}', [i + 1]),
         details: [
           DetailsItemModel(
-            name: 'Addresses',
+            name: t(context, 'Addresses'),
             values: endpoint.subsets?[i].addresses
                 ?.map(
                   (address) =>
@@ -190,7 +195,7 @@ List<Widget> _buildSubsets(
             },
           ),
           DetailsItemModel(
-            name: 'Ports',
+            name: t(context, 'Ports'),
             values: endpoint.subsets?[i].ports
                 ?.map(
                   (port) =>

@@ -8,6 +8,7 @@ import 'package:kubenav/repositories/app_repository.dart';
 import 'package:kubenav/repositories/clusters_repository.dart';
 import 'package:kubenav/services/kubernetes_service.dart';
 import 'package:kubenav/utils/constants.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/utils/logger.dart';
 import 'package:kubenav/utils/showmodal.dart';
 import 'package:kubenav/widgets/resources/resources/resources.dart';
@@ -85,8 +86,12 @@ class _PluginArgoSyncState extends State<PluginArgoSync> {
       if (mounted) {
         showSnackbar(
           context,
-          '${widget.resource.singular} Synced',
-          'The ${widget.resource.singular} ${widget.namespace}/${widget.name} was synced',
+          tFmt(context, '{0} Synced', [t(context, widget.resource.singular)]),
+          tFmt(context, 'The {0} {1}/{2} was synced', [
+            t(context, widget.resource.singular),
+            widget.namespace,
+            widget.name,
+          ]),
         );
         Navigator.pop(context);
       }
@@ -102,7 +107,7 @@ class _PluginArgoSyncState extends State<PluginArgoSync> {
       if (mounted) {
         showSnackbar(
           context,
-          'Initiating Sync Operation Failed',
+          t(context, 'Initiating Sync Operation Failed'),
           err.toString(),
         );
       }
@@ -112,13 +117,13 @@ class _PluginArgoSyncState extends State<PluginArgoSync> {
   @override
   Widget build(BuildContext context) {
     return AppBottomSheetWidget(
-      title: 'Sync',
+      title: t(context, 'Sync'),
       subtitle: '${widget.namespace}/${widget.name}',
       icon: Icons.sync,
       closePressed: () {
         Navigator.pop(context);
       },
-      actionText: 'Sync',
+      actionText: t(context, 'Sync'),
       actionPressed: () {
         _sync();
       },
@@ -132,7 +137,11 @@ class _PluginArgoSyncState extends State<PluginArgoSync> {
             right: Constants.spacingMiddle,
           ),
           child: Text(
-            'Do you really want to sync the ${widget.resource.singular} ${widget.namespace}/${widget.name}?',
+            tFmt(context, 'Do you really want to sync the {0} {1}/{2}?', [
+              t(context, widget.resource.singular),
+              widget.namespace,
+              widget.name,
+            ]),
           ),
         ),
       ),

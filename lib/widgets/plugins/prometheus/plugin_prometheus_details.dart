@@ -107,9 +107,9 @@ class _PluginPrometheusDetailsState extends State<PluginPrometheusDetails> {
         title: Column(
           children: [
             Text(
-              Characters(
-                widget.name,
-              ).replaceAll(Characters(''), Characters('\u{200B}')).toString(),
+              Characters(widget.name)
+                  .replaceAll(Characters(''), Characters('\u{200B}'))
+                  .toString(),
               textAlign: TextAlign.center,
               style: const TextStyle(
                 fontSize: 20,
@@ -118,9 +118,9 @@ class _PluginPrometheusDetailsState extends State<PluginPrometheusDetails> {
               ),
             ),
             Text(
-              Characters(
-                widget.namespace,
-              ).replaceAll(Characters(''), Characters('\u{200B}')).toString(),
+              Characters(widget.namespace)
+                  .replaceAll(Characters(''), Characters('\u{200B}'))
+                  .toString(),
               textAlign: TextAlign.center,
               style: const TextStyle(
                 fontSize: 14,

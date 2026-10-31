@@ -7,6 +7,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:kubenav/models/kubernetes/schema.models.swagger.dart';
 import 'package:kubenav/utils/constants.dart';
 import 'package:kubenav/utils/helpers.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/utils/navigate.dart';
 import 'package:kubenav/utils/resources.dart';
 import 'package:kubenav/utils/showmodal.dart';
@@ -80,35 +81,34 @@ final resourceCustomResourceDefinition = Resource(
   toJson: (dynamic item) {
     return json.decode(json.encode(item));
   },
-  listItemBuilder:
-      (BuildContext context, Resource resource, ResourceItem listItem) {
-        final item =
-            listItem.item
-                as IoK8sApiextensionsApiserverPkgApisApiextensionsV1CustomResourceDefinition;
-        final status = listItem.status;
+  listItemBuilder: (BuildContext context, Resource resource, ResourceItem listItem) {
+    final item =
+        listItem.item
+            as IoK8sApiextensionsApiserverPkgApisApiextensionsV1CustomResourceDefinition;
+    final status = listItem.status;
 
-        return ResourcesListItem(
-          name: item.metadata?.name ?? '',
-          namespace: item.metadata?.namespace,
-          resource: resource,
-          item: item,
-          status: status,
-          details: [
-            'Kind: ${item.spec.names.kind}',
-            'Scope: ${item.spec.scope}',
-            'Age: ${getAge(item.metadata?.creationTimestamp)}',
-          ],
-        );
-      },
-  previewItemBuilder: (dynamic listItem) {
+    return ResourcesListItem(
+      name: item.metadata?.name ?? '',
+      namespace: item.metadata?.namespace,
+      resource: resource,
+      item: item,
+      status: status,
+      details: [
+        tFmt(context, 'Kind: {0}', [item.spec.names.kind]),
+        tFmt(context, 'Scope: {0}', [item.spec.scope]),
+        tFmt(context, 'Age: {0}', [getAge(item.metadata?.creationTimestamp)]),
+      ],
+    );
+  },
+  previewItemBuilder: (BuildContext context, dynamic listItem) {
     final item =
         listItem
             as IoK8sApiextensionsApiserverPkgApisApiextensionsV1CustomResourceDefinition;
 
     return [
-      'Kind: ${item.spec.names.kind}',
-      'Scope: ${item.spec.scope}',
-      'Age: ${getAge(item.metadata?.creationTimestamp)}',
+      tFmt(context, 'Kind: {0}', [item.spec.names.kind]),
+      tFmt(context, 'Scope: {0}', [item.spec.scope]),
+      tFmt(context, 'Age: {0}', [getAge(item.metadata?.creationTimestamp)]),
     ];
   },
   detailsItemBuilder: (BuildContext context, Resource resource, dynamic detailsItem) {
@@ -121,29 +121,41 @@ final resourceCustomResourceDefinition = Resource(
         DetailsItemMetadata(kind: item.kind, metadata: item.metadata),
         const SizedBox(height: Constants.spacingMiddle),
         DetailsItem(
-          title: 'Configuration',
+          title: t(context, 'Configuration'),
           details: [
-            DetailsItemModel(name: 'Group', values: item.spec.group),
-            DetailsItemModel(name: 'Kind', values: item.spec.names.kind),
             DetailsItemModel(
-              name: 'List Kind',
+              name: t(context, 'Group'),
+              values: item.spec.group,
+            ),
+            DetailsItemModel(
+              name: t(context, 'Kind'),
+              values: item.spec.names.kind,
+            ),
+            DetailsItemModel(
+              name: t(context, 'List Kind'),
               values: item.spec.names.listKind,
             ),
-            DetailsItemModel(name: 'Plural', values: item.spec.names.plural),
             DetailsItemModel(
-              name: 'Singular',
+              name: t(context, 'Plural'),
+              values: item.spec.names.plural,
+            ),
+            DetailsItemModel(
+              name: t(context, 'Singular'),
               values: item.spec.names.singular,
             ),
-            DetailsItemModel(name: 'Scope', values: item.spec.scope),
             DetailsItemModel(
-              name: 'Conversion Strategy',
+              name: t(context, 'Scope'),
+              values: item.spec.scope,
+            ),
+            DetailsItemModel(
+              name: t(context, 'Conversion Strategy'),
               values: item.spec.conversion?.strategy,
             ),
           ],
         ),
         const SizedBox(height: Constants.spacingMiddle),
         AppVerticalListSimpleWidget(
-          title: 'Versions',
+          title: t(context, 'Versions'),
           items: item.spec.versions
               .map(
                 (version) => AppVerticalListSimpleModel(
@@ -307,7 +319,9 @@ Resource buildCustomResource(
       final name = resource.getName(listItem.item);
       final namespace = resource.getNamespace(listItem.item);
       final List<String> details = namespace != null
-          ? ['Namespace: $namespace']
+          ? [
+              tFmt(context, 'Namespace: {0}', [namespace]),
+            ]
           : [];
 
       if (resource.additionalPrinterColumns.isNotEmpty) {
@@ -335,7 +349,7 @@ Resource buildCustomResource(
         details: details,
       );
     },
-    previewItemBuilder: (dynamic listItem) {
+    previewItemBuilder: (BuildContext context, dynamic listItem) {
       return [];
     },
     detailsItemBuilder:
@@ -422,7 +436,10 @@ class CustomResourceItem extends StatelessWidget {
 
     return [
       const SizedBox(height: Constants.spacingMiddle),
-      DetailsItem(title: 'Additional Information', details: detailsItems),
+      DetailsItem(
+        title: t(context, 'Additional Information'),
+        details: detailsItems,
+      ),
     ];
   }
 

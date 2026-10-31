@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:kubenav/utils/constants.dart';
 import 'package:kubenav/utils/helpers.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/utils/showmodal.dart';
 import 'package:kubenav/utils/themes.dart';
 import 'package:kubenav/widgets/home/overview/overview_metric.dart';
@@ -75,7 +76,7 @@ class OverviewMetrics extends StatelessWidget {
             children: [
               Expanded(
                 child: Text(
-                  'Metrics',
+                  t(context, 'Metrics'),
                   style: primaryTextStyle(context, size: 18),
                 ),
               ),
@@ -92,13 +93,13 @@ class OverviewMetrics extends StatelessWidget {
                 ? MainAxisAlignment.spaceEvenly
                 : MainAxisAlignment.spaceBetween,
             children: [
-              buildCard(context, 'CPU', Icons.bar_chart, () {
+              buildCard(context, t(context, 'CPU'), Icons.bar_chart, () {
                 showMetrics(context, MetricType.cpu, Icons.bar_chart);
               }),
-              buildCard(context, 'Memory', Icons.area_chart, () {
+              buildCard(context, t(context, 'Memory'), Icons.area_chart, () {
                 showMetrics(context, MetricType.memory, Icons.area_chart);
               }),
-              buildCard(context, 'Pods', Icons.pie_chart, () {
+              buildCard(context, t(context, 'Pods'), Icons.pie_chart, () {
                 showMetrics(context, MetricType.pods, Icons.pie_chart);
               }),
             ],

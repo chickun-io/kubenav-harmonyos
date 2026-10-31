@@ -7,6 +7,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:kubenav/models/kubernetes/schema.models.swagger.dart';
 import 'package:kubenav/utils/constants.dart';
 import 'package:kubenav/utils/helpers.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/utils/navigate.dart';
 import 'package:kubenav/utils/resources.dart';
 import 'package:kubenav/utils/themes.dart';
@@ -25,8 +26,7 @@ final resourceClusterRoleBinding = Resource(
   category: ResourceCategories.rbac,
   plural: 'ClusterRoleBindings',
   singular: 'ClusterRoleBinding',
-  description:
-      'A cluster role binding grants the permissions defined in a role to a user or set of users.',
+  description: 'A cluster role binding grants the permissions defined in a role to a user or set of users.',
   path: '/apis/rbac.authorization.k8s.io/v1',
   resource: 'clusterrolebindings',
   scope: ResourceScope.cluster,
@@ -80,17 +80,22 @@ final resourceClusterRoleBinding = Resource(
           item: item,
           status: status,
           details: [
-            'Role: ${item.roleRef.kind}/${item.roleRef.name}',
-            'Age: ${getAge(item.metadata?.creationTimestamp)}',
+            tFmt(context, 'Role: {0}/{1}', [
+              item.roleRef.kind,
+              item.roleRef.name,
+            ]),
+            tFmt(context, 'Age: {0}', [
+              getAge(item.metadata?.creationTimestamp),
+            ]),
           ],
         );
       },
-  previewItemBuilder: (dynamic listItem) {
+  previewItemBuilder: (BuildContext context, dynamic listItem) {
     final item = listItem as IoK8sApiRbacV1ClusterRoleBinding;
 
     return [
-      'Role: ${item.roleRef.kind}/${item.roleRef.name}',
-      'Age: ${getAge(item.metadata?.creationTimestamp)}',
+      tFmt(context, 'Role: {0}/{1}', [item.roleRef.kind, item.roleRef.name]),
+      tFmt(context, 'Age: {0}', [getAge(item.metadata?.creationTimestamp)]),
     ];
   },
   detailsItemBuilder: (BuildContext context, Resource resource, dynamic detailsItem) {
@@ -101,10 +106,10 @@ final resourceClusterRoleBinding = Resource(
         DetailsItemMetadata(kind: item.kind, metadata: item.metadata),
         const SizedBox(height: Constants.spacingMiddle),
         DetailsItem(
-          title: 'Configuration',
+          title: t(context, 'Configuration'),
           details: [
             DetailsItemModel(
-              name: 'Role',
+              name: t(context, 'Role'),
               values: '${item.roleRef.kind}/${item.roleRef.name}',
               onTap: item.roleRef.kind == 'ClusterRole'
                   ? (index) {
@@ -123,7 +128,7 @@ final resourceClusterRoleBinding = Resource(
         ),
         const SizedBox(height: Constants.spacingMiddle),
         AppVerticalListSimpleWidget(
-          title: 'Subjects',
+          title: t(context, 'Subjects'),
           items:
               item.subjects
                   ?.map(

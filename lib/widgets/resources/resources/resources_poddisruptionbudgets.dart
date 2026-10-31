@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:kubenav/models/kubernetes/schema.models.swagger.dart';
 import 'package:kubenav/models/plugins/prometheus.dart';
 import 'package:kubenav/utils/constants.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/utils/resources.dart';
 import 'package:kubenav/widgets/resources/helpers/details_item.dart';
 import 'package:kubenav/widgets/resources/helpers/details_item_conditions.dart';
@@ -83,23 +84,35 @@ final resourcePodDisruptionBudget = Resource(
           item: item,
           status: status,
           details: [
-            'Namespace: ${item.metadata?.namespace ?? '-'}',
-            'Min. Available: ${item.spec?.minAvailable ?? '-'}',
-            'Max. Unavailable: ${item.spec?.maxUnavailable ?? '-'}',
-            'Allowed Disruptions: ${item.status?.disruptionsAllowed ?? 0}',
-            'Age: ${getAge(item.metadata?.creationTimestamp)}',
+            tFmt(context, 'Namespace: {0}', [item.metadata?.namespace ?? '-']),
+            tFmt(context, 'Min. Available: {0}', [
+              item.spec?.minAvailable ?? '-',
+            ]),
+            tFmt(context, 'Max. Unavailable: {0}', [
+              item.spec?.maxUnavailable ?? '-',
+            ]),
+            tFmt(context, 'Allowed Disruptions: {0}', [
+              item.status?.disruptionsAllowed ?? 0,
+            ]),
+            tFmt(context, 'Age: {0}', [
+              getAge(item.metadata?.creationTimestamp),
+            ]),
           ],
         );
       },
-  previewItemBuilder: (dynamic listItem) {
+  previewItemBuilder: (BuildContext context, dynamic listItem) {
     final item = listItem as IoK8sApiPolicyV1PodDisruptionBudget;
 
     return [
-      'Namespace: ${item.metadata?.namespace ?? '-'}',
-      'Min. Available: ${item.spec?.minAvailable ?? '-'}',
-      'Max. Unavailable: ${item.spec?.maxUnavailable ?? '-'}',
-      'Allowed Disruptions: ${item.status?.disruptionsAllowed ?? 0}',
-      'Age: ${getAge(item.metadata?.creationTimestamp)}',
+      tFmt(context, 'Namespace: {0}', [item.metadata?.namespace ?? '-']),
+      tFmt(context, 'Min. Available: {0}', [item.spec?.minAvailable ?? '-']),
+      tFmt(context, 'Max. Unavailable: {0}', [
+        item.spec?.maxUnavailable ?? '-',
+      ]),
+      tFmt(context, 'Allowed Disruptions: {0}', [
+        item.status?.disruptionsAllowed ?? 0,
+      ]),
+      tFmt(context, 'Age: {0}', [getAge(item.metadata?.creationTimestamp)]),
     ];
   },
   detailsItemBuilder:
@@ -112,10 +125,10 @@ final resourcePodDisruptionBudget = Resource(
             DetailsItemConditions(conditions: item.status?.conditions),
             const SizedBox(height: Constants.spacingMiddle),
             DetailsItem(
-              title: 'Configuration',
+              title: t(context, 'Configuration'),
               details: [
                 DetailsItemModel(
-                  name: 'Selector',
+                  name: t(context, 'Selector'),
                   values: item.spec?.selector?.matchLabels?.entries
                       .map(
                         (matchLabels) =>
@@ -124,37 +137,37 @@ final resourcePodDisruptionBudget = Resource(
                       .toList(),
                 ),
                 DetailsItemModel(
-                  name: 'Min. Available',
+                  name: t(context, 'Min. Available'),
                   values: item.spec?.minAvailable,
                 ),
                 DetailsItemModel(
-                  name: 'Max. Unavailable',
+                  name: t(context, 'Max. Unavailable'),
                   values: item.spec?.maxUnavailable,
                 ),
               ],
             ),
             const SizedBox(height: Constants.spacingMiddle),
             DetailsItem(
-              title: 'Status',
+              title: t(context, 'Status'),
               details: [
                 DetailsItemModel(
-                  name: 'Current Healthy',
+                  name: t(context, 'Current Healthy'),
                   values: item.status?.currentHealthy,
                 ),
                 DetailsItemModel(
-                  name: 'Desired Healthy',
+                  name: t(context, 'Desired Healthy'),
                   values: item.status?.desiredHealthy,
                 ),
                 DetailsItemModel(
-                  name: 'Disruptions Allowed',
+                  name: t(context, 'Disruptions Allowed'),
                   values: item.status?.disruptionsAllowed,
                 ),
                 DetailsItemModel(
-                  name: 'Expected Pods',
+                  name: t(context, 'Expected Pods'),
                   values: item.status?.expectedPods,
                 ),
                 DetailsItemModel(
-                  name: 'Observed Generation',
+                  name: t(context, 'Observed Generation'),
                   values: item.status?.observedGeneration,
                 ),
               ],
@@ -180,24 +193,24 @@ final resourcePodDisruptionBudget = Resource(
               toJson: resource.toJson,
               defaultCharts: [
                 Chart(
-                  title: 'Pods',
+                  title: t(context, 'Pods'),
                   unit: '',
                   queries: [
                     Query(
                       query: 'kube_poddisruptionbudget_status_desired_healthy{namespace="{{with .metadata}}{{with .namespace}}{{.}}{{end}}{{end}}", poddisruptionbudget="{{with .metadata}}{{with .name}}{{.}}{{end}}{{end}}"}',
-                      label: 'Desired',
+                      label: t(context, 'Desired'),
                     ),
                     Query(
                       query: 'kube_poddisruptionbudget_status_current_healthy{namespace="{{with .metadata}}{{with .namespace}}{{.}}{{end}}{{end}}", poddisruptionbudget="{{with .metadata}}{{with .name}}{{.}}{{end}}{{end}}"}',
-                      label: 'Current',
+                      label: t(context, 'Current'),
                     ),
                     Query(
                       query: 'kube_poddisruptionbudget_status_pod_disruptions_allowed{namespace="{{with .metadata}}{{with .namespace}}{{.}}{{end}}{{end}}", poddisruptionbudget="{{with .metadata}}{{with .name}}{{.}}{{end}}{{end}}"}',
-                      label: 'Allowed Disruptions',
+                      label: t(context, 'Allowed Disruptions'),
                     ),
                     Query(
                       query: 'kube_poddisruptionbudget_status_expected_pods{namespace="{{with .metadata}}{{with .namespace}}{{.}}{{end}}{{end}}", poddisruptionbudget="{{with .metadata}}{{with .name}}{{.}}{{end}}{{end}}"}',
-                      label: 'Expected',
+                      label: t(context, 'Expected'),
                     ),
                   ],
                 ),

@@ -17,6 +17,7 @@ import 'package:kubenav/services/kubernetes_service.dart';
 import 'package:kubenav/utils/constants.dart';
 import 'package:kubenav/utils/custom_icons.dart';
 import 'package:kubenav/utils/helpers.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/utils/logger.dart';
 import 'package:kubenav/utils/navigate.dart';
 import 'package:kubenav/utils/showmodal.dart';
@@ -239,9 +240,9 @@ class _ResourcesListState extends State<ResourcesList> {
         title: Column(
           children: [
             Text(
-              Characters(
-                widget.resource.plural,
-              ).replaceAll(Characters(''), Characters('\u{200B}')).toString(),
+              Characters(t(context, widget.resource.plural))
+                  .replaceAll(Characters(''), Characters('\u{200B}'))
+                  .toString(),
               textAlign: TextAlign.center,
               style: const TextStyle(
                 fontSize: 20,
@@ -365,13 +366,13 @@ class _ResourcesListState extends State<ResourcesList> {
                                       child: TextField(
                                         controller: _filterController,
                                         style: TextStyle(
-                                          color: Theme.of(
-                                            context,
-                                          ).colorScheme.onPrimary,
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onPrimary,
                                         ),
-                                        cursorColor: Theme.of(
-                                          context,
-                                        ).colorScheme.onPrimary,
+                                        cursorColor: Theme.of(context)
+                                            .colorScheme
+                                            .onPrimary,
                                         keyboardType: TextInputType.text,
                                         autocorrect: false,
                                         enableSuggestions: false,
@@ -380,17 +381,17 @@ class _ResourcesListState extends State<ResourcesList> {
                                           border: const OutlineInputBorder(),
                                           enabledBorder: OutlineInputBorder(
                                             borderSide: BorderSide(
-                                              color: Theme.of(
-                                                context,
-                                              ).colorScheme.onPrimary,
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .onPrimary,
                                               width: 0.0,
                                             ),
                                           ),
                                           focusedBorder: OutlineInputBorder(
                                             borderSide: BorderSide(
-                                              color: Theme.of(
-                                                context,
-                                              ).colorScheme.onPrimary,
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .onPrimary,
                                               width: 0.0,
                                             ),
                                           ),
@@ -399,9 +400,9 @@ class _ResourcesListState extends State<ResourcesList> {
                                             8,
                                           ),
                                           hintStyle: TextStyle(
-                                            color: Theme.of(
-                                              context,
-                                            ).colorScheme.onPrimary,
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .onPrimary,
                                           ),
                                           hintText: 'Filter...',
                                           suffixIcon: IconButton(
@@ -410,9 +411,9 @@ class _ResourcesListState extends State<ResourcesList> {
                                             },
                                             icon: Icon(
                                               Icons.clear,
-                                              color: Theme.of(
-                                                context,
-                                              ).colorScheme.onPrimary,
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .onPrimary,
                                             ),
                                           ),
                                         ),
@@ -631,25 +632,25 @@ class ResourcesListStatus extends StatelessWidget {
         PopupMenuItem<ResourceStatus>(
           value: ResourceStatus.undefined,
           child: Text(
-            '${ResourceStatus.undefined.toLocalizedString()} ($undefinedCount)',
+            '${ResourceStatus.undefined.toLocalizedString(context)} ($undefinedCount)',
           ),
         ),
         PopupMenuItem<ResourceStatus>(
           value: ResourceStatus.success,
           child: Text(
-            '${ResourceStatus.success.toLocalizedString()} ($successCount)',
+            '${ResourceStatus.success.toLocalizedString(context)} ($successCount)',
           ),
         ),
         PopupMenuItem<ResourceStatus>(
           value: ResourceStatus.warning,
           child: Text(
-            '${ResourceStatus.warning.toLocalizedString()} ($warningCount)',
+            '${ResourceStatus.warning.toLocalizedString(context)} ($warningCount)',
           ),
         ),
         PopupMenuItem<ResourceStatus>(
           value: ResourceStatus.danger,
           child: Text(
-            '${ResourceStatus.danger.toLocalizedString()} ($dangerCount)',
+            '${ResourceStatus.danger.toLocalizedString(context)} ($dangerCount)',
           ),
         ),
       ],
@@ -997,7 +998,7 @@ class _ResourcesListItemCreateResourceState
   Widget build(BuildContext context) {
     return AppBottomSheetWidget(
       title: 'Create',
-      subtitle: widget.resource.singular,
+      subtitle: t(context, widget.resource.singular),
       icon: Icons.create,
       closePressed: () {
         Navigator.pop(context);
@@ -1210,9 +1211,9 @@ class _ResourcesListItemDeleteResourcesState
                     decoration: BoxDecoration(
                       boxShadow: [
                         BoxShadow(
-                          color: Theme.of(
-                            context,
-                          ).extension<CustomColors>()!.shadow,
+                          color: Theme.of(context)
+                              .extension<CustomColors>()!
+                              .shadow,
                           blurRadius: Constants.sizeBorderBlurRadius,
                           spreadRadius: Constants.sizeBorderSpreadRadius,
                           offset: const Offset(0.0, 0.0),

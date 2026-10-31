@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:kubenav/repositories/sponsor_repository.dart';
 import 'package:kubenav/utils/constants.dart';
 import 'package:kubenav/utils/helpers.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/utils/showmodal.dart';
 import 'package:kubenav/widgets/settings/settings/sponsor/settings_sponsor_subscribe.dart';
 import 'package:kubenav/widgets/shared/app_vertical_list_simple_widget.dart';
@@ -43,7 +44,7 @@ class SettingsSponsor extends StatelessWidget {
               children: [
                 Expanded(
                   child: Text(
-                    'Sponsor',
+                    t(context, 'Sponsor'),
                     style: primaryTextStyle(context, size: 18),
                   ),
                 ),

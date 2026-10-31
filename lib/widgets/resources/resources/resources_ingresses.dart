@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import 'package:kubenav/models/kubernetes/schema.models.swagger.dart';
 import 'package:kubenav/utils/constants.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/utils/navigate.dart';
 import 'package:kubenav/utils/resources.dart';
 import 'package:kubenav/widgets/resources/helpers/details_item.dart';
@@ -20,8 +21,7 @@ final resourceIngress = Resource(
   category: ResourceCategories.discoveryandloadbalancing,
   plural: 'Ingresses',
   singular: 'Ingress',
-  description:
-      'An API object that manages external access to the services in a cluster, typically HTTP.',
+  description: 'An API object that manages external access to the services in a cluster, typically HTTP.',
   path: '/apis/networking.k8s.io/v1',
   resource: 'ingresses',
   scope: ResourceScope.namespaced,
@@ -70,31 +70,38 @@ final resourceIngress = Resource(
   toJson: (dynamic item) {
     return json.decode(json.encode(item));
   },
-  listItemBuilder: (BuildContext context, Resource resource, ResourceItem listItem) {
-    final item = listItem.item as IoK8sApiNetworkingV1Ingress;
-    final status = listItem.status;
+  listItemBuilder:
+      (BuildContext context, Resource resource, ResourceItem listItem) {
+        final item = listItem.item as IoK8sApiNetworkingV1Ingress;
+        final status = listItem.status;
 
-    final hosts = item.spec?.rules?.map((rule) => rule.host).toList();
-    final address = item.status?.loadBalancer?.ingress
-        ?.where((e) => e.ip != null)
-        .map((e) => e.ip)
-        .toList();
+        final hosts = item.spec?.rules?.map((rule) => rule.host).toList();
+        final address = item.status?.loadBalancer?.ingress
+            ?.where((e) => e.ip != null)
+            .map((e) => e.ip)
+            .toList();
 
-    return ResourcesListItem(
-      name: item.metadata?.name ?? '',
-      namespace: item.metadata?.namespace,
-      resource: resource,
-      item: item,
-      status: status,
-      details: [
-        'Namespace: ${item.metadata?.namespace ?? '-'}',
-        'Hosts: ${hosts != null && hosts.isNotEmpty ? hosts.join(', ') : '-'}',
-        'Address: ${address != null && address.isNotEmpty ? address.join(', ') : '-'}',
-        'Age: ${getAge(item.metadata?.creationTimestamp)}',
-      ],
-    );
-  },
-  previewItemBuilder: (dynamic listItem) {
+        return ResourcesListItem(
+          name: item.metadata?.name ?? '',
+          namespace: item.metadata?.namespace,
+          resource: resource,
+          item: item,
+          status: status,
+          details: [
+            tFmt(context, 'Namespace: {0}', [item.metadata?.namespace ?? '-']),
+            tFmt(context, 'Hosts: {0}', [
+              hosts != null && hosts.isNotEmpty ? hosts.join(', ') : '-',
+            ]),
+            tFmt(context, 'Address: {0}', [
+              address != null && address.isNotEmpty ? address.join(', ') : '-',
+            ]),
+            tFmt(context, 'Age: {0}', [
+              getAge(item.metadata?.creationTimestamp),
+            ]),
+          ],
+        );
+      },
+  previewItemBuilder: (BuildContext context, dynamic listItem) {
     final item = listItem as IoK8sApiNetworkingV1Ingress;
 
     final hosts = item.spec?.rules?.map((rule) => rule.host).toList();
@@ -104,10 +111,14 @@ final resourceIngress = Resource(
         .toList();
 
     return [
-      'Namespace: ${item.metadata?.namespace ?? '-'}',
-      'Hosts: ${hosts != null && hosts.isNotEmpty ? hosts.join(', ') : '-'}',
-      'Address: ${address != null && address.isNotEmpty ? address.join(', ') : '-'}',
-      'Age: ${getAge(item.metadata?.creationTimestamp)}',
+      tFmt(context, 'Namespace: {0}', [item.metadata?.namespace ?? '-']),
+      tFmt(context, 'Hosts: {0}', [
+        hosts != null && hosts.isNotEmpty ? hosts.join(', ') : '-',
+      ]),
+      tFmt(context, 'Address: {0}', [
+        address != null && address.isNotEmpty ? address.join(', ') : '-',
+      ]),
+      tFmt(context, 'Age: {0}', [getAge(item.metadata?.creationTimestamp)]),
     ];
   },
   detailsItemBuilder:
@@ -119,14 +130,14 @@ final resourceIngress = Resource(
             DetailsItemMetadata(kind: item.kind, metadata: item.metadata),
             const SizedBox(height: Constants.spacingMiddle),
             DetailsItem(
-              title: 'Configuration',
+              title: t(context, 'Configuration'),
               details: [
                 DetailsItemModel(
-                  name: 'Default Backend',
+                  name: t(context, 'Default Backend'),
                   values: item.spec?.defaultBackend?.service?.name,
                 ),
                 DetailsItemModel(
-                  name: 'Ingress Class',
+                  name: t(context, 'Ingress Class'),
                   values: item.spec?.ingressClassName,
                   onTap: item.spec?.ingressClassName == null
                       ? null
@@ -142,7 +153,7 @@ final resourceIngress = Resource(
                         },
                 ),
                 DetailsItemModel(
-                  name: 'Address',
+                  name: t(context, 'Address'),
                   values: item.status?.loadBalancer?.ingress
                       ?.where((e) => e.ip != null)
                       .map((e) => e.ip ?? '-')
@@ -150,7 +161,7 @@ final resourceIngress = Resource(
                 ),
               ],
             ),
-            ..._buildRules(item),
+            ..._buildRules(context, item),
             const SizedBox(height: Constants.spacingMiddle),
             DetailsResourcesPreview(
               resource: resourceEvent,
@@ -170,7 +181,10 @@ final resourceIngress = Resource(
       },
 );
 
-List<Widget> _buildRules(IoK8sApiNetworkingV1Ingress ingress) {
+List<Widget> _buildRules(
+  BuildContext context,
+  IoK8sApiNetworkingV1Ingress ingress,
+) {
   if (ingress.spec?.rules == null || ingress.spec!.rules!.isEmpty) {
     return [Container()];
   }
@@ -181,17 +195,20 @@ List<Widget> _buildRules(IoK8sApiNetworkingV1Ingress ingress) {
     ruleWidgets.add(const SizedBox(height: Constants.spacingMiddle));
     ruleWidgets.add(
       DetailsItem(
-        title: 'Rule ${i + 1}',
+        title: tFmt(context, 'Rule {0}', [i + 1]),
         details: [
-          DetailsItemModel(name: 'Host', values: ingress.spec!.rules![i].host),
           DetailsItemModel(
-            name: 'Paths',
+            name: t(context, 'Host'),
+            values: ingress.spec!.rules![i].host,
+          ),
+          DetailsItemModel(
+            name: t(context, 'Paths'),
             values: ingress.spec!.rules![i].http?.paths
                 .map((e) => e.path ?? '-')
                 .toList(),
           ),
           DetailsItemModel(
-            name: 'Backend',
+            name: t(context, 'Backend'),
             values: ingress.spec!.rules![i].http?.paths
                 .map((e) => e.backend.service?.name ?? '-')
                 .toList(),

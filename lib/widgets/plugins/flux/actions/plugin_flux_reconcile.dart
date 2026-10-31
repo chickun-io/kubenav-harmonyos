@@ -7,6 +7,7 @@ import 'package:kubenav/repositories/app_repository.dart';
 import 'package:kubenav/repositories/clusters_repository.dart';
 import 'package:kubenav/services/kubernetes_service.dart';
 import 'package:kubenav/utils/constants.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/utils/logger.dart';
 import 'package:kubenav/utils/showmodal.dart';
 import 'package:kubenav/utils/time.dart';
@@ -90,8 +91,14 @@ class _PluginFluxReconcileState extends State<PluginFluxReconcile> {
       if (mounted) {
         showSnackbar(
           context,
-          '${widget.resource.singular} Reconciled',
-          'The ${widget.resource.singular} ${widget.namespace}/${widget.name} was reconciled',
+          tFmt(context, '{0} Reconciled', [
+            t(context, widget.resource.singular),
+          ]),
+          tFmt(context, 'The {0} {1}/{2} was reconciled', [
+            t(context, widget.resource.singular),
+            widget.namespace,
+            widget.name,
+          ]),
         );
         Navigator.pop(context);
       }
@@ -105,7 +112,11 @@ class _PluginFluxReconcileState extends State<PluginFluxReconcile> {
         _isLoading = false;
       });
       if (mounted) {
-        showSnackbar(context, 'Reconciliation Failed', err.toString());
+        showSnackbar(
+          context,
+          t(context, 'Reconciliation Failed'),
+          err.toString(),
+        );
       }
     }
   }
@@ -113,13 +124,13 @@ class _PluginFluxReconcileState extends State<PluginFluxReconcile> {
   @override
   Widget build(BuildContext context) {
     return AppBottomSheetWidget(
-      title: 'Reconcile',
+      title: t(context, 'Reconcile'),
       subtitle: '${widget.namespace}/${widget.name}',
       icon: Icons.restart_alt,
       closePressed: () {
         Navigator.pop(context);
       },
-      actionText: 'Reconcile',
+      actionText: t(context, 'Reconcile'),
       actionPressed: () {
         _reconcile();
       },
@@ -133,7 +144,11 @@ class _PluginFluxReconcileState extends State<PluginFluxReconcile> {
             right: Constants.spacingMiddle,
           ),
           child: Text(
-            'Do you really want to reconcile the ${widget.resource.singular} ${widget.namespace}/${widget.name}?',
+            tFmt(context, 'Do you really want to reconcile the {0} {1}/{2}?', [
+              t(context, widget.resource.singular),
+              widget.namespace,
+              widget.name,
+            ]),
           ),
         ),
       ),

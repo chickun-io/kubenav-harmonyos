@@ -7,6 +7,7 @@ import 'package:kubenav/repositories/app_repository.dart';
 import 'package:kubenav/repositories/clusters_repository.dart';
 import 'package:kubenav/services/kubernetes_service.dart';
 import 'package:kubenav/utils/constants.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/utils/logger.dart';
 import 'package:kubenav/utils/showmodal.dart';
 import 'package:kubenav/utils/time.dart';
@@ -86,8 +87,12 @@ class _PluginCertManagerRenewState extends State<PluginCertManagerRenew> {
       if (mounted) {
         showSnackbar(
           context,
-          '${widget.resource.singular} Renewed',
-          'The ${widget.resource.singular} ${widget.namespace}/${widget.name} was renewed',
+          tFmt(context, '{0} Renewed', [t(context, widget.resource.singular)]),
+          tFmt(context, 'The {0} {1}/{2} was renewed', [
+            t(context, widget.resource.singular),
+            widget.namespace,
+            widget.name,
+          ]),
         );
         Navigator.pop(context);
       }
@@ -103,7 +108,9 @@ class _PluginCertManagerRenewState extends State<PluginCertManagerRenew> {
       if (mounted) {
         showSnackbar(
           context,
-          'Failed to Renew ${widget.resource.singular}',
+          tFmt(context, 'Failed to Renew {0}', [
+            t(context, widget.resource.singular),
+          ]),
           err.toString(),
         );
       }
@@ -113,13 +120,13 @@ class _PluginCertManagerRenewState extends State<PluginCertManagerRenew> {
   @override
   Widget build(BuildContext context) {
     return AppBottomSheetWidget(
-      title: 'Renew',
+      title: t(context, 'Renew'),
       subtitle: '${widget.namespace}/${widget.name}',
       icon: Icons.restart_alt,
       closePressed: () {
         Navigator.pop(context);
       },
-      actionText: 'Renew',
+      actionText: t(context, 'Renew'),
       actionPressed: () {
         _renew();
       },
@@ -133,7 +140,15 @@ class _PluginCertManagerRenewState extends State<PluginCertManagerRenew> {
             right: Constants.spacingMiddle,
           ),
           child: Text(
-            'Do you really want to manually renew the ${widget.resource.singular} ${widget.namespace}/${widget.name}?',
+            tFmt(
+              context,
+              'Do you really want to manually renew the {0} {1}/{2}?',
+              [
+                t(context, widget.resource.singular),
+                widget.namespace,
+                widget.name,
+              ],
+            ),
           ),
         ),
       ),

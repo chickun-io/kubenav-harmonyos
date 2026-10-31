@@ -12,6 +12,7 @@ import 'package:kubenav/repositories/app_repository.dart';
 import 'package:kubenav/services/helpers_service.dart';
 import 'package:kubenav/utils/constants.dart';
 import 'package:kubenav/utils/helpers.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/utils/logger.dart';
 import 'package:kubenav/utils/themes.dart';
 import 'package:kubenav/widgets/shared/app_bottom_sheet_widget.dart';
@@ -96,7 +97,7 @@ class _PluginHelmDetailsValuesState extends State<PluginHelmDetailsValues> {
       closePressed: () {
         Navigator.pop(context);
       },
-      actionText: 'Close',
+      actionText: t(context, 'Close'),
       actionPressed: () {
         Navigator.pop(context);
       },

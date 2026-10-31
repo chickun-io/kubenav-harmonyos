@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 
 import 'package:kubenav/repositories/bookmarks_repository.dart';
 import 'package:kubenav/repositories/clusters_repository.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/utils/navigate.dart';
 import 'package:kubenav/widgets/resources/bookmarks/resources_bookmarks.dart';
 import 'package:kubenav/widgets/resources/resources_details.dart';
@@ -104,7 +105,7 @@ class _ResourcesBookmarksPreviewState extends State<ResourcesBookmarksPreview> {
     }
 
     return AppHorizontalListCardsWidget(
-      title: 'Bookmarks',
+      title: t(context, 'Bookmarks'),
       cards: List.generate(
         bookmarksRepository.bookmarks.length <= 10
             ? bookmarksRepository.bookmarks.length
@@ -120,9 +121,15 @@ class _ResourcesBookmarksPreviewState extends State<ResourcesBookmarksPreview> {
                 ? bookmarksRepository.bookmarks[index].resource.plural
                 : bookmarksRepository.bookmarks[index].resource.singular,
             subtitle: [
-              'Cluster: ${cluster?.name ?? bookmarksRepository.bookmarks[index].clusterId}',
-              'Namespace: ${bookmarksRepository.bookmarks[index].namespace ?? '-'}',
-              'Name: ${bookmarksRepository.bookmarks[index].name ?? '-'}',
+              tFmt(context, 'Cluster: {0}', [
+                cluster?.name ?? bookmarksRepository.bookmarks[index].clusterId,
+              ]),
+              tFmt(context, 'Namespace: {0}', [
+                bookmarksRepository.bookmarks[index].namespace ?? '-',
+              ]),
+              tFmt(context, 'Name: {0}', [
+                bookmarksRepository.bookmarks[index].name ?? '-',
+              ]),
             ],
             image:
                 'assets/resources/${bookmarksRepository.bookmarks[index].resource.icon}.svg',

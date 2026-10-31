@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:kubenav/models/kubernetes/schema.models.swagger.dart';
 import 'package:kubenav/models/plugins/prometheus.dart';
 import 'package:kubenav/utils/constants.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/utils/resources.dart';
 import 'package:kubenav/widgets/resources/helpers/details_item.dart';
 import 'package:kubenav/widgets/resources/helpers/details_item_conditions.dart';
@@ -20,8 +21,7 @@ final resourceReplicaSet = Resource(
   category: ResourceCategories.workload,
   plural: 'ReplicaSets',
   singular: 'ReplicaSet',
-  description:
-      'A ReplicaSet\'s purpose is to maintain a stable set of replica Pods running at any given time.',
+  description: 'A ReplicaSet\'s purpose is to maintain a stable set of replica Pods running at any given time.',
   path: '/apis/apps/v1',
   resource: 'replicasets',
   scope: ResourceScope.namespaced,
@@ -80,128 +80,136 @@ final resourceReplicaSet = Resource(
           item: item,
           status: status,
           details: [
-            'Namespace: ${item.metadata?.namespace ?? '-'}',
-            'Desired: ${item.status?.replicas ?? 0}',
-            'Current: ${item.status?.availableReplicas ?? 0}',
-            'Ready: ${item.status?.readyReplicas ?? 0}',
-            'Age: ${getAge(item.metadata?.creationTimestamp)}',
+            tFmt(context, 'Namespace: {0}', [item.metadata?.namespace ?? '-']),
+            tFmt(context, 'Desired: {0}', [item.status?.replicas ?? 0]),
+            tFmt(context, 'Current: {0}', [
+              item.status?.availableReplicas ?? 0,
+            ]),
+            tFmt(context, 'Ready: {0}', [item.status?.readyReplicas ?? 0]),
+            tFmt(context, 'Age: {0}', [
+              getAge(item.metadata?.creationTimestamp),
+            ]),
           ],
         );
       },
-  previewItemBuilder: (dynamic listItem) {
+  previewItemBuilder: (BuildContext context, dynamic listItem) {
     final item = listItem as IoK8sApiAppsV1ReplicaSet;
 
     return [
-      'Namespace: ${item.metadata?.namespace ?? '-'}',
-      'Desired: ${item.status?.replicas ?? 0}',
-      'Current: ${item.status?.availableReplicas ?? 0}',
-      'Ready: ${item.status?.readyReplicas ?? 0}',
-      'Age: ${getAge(item.metadata?.creationTimestamp)}',
+      tFmt(context, 'Namespace: {0}', [item.metadata?.namespace ?? '-']),
+      tFmt(context, 'Desired: {0}', [item.status?.replicas ?? 0]),
+      tFmt(context, 'Current: {0}', [item.status?.availableReplicas ?? 0]),
+      tFmt(context, 'Ready: {0}', [item.status?.readyReplicas ?? 0]),
+      tFmt(context, 'Age: {0}', [getAge(item.metadata?.creationTimestamp)]),
     ];
   },
-  detailsItemBuilder: (BuildContext context, Resource resource, dynamic detailsItem) {
-    final item = detailsItem as IoK8sApiAppsV1ReplicaSet;
+  detailsItemBuilder:
+      (BuildContext context, Resource resource, dynamic detailsItem) {
+        final item = detailsItem as IoK8sApiAppsV1ReplicaSet;
 
-    return Column(
-      children: [
-        DetailsItemMetadata(kind: item.kind, metadata: item.metadata),
-        DetailsItemConditions(
-          conditions: item.status?.conditions
-              ?.map(
-                (e) => IoK8sApimachineryPkgApisMetaV1Condition(
-                  lastTransitionTime: e.lastTransitionTime ?? DateTime.now(),
-                  message: e.message ?? '',
-                  observedGeneration: null,
-                  reason: e.reason ?? '',
-                  status: e.status,
-                  type: e.type,
-                ),
-              )
-              .toList(),
-        ),
-        const SizedBox(height: Constants.spacingMiddle),
-        DetailsItem(
-          title: 'Configuration',
-          details: [
-            DetailsItemModel(name: 'Replicas', values: item.spec?.replicas),
-            DetailsItemModel(
-              name: 'Selector',
-              values: item.spec?.selector.matchLabels?.entries
-                  .map((matchLabel) => '${matchLabel.key}=${matchLabel.value}')
+        return Column(
+          children: [
+            DetailsItemMetadata(kind: item.kind, metadata: item.metadata),
+            DetailsItemConditions(
+              conditions: item.status?.conditions
+                  ?.map(
+                    (e) => IoK8sApimachineryPkgApisMetaV1Condition(
+                      lastTransitionTime:
+                          e.lastTransitionTime ?? DateTime.now(),
+                      message: e.message ?? '',
+                      observedGeneration: null,
+                      reason: e.reason ?? '',
+                      status: e.status,
+                      type: e.type,
+                    ),
+                  )
                   .toList(),
             ),
-          ],
-        ),
-        const SizedBox(height: Constants.spacingMiddle),
-        DetailsItem(
-          title: 'Status',
-          details: [
-            DetailsItemModel(
-              name: 'Desired Replicas',
-              values: item.status?.replicas,
-            ),
-            DetailsItemModel(
-              name: 'Ready Replicas',
-              values: item.status?.readyReplicas,
-            ),
-            DetailsItemModel(
-              name: 'Available Replicas',
-              values: item.status?.availableReplicas,
-            ),
-            DetailsItemModel(
-              name: 'Fully Labeled Replicas',
-              values: item.status?.fullyLabeledReplicas,
-            ),
-            DetailsItemModel(
-              name: 'Observed Generation',
-              values: item.status?.observedGeneration,
-            ),
-          ],
-        ),
-        const SizedBox(height: Constants.spacingMiddle),
-        DetailsResourcesPreview(
-          resource: resourcePod,
-          namespace: item.metadata?.namespace,
-          selector: getSelector(item.spec?.selector),
-          filter: null,
-        ),
-        const SizedBox(height: Constants.spacingMiddle),
-        DetailsResourcesPreview(
-          resource: resourceEvent,
-          namespace: item.metadata?.namespace,
-          selector:
-              'fieldSelector=involvedObject.name=${item.metadata?.name ?? ''}',
-          filter: null,
-        ),
-        const SizedBox(height: Constants.spacingMiddle),
-        AppPrometheusChartsWidget(
-          item: item,
-          toJson: resource.toJson,
-          defaultCharts: [
-            Chart(
-              title: 'Pods',
-              unit: '',
-              queries: [
-                Query(
-                  query:
-                      'sum(kube_replicaset_spec_replicas{namespace="{{with .metadata}}{{with .namespace}}{{.}}{{end}}{{end}}", replicaset="{{with .metadata}}{{with .name}}{{.}}{{end}}{{end}}"})',
-                  label: 'Desired',
+            const SizedBox(height: Constants.spacingMiddle),
+            DetailsItem(
+              title: t(context, 'Configuration'),
+              details: [
+                DetailsItemModel(
+                  name: t(context, 'Replicas'),
+                  values: item.spec?.replicas,
                 ),
-                Query(
-                  query:
-                      'sum(kube_replicaset_status_replicas{namespace="{{with .metadata}}{{with .namespace}}{{.}}{{end}}{{end}}", replicaset="{{with .metadata}}{{with .name}}{{.}}{{end}}{{end}}"})',
-                  label: 'Current',
+                DetailsItemModel(
+                  name: t(context, 'Selector'),
+                  values: item.spec?.selector.matchLabels?.entries
+                      .map(
+                        (matchLabel) => '${matchLabel.key}=${matchLabel.value}',
+                      )
+                      .toList(),
                 ),
-                Query(
-                  query:
-                      'sum(kube_replicaset_status_ready_replicas{namespace="{{with .metadata}}{{with .namespace}}{{.}}{{end}}{{end}}", replicaset="{{with .metadata}}{{with .name}}{{.}}{{end}}{{end}}"})',
-                  label: 'Ready',
+              ],
+            ),
+            const SizedBox(height: Constants.spacingMiddle),
+            DetailsItem(
+              title: t(context, 'Status'),
+              details: [
+                DetailsItemModel(
+                  name: t(context, 'Desired Replicas'),
+                  values: item.status?.replicas,
+                ),
+                DetailsItemModel(
+                  name: t(context, 'Ready Replicas'),
+                  values: item.status?.readyReplicas,
+                ),
+                DetailsItemModel(
+                  name: t(context, 'Available Replicas'),
+                  values: item.status?.availableReplicas,
+                ),
+                DetailsItemModel(
+                  name: t(context, 'Fully Labeled Replicas'),
+                  values: item.status?.fullyLabeledReplicas,
+                ),
+                DetailsItemModel(
+                  name: t(context, 'Observed Generation'),
+                  values: item.status?.observedGeneration,
+                ),
+              ],
+            ),
+            const SizedBox(height: Constants.spacingMiddle),
+            DetailsResourcesPreview(
+              resource: resourcePod,
+              namespace: item.metadata?.namespace,
+              selector: getSelector(item.spec?.selector),
+              filter: null,
+            ),
+            const SizedBox(height: Constants.spacingMiddle),
+            DetailsResourcesPreview(
+              resource: resourceEvent,
+              namespace: item.metadata?.namespace,
+              selector:
+                  'fieldSelector=involvedObject.name=${item.metadata?.name ?? ''}',
+              filter: null,
+            ),
+            const SizedBox(height: Constants.spacingMiddle),
+            AppPrometheusChartsWidget(
+              item: item,
+              toJson: resource.toJson,
+              defaultCharts: [
+                Chart(
+                  title: t(context, 'Pods'),
+                  unit: '',
+                  queries: [
+                    Query(
+                      query: 'sum(kube_replicaset_spec_replicas{namespace="{{with .metadata}}{{with .namespace}}{{.}}{{end}}{{end}}", replicaset="{{with .metadata}}{{with .name}}{{.}}{{end}}{{end}}"})',
+                      label: t(context, 'Desired'),
+                    ),
+                    Query(
+                      query: 'sum(kube_replicaset_status_replicas{namespace="{{with .metadata}}{{with .namespace}}{{.}}{{end}}{{end}}", replicaset="{{with .metadata}}{{with .name}}{{.}}{{end}}{{end}}"})',
+                      label: t(context, 'Current'),
+                    ),
+                    Query(
+                      query: 'sum(kube_replicaset_status_ready_replicas{namespace="{{with .metadata}}{{with .namespace}}{{.}}{{end}}{{end}}", replicaset="{{with .metadata}}{{with .name}}{{.}}{{end}}{{end}}"})',
+                      label: t(context, 'Ready'),
+                    ),
+                  ],
                 ),
               ],
             ),
           ],
-        ),
-      ],
-    );
-  },
+        );
+      },
 );

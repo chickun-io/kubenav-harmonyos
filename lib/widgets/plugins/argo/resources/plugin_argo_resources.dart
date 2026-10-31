@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/utils/showmodal.dart';
 import 'package:kubenav/widgets/plugins/argo/actions/plugin_argo_sync.dart';
 import 'package:kubenav/widgets/plugins/argo/resources/plugin_argo_resources_applications.dart';
@@ -42,7 +43,7 @@ List<AppResourceActionsModel> argoResourceActions(
       resource.path == argoResourceApplication.path) {
     return [
       AppResourceActionsModel(
-        title: 'Sync',
+        title: t(context, 'Sync'),
         icon: Icons.sync,
         onTap: () {
           showModal(

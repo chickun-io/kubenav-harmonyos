@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import 'package:kubenav/models/kubernetes/schema.models.swagger.dart';
 import 'package:kubenav/utils/constants.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/utils/resources.dart';
 import 'package:kubenav/widgets/resources/helpers/details_item.dart';
 import 'package:kubenav/widgets/resources/helpers/details_item_conditions.dart';
@@ -19,15 +20,13 @@ final resourceJob = Resource(
   category: ResourceCategories.workload,
   plural: 'Jobs',
   singular: 'Job',
-  description:
-      'A Job creates one or more Pods and will continue to retry execution of the Pods until a specified number of them successfully terminate.',
+  description: 'A Job creates one or more Pods and will continue to retry execution of the Pods until a specified number of them successfully terminate.',
   path: '/apis/batch/v1',
   resource: 'jobs',
   scope: ResourceScope.namespaced,
   additionalPrinterColumns: [],
   icon: 'jobs',
-  template:
-      '{"apiVersion":"batch/v1","kind":"Job","metadata":{"name":"","namespace":""},"spec":{"backoffLimit":0,"completions":1,"parallelism":1,"template":{"spec":{"containers":[{"name":"nginx","image":"nginx:1.14.2"}]}}}}',
+  template: '{"apiVersion":"batch/v1","kind":"Job","metadata":{"name":"","namespace":""},"spec":{"backoffLimit":0,"completions":1,"parallelism":1,"template":{"spec":{"containers":[{"name":"nginx","image":"nginx:1.14.2"}]}}}}',
   decodeListData: (ResourcesListData data) {
     final parsed = json.decode(data.list);
     final items = IoK8sApiBatchV1JobList.fromJson(parsed).items;
@@ -77,32 +76,45 @@ final resourceJob = Resource(
   toJson: (dynamic item) {
     return json.decode(json.encode(item));
   },
-  listItemBuilder: (BuildContext context, Resource resource, ResourceItem listItem) {
-    final item = listItem.item as IoK8sApiBatchV1Job;
-    final status = listItem.status;
+  listItemBuilder:
+      (BuildContext context, Resource resource, ResourceItem listItem) {
+        final item = listItem.item as IoK8sApiBatchV1Job;
+        final status = listItem.status;
 
-    return ResourcesListItem(
-      name: item.metadata?.name ?? '',
-      namespace: item.metadata?.namespace,
-      resource: resource,
-      item: item,
-      status: status,
-      details: [
-        'Namespace: ${item.metadata?.namespace ?? '-'}',
-        'Completions: ${item.status?.succeeded ?? 0}/${item.spec?.completions ?? 0}',
-        'Duration: ${timeDiff(item.status?.startTime, item.status?.completionTime)}',
-        'Age: ${getAge(item.metadata?.creationTimestamp)}',
-      ],
-    );
-  },
-  previewItemBuilder: (dynamic listItem) {
+        return ResourcesListItem(
+          name: item.metadata?.name ?? '',
+          namespace: item.metadata?.namespace,
+          resource: resource,
+          item: item,
+          status: status,
+          details: [
+            tFmt(context, 'Namespace: {0}', [item.metadata?.namespace ?? '-']),
+            tFmt(context, 'Completions: {0}/{1}', [
+              item.status?.succeeded ?? 0,
+              item.spec?.completions ?? 0,
+            ]),
+            tFmt(context, 'Duration: {0}', [
+              timeDiff(item.status?.startTime, item.status?.completionTime),
+            ]),
+            tFmt(context, 'Age: {0}', [
+              getAge(item.metadata?.creationTimestamp),
+            ]),
+          ],
+        );
+      },
+  previewItemBuilder: (BuildContext context, dynamic listItem) {
     final item = listItem as IoK8sApiBatchV1Job;
 
     return [
-      'Namespace: ${item.metadata?.namespace ?? '-'}',
-      'Completions: ${item.status?.succeeded ?? 0}/${item.spec?.completions ?? 0}',
-      'Duration: ${timeDiff(item.status?.startTime, item.status?.completionTime)}',
-      'Age: ${getAge(item.metadata?.creationTimestamp)}',
+      tFmt(context, 'Namespace: {0}', [item.metadata?.namespace ?? '-']),
+      tFmt(context, 'Completions: {0}/{1}', [
+        item.status?.succeeded ?? 0,
+        item.spec?.completions ?? 0,
+      ]),
+      tFmt(context, 'Duration: {0}', [
+        timeDiff(item.status?.startTime, item.status?.completionTime),
+      ]),
+      tFmt(context, 'Age: {0}', [getAge(item.metadata?.creationTimestamp)]),
     ];
   },
   detailsItemBuilder:
@@ -129,46 +141,49 @@ final resourceJob = Resource(
             ),
             const SizedBox(height: Constants.spacingMiddle),
             DetailsItem(
-              title: 'Configuration',
+              title: t(context, 'Configuration'),
               details: [
                 DetailsItemModel(
-                  name: 'Backoff Limit',
+                  name: t(context, 'Backoff Limit'),
                   values: item.spec?.backoffLimit,
                 ),
                 DetailsItemModel(
-                  name: 'Completions',
+                  name: t(context, 'Completions'),
                   values: item.spec?.completions,
                 ),
                 DetailsItemModel(
-                  name: 'Parallelism',
+                  name: t(context, 'Parallelism'),
                   values: item.spec?.parallelism,
                 ),
               ],
             ),
             const SizedBox(height: Constants.spacingMiddle),
             DetailsItem(
-              title: 'Status',
+              title: t(context, 'Status'),
               details: [
                 DetailsItemModel(
-                  name: 'Start Time',
+                  name: t(context, 'Start Time'),
                   values: formatTime(item.status?.startTime),
                 ),
                 DetailsItemModel(
-                  name: 'Completion Time',
+                  name: t(context, 'Completion Time'),
                   values: formatTime(item.status?.completionTime),
                 ),
                 DetailsItemModel(
-                  name: 'Duration',
+                  name: t(context, 'Duration'),
                   values: timeDiff(
                     item.status?.startTime,
                     item.status?.completionTime,
                   ),
                 ),
                 DetailsItemModel(
-                  name: 'Succeeded',
+                  name: t(context, 'Succeeded'),
                   values: item.status?.succeeded,
                 ),
-                DetailsItemModel(name: 'Failed', values: item.status?.failed),
+                DetailsItemModel(
+                  name: t(context, 'Failed'),
+                  values: item.status?.failed,
+                ),
               ],
             ),
             const SizedBox(height: Constants.spacingMiddle),

@@ -13,6 +13,7 @@ import 'package:kubenav/repositories/clusters_repository.dart';
 import 'package:kubenav/services/kubernetes_service.dart';
 import 'package:kubenav/utils/constants.dart';
 import 'package:kubenav/utils/helpers.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/utils/resources.dart';
 import 'package:kubenav/utils/themes.dart';
 import 'package:kubenav/widgets/shared/app_bottom_sheet_widget.dart';
@@ -362,7 +363,7 @@ class _OverviewMetricState extends State<OverviewMetric> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
-            'Allocatable',
+            t(context, 'Allocatable'),
             style: normalTextStyle(context, size: Constants.sizeTextSecondary),
           ),
           Text(
@@ -375,7 +376,7 @@ class _OverviewMetricState extends State<OverviewMetric> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
-            'Usage',
+            t(context, 'Usage'),
             style: normalTextStyle(context, size: Constants.sizeTextSecondary),
           ),
           Text(
@@ -392,7 +393,7 @@ class _OverviewMetricState extends State<OverviewMetric> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              'Requests',
+              t(context, 'Requests'),
               style: normalTextStyle(
                 context,
                 size: Constants.sizeTextSecondary,
@@ -408,7 +409,7 @@ class _OverviewMetricState extends State<OverviewMetric> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              'Limits',
+              t(context, 'Limits'),
               style: normalTextStyle(
                 context,
                 size: Constants.sizeTextSecondary,
@@ -437,7 +438,7 @@ class _OverviewMetricState extends State<OverviewMetric> {
       closePressed: () {
         Navigator.pop(context);
       },
-      actionText: 'Close',
+      actionText: t(context, 'Close'),
       actionPressed: () {
         Navigator.pop(context);
       },
@@ -462,7 +463,7 @@ class _OverviewMetricState extends State<OverviewMetric> {
                 default:
                   if (snapshot.hasError) {
                     return AppErrorWidget(
-                      message: 'Could not load metrics',
+                      message: t(context, 'Could not load metrics'),
                       details: snapshot.error.toString(),
                       icon: widget.icon,
                     );
@@ -475,9 +476,9 @@ class _OverviewMetricState extends State<OverviewMetric> {
                     decoration: BoxDecoration(
                       boxShadow: [
                         BoxShadow(
-                          color: Theme.of(
-                            context,
-                          ).extension<CustomColors>()!.shadow,
+                          color: Theme.of(context)
+                              .extension<CustomColors>()!
+                              .shadow,
                           blurRadius: Constants.sizeBorderBlurRadius,
                           spreadRadius: Constants.sizeBorderSpreadRadius,
                           offset: const Offset(0.0, 0.0),
@@ -501,9 +502,9 @@ class _OverviewMetricState extends State<OverviewMetric> {
                                   fitInsideHorizontally: true,
                                   fitInsideVertically: true,
                                   getTooltipColor: (BarChartGroupData group) {
-                                    return Theme.of(
-                                      context,
-                                    ).extension<CustomColors>()!.message;
+                                    return Theme.of(context)
+                                        .extension<CustomColors>()!
+                                        .message;
                                   },
                                   getTooltipItem:
                                       (group, groupIndex, rod, rodIndex) {
@@ -595,18 +596,18 @@ class _OverviewMetricState extends State<OverviewMetric> {
                                 show: true,
                                 getDrawingHorizontalLine: (value) {
                                   return FlLine(
-                                    color: Theme.of(
-                                      context,
-                                    ).extension<CustomColors>()!.textSecondary,
+                                    color: Theme.of(context)
+                                        .extension<CustomColors>()!
+                                        .textSecondary,
                                     strokeWidth: 0.4,
                                     dashArray: [8, 4],
                                   );
                                 },
                                 getDrawingVerticalLine: (value) {
                                   return FlLine(
-                                    color: Theme.of(
-                                      context,
-                                    ).extension<CustomColors>()!.textSecondary,
+                                    color: Theme.of(context)
+                                        .extension<CustomColors>()!
+                                        .textSecondary,
                                     strokeWidth: 0.4,
                                     dashArray: [8, 4],
                                   );

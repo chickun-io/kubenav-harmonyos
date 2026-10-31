@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import 'package:kubenav/models/kubernetes/schema.models.swagger.dart';
 import 'package:kubenav/utils/constants.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/utils/resources.dart';
 import 'package:kubenav/widgets/resources/helpers/details_item.dart';
 import 'package:kubenav/widgets/resources/helpers/details_item_metadata.dart';
@@ -18,8 +19,7 @@ final resourceNetworkPolicy = Resource(
   category: ResourceCategories.discoveryandloadbalancing,
   plural: 'NetworkPolicies',
   singular: 'NetworkPolicy',
-  description:
-      'NetworkPolicies are an application-centric construct which allow you to specify how a pod is allowed to communicate with various network "entities" over the network.',
+  description: 'NetworkPolicies are an application-centric construct which allow you to specify how a pod is allowed to communicate with various network "entities" over the network.',
   path: '/apis/networking.k8s.io/v1',
   resource: 'networkpolicies',
   scope: ResourceScope.namespaced,
@@ -81,13 +81,19 @@ final resourceNetworkPolicy = Resource(
           item: item,
           status: status,
           details: [
-            'Namespace: ${item.metadata?.namespace ?? '-'}',
-            'Pod Selector: ${podSelector != null && podSelector.isNotEmpty ? podSelector.join(', ') : '-'}',
-            'Age: ${getAge(item.metadata?.creationTimestamp)}',
+            tFmt(context, 'Namespace: {0}', [item.metadata?.namespace ?? '-']),
+            tFmt(context, 'Pod Selector: {0}', [
+              podSelector != null && podSelector.isNotEmpty
+                  ? podSelector.join(', ')
+                  : '-',
+            ]),
+            tFmt(context, 'Age: {0}', [
+              getAge(item.metadata?.creationTimestamp),
+            ]),
           ],
         );
       },
-  previewItemBuilder: (dynamic listItem) {
+  previewItemBuilder: (BuildContext context, dynamic listItem) {
     final item = listItem as IoK8sApiNetworkingV1NetworkPolicy;
 
     final podSelector = item.spec?.podSelector?.matchLabels?.entries
@@ -95,9 +101,13 @@ final resourceNetworkPolicy = Resource(
         .toList();
 
     return [
-      'Namespace: ${item.metadata?.namespace ?? '-'}',
-      'Pod Selector: ${podSelector != null && podSelector.isNotEmpty ? podSelector.join(', ') : '-'}',
-      'Age: ${getAge(item.metadata?.creationTimestamp)}',
+      tFmt(context, 'Namespace: {0}', [item.metadata?.namespace ?? '-']),
+      tFmt(context, 'Pod Selector: {0}', [
+        podSelector != null && podSelector.isNotEmpty
+            ? podSelector.join(', ')
+            : '-',
+      ]),
+      tFmt(context, 'Age: {0}', [getAge(item.metadata?.creationTimestamp)]),
     ];
   },
   detailsItemBuilder:
@@ -109,24 +119,24 @@ final resourceNetworkPolicy = Resource(
             DetailsItemMetadata(kind: item.kind, metadata: item.metadata),
             const SizedBox(height: Constants.spacingMiddle),
             DetailsItem(
-              title: 'Configuration',
+              title: t(context, 'Configuration'),
               details: [
                 DetailsItemModel(
-                  name: 'Pod Selector',
+                  name: t(context, 'Pod Selector'),
                   values: item.spec?.podSelector?.matchLabels?.entries
                       .map((e) => '${e.key}=${e.value}')
                       .toList(),
                 ),
                 DetailsItemModel(
-                  name: 'Policy Types',
+                  name: t(context, 'Policy Types'),
                   values: item.spec?.policyTypes?.map((e) => e.value).toList(),
                 ),
                 DetailsItemModel(
-                  name: 'Egress Rules',
+                  name: t(context, 'Egress Rules'),
                   values: item.spec?.egress?.length,
                 ),
                 DetailsItemModel(
-                  name: 'Ingress Rules',
+                  name: t(context, 'Ingress Rules'),
                   values: item.spec?.ingress?.length,
                 ),
               ],

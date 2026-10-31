@@ -8,6 +8,7 @@ import 'package:kubenav/repositories/clusters_repository.dart';
 import 'package:kubenav/utils/constants.dart';
 import 'package:kubenav/utils/custom_icons.dart';
 import 'package:kubenav/utils/helpers.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/utils/navigate.dart';
 import 'package:kubenav/utils/showmodal.dart';
 import 'package:kubenav/utils/themes.dart';
@@ -45,8 +46,7 @@ final _plugins = [
   ),
   Plugin(
     title: 'cert-manager',
-    description:
-        'cert-manager is a powerful and extensible X.509 certificate controller for Kubernetes and OpenShift workloads',
+    description: 'cert-manager is a powerful and extensible X.509 certificate controller for Kubernetes and OpenShift workloads',
     icon: 'assets/plugins/cert-manager.svg',
     widget: const PluginCertManager(),
   ),
@@ -64,8 +64,7 @@ final _plugins = [
   ),
   Plugin(
     title: 'Prometheus',
-    description:
-        'From metrics to insight: Power your metrics and alerting with the leading open-source monitoring solution',
+    description: 'From metrics to insight: Power your metrics and alerting with the leading open-source monitoring solution',
     icon: 'assets/plugins/prometheus.svg',
     widget: const PluginPrometheusList(),
   ),
@@ -91,7 +90,7 @@ class Plugins extends StatelessWidget {
 
     return [
       AppVerticalListSimpleWidget(
-        title: 'Plugins',
+        title: t(context, 'Plugins'),
         items: List.generate(_plugins.length, (index) {
           return AppVerticalListSimpleModel(
             onTap: () {
@@ -117,13 +116,13 @@ class Plugins extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      _plugins[index].title,
+                      t(context, _plugins[index].title),
                       style: primaryTextStyle(context),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
                     Text(
-                      _plugins[index].description,
+                      t(context, _plugins[index].description),
                       style: secondaryTextStyle(context),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
@@ -172,8 +171,8 @@ class Plugins extends StatelessWidget {
         automaticallyImplyLeading: false,
         title: Column(
           children: [
-            const Text(
-              'Plugins',
+            Text(
+              t(context, 'Plugins'),
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 20,
@@ -182,9 +181,9 @@ class Plugins extends StatelessWidget {
               ),
             ),
             Text(
-              Characters(
-                activeCluster?.name ?? 'No Active Cluster',
-              ).replaceAll(Characters(''), Characters('\u{200B}')).toString(),
+              Characters(activeCluster?.name ?? t(context, 'No Active Cluster'))
+                  .replaceAll(Characters(''), Characters('\u{200B}'))
+                  .toString(),
               textAlign: TextAlign.center,
               style: const TextStyle(
                 fontSize: 14,

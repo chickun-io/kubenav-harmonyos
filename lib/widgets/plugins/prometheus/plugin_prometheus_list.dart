@@ -12,6 +12,7 @@ import 'package:kubenav/services/kubernetes_service.dart';
 import 'package:kubenav/utils/constants.dart';
 import 'package:kubenav/utils/custom_icons.dart';
 import 'package:kubenav/utils/helpers.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/utils/logger.dart';
 import 'package:kubenav/utils/navigate.dart';
 import 'package:kubenav/utils/showmodal.dart';
@@ -179,9 +180,9 @@ class _PluginPrometheusListState extends State<PluginPrometheusList> {
         title: Column(
           children: [
             Text(
-              Characters(
-                'Prometheus Dashboards',
-              ).replaceAll(Characters(''), Characters('\u{200B}')).toString(),
+              Characters('Prometheus Dashboards')
+                  .replaceAll(Characters(''), Characters('\u{200B}'))
+                  .toString(),
               textAlign: TextAlign.center,
               style: const TextStyle(
                 fontSize: 20,
@@ -252,7 +253,10 @@ class _PluginPrometheusListState extends State<PluginPrometheusList> {
                                       Constants.spacingMiddle,
                                     ),
                                     child: AppErrorWidget(
-                                      message: 'Failed to Load Dashboards',
+                                      message: t(
+                                        context,
+                                        'Failed to Load Dashboards',
+                                      ),
                                       details: snapshot.error.toString(),
                                       icon: 'assets/plugins/prometheus.svg',
                                     ),
@@ -268,7 +272,7 @@ class _PluginPrometheusListState extends State<PluginPrometheusList> {
                                 mode: AppResourceActionsMode.header,
                                 actions: [
                                   AppResourceActionsModel(
-                                    title: 'Refresh',
+                                    title: t(context, 'Refresh'),
                                     icon: Icons.refresh,
                                     onTap: () {
                                       setState(() {

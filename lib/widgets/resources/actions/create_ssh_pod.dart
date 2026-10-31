@@ -8,6 +8,7 @@ import 'package:kubenav/repositories/clusters_repository.dart';
 import 'package:kubenav/services/kubernetes_service.dart';
 import 'package:kubenav/utils/constants.dart';
 import 'package:kubenav/utils/helpers.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/utils/logger.dart';
 import 'package:kubenav/utils/showmodal.dart';
 import 'package:kubenav/widgets/resources/resources/resources.dart';
@@ -40,7 +41,7 @@ class _CreateSSHPodState extends State<CreateSSHPod> {
   /// [_namespaceController]. If the value is empty the validation fails.
   String? _validator(String? value) {
     if (value == null || value.isEmpty) {
-      return 'This field is required';
+      return t(context, 'This field is required');
     }
 
     return null;
@@ -83,8 +84,12 @@ class _CreateSSHPodState extends State<CreateSSHPod> {
         if (mounted) {
           showSnackbar(
             context,
-            '$podName Created',
-            'The $podName Pod was create in the Namespace ${_namespaceController.text} on the Node ${widget.name}.',
+            tFmt(context, '{0} Created', [podName]),
+            tFmt(
+              context,
+              'The {0} Pod was create in the Namespace {1} on the Node {2}.',
+              [podName, _namespaceController.text, widget.name],
+            ),
           );
           Navigator.pop(context);
         }
@@ -100,7 +105,7 @@ class _CreateSSHPodState extends State<CreateSSHPod> {
         if (mounted) {
           showSnackbar(
             context,
-            'Failed to Create Pod $podName',
+            tFmt(context, 'Failed to Create Pod {0}', [podName]),
             err.toString(),
           );
         }
@@ -123,7 +128,7 @@ class _CreateSSHPodState extends State<CreateSSHPod> {
       closePressed: () {
         Navigator.pop(context);
       },
-      actionText: 'Create Pod',
+      actionText: t(context, 'Create Pod'),
       actionPressed: () {
         _create();
       },
@@ -141,7 +146,11 @@ class _CreateSSHPodState extends State<CreateSSHPod> {
             child: Column(
               children: [
                 Text(
-                  'Create a SSH Pod $podName on Node ${widget.name} in the provided Namespace:',
+                  tFmt(
+                    context,
+                    'Create a SSH Pod {0} on Node {1} in the provided Namespace:',
+                    [podName, widget.name],
+                  ),
                 ),
                 const SizedBox(height: Constants.spacingMiddle),
                 TextFormField(
@@ -150,9 +159,9 @@ class _CreateSSHPodState extends State<CreateSSHPod> {
                   autocorrect: false,
                   enableSuggestions: false,
                   maxLines: 1,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     border: OutlineInputBorder(),
-                    labelText: 'Namespace',
+                    labelText: t(context, 'Namespace'),
                   ),
                   validator: _validator,
                   onFieldSubmitted: (String value) {

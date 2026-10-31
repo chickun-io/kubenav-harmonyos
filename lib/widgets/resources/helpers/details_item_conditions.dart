@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:kubenav/models/kubernetes/schema.models.swagger.dart';
 import 'package:kubenav/utils/constants.dart';
 import 'package:kubenav/utils/helpers.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/utils/resources.dart';
 import 'package:kubenav/utils/showmodal.dart';
 import 'package:kubenav/widgets/shared/app_list_item.dart';
@@ -26,7 +27,7 @@ class DetailsItemConditions extends StatelessWidget {
               children: [
                 Expanded(
                   child: Text(
-                    'Conditions',
+                    t(context, 'Conditions'),
                     style: primaryTextStyle(context, size: 18),
                   ),
                 ),
@@ -52,7 +53,16 @@ class DetailsItemConditions extends StatelessWidget {
                       showSnackbar(
                         context,
                         conditions![index].type,
-                        'Status: ${conditions![index].status}\nLast Transition Time: ${getAge(conditions![index].lastTransitionTime)}\nReason: ${conditions![index].reason}\nMessage: ${conditions![index].message}',
+                        tFmt(
+                          context,
+                          'Status: {0}\nLast Transition Time: {1}\nReason: {2}\nMessage: {3}',
+                          [
+                            conditions![index].status,
+                            getAge(conditions![index].lastTransitionTime),
+                            conditions![index].reason,
+                            conditions![index].message,
+                          ],
+                        ),
                       );
                     },
                     child: Row(

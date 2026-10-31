@@ -9,6 +9,7 @@ import 'package:kubenav/repositories/app_repository.dart';
 import 'package:kubenav/repositories/clusters_repository.dart';
 import 'package:kubenav/repositories/portforwarding_repository.dart';
 import 'package:kubenav/utils/constants.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/utils/resources.dart';
 import 'package:kubenav/utils/showmodal.dart';
 import 'package:kubenav/widgets/resources/helpers/details_item.dart';
@@ -25,8 +26,7 @@ final resourceService = Resource(
   category: ResourceCategories.discoveryandloadbalancing,
   plural: 'Services',
   singular: 'Service',
-  description:
-      'An abstract way to expose an application running on a set of Pods as a network service.',
+  description: 'An abstract way to expose an application running on a set of Pods as a network service.',
   path: '/api/v1',
   resource: 'services',
   scope: ResourceScope.namespaced,
@@ -89,16 +89,22 @@ final resourceService = Resource(
       item: item,
       status: status,
       details: [
-        'Namespace: ${item.metadata?.namespace ?? '-'}',
-        'Type: ${item.spec?.type?.value ?? '-'}',
-        'Cluster IP: ${item.spec?.clusterIP ?? '-'}',
-        'External IP: ${externalIP != null && externalIP.isNotEmpty ? externalIP.join(', ') : '-'}',
-        'Port(s): ${ports != null && ports.isNotEmpty ? ports.join(', ') : '-'}',
-        'Age: ${getAge(item.metadata?.creationTimestamp)}',
+        tFmt(context, 'Namespace: {0}', [item.metadata?.namespace ?? '-']),
+        tFmt(context, 'Type: {0}', [item.spec?.type?.value ?? '-']),
+        tFmt(context, 'Cluster IP: {0}', [item.spec?.clusterIP ?? '-']),
+        tFmt(context, 'External IP: {0}', [
+          externalIP != null && externalIP.isNotEmpty
+              ? externalIP.join(', ')
+              : '-',
+        ]),
+        tFmt(context, 'Port(s): {0}', [
+          ports != null && ports.isNotEmpty ? ports.join(', ') : '-',
+        ]),
+        tFmt(context, 'Age: {0}', [getAge(item.metadata?.creationTimestamp)]),
       ],
     );
   },
-  previewItemBuilder: (dynamic listItem) {
+  previewItemBuilder: (BuildContext context, dynamic listItem) {
     final item = listItem as IoK8sApiCoreV1Service;
 
     final externalIP = item.status?.loadBalancer?.ingress
@@ -112,12 +118,18 @@ final resourceService = Resource(
         .toList();
 
     return [
-      'Namespace: ${item.metadata?.namespace ?? '-'}',
-      'Type: ${item.spec?.type?.value ?? '-'}',
-      'Cluster IP: ${item.spec?.clusterIP ?? '-'}',
-      'External IP: ${externalIP != null && externalIP.isNotEmpty ? externalIP.join(', ') : '-'}',
-      'Port(s): ${ports != null && ports.isNotEmpty ? ports.join(', ') : '-'}',
-      'Age: ${getAge(item.metadata?.creationTimestamp)}',
+      tFmt(context, 'Namespace: {0}', [item.metadata?.namespace ?? '-']),
+      tFmt(context, 'Type: {0}', [item.spec?.type?.value ?? '-']),
+      tFmt(context, 'Cluster IP: {0}', [item.spec?.clusterIP ?? '-']),
+      tFmt(context, 'External IP: {0}', [
+        externalIP != null && externalIP.isNotEmpty
+            ? externalIP.join(', ')
+            : '-',
+      ]),
+      tFmt(context, 'Port(s): {0}', [
+        ports != null && ports.isNotEmpty ? ports.join(', ') : '-',
+      ]),
+      tFmt(context, 'Age: {0}', [getAge(item.metadata?.creationTimestamp)]),
     ];
   },
   detailsItemBuilder:
@@ -151,7 +163,11 @@ class ServiceItem extends StatelessWidget {
     PortForwardingRepository portForwardingRepository =
         Provider.of<PortForwardingRepository>(context, listen: false);
 
-    showSnackbar(context, 'Port Forwarding', 'Create Session ...');
+    showSnackbar(
+      context,
+      t(context, 'Port Forwarding'),
+      t(context, 'Create Session ...'),
+    );
 
     try {
       final cluster = await clustersRepository.getClusterWithCredentials(
@@ -171,13 +187,17 @@ class ServiceItem extends StatelessWidget {
       );
 
       if (context.mounted) {
-        showSnackbar(context, 'Port Forwarding', 'Session Created');
+        showSnackbar(
+          context,
+          t(context, 'Port Forwarding'),
+          t(context, 'Session Created'),
+        );
       }
     } catch (err) {
       if (context.mounted) {
         showSnackbar(
           context,
-          'Failed to Create Port Forwarding Session',
+          t(context, 'Failed to Create Port Forwarding Session'),
           err.toString(),
         );
       }
@@ -192,17 +212,20 @@ class ServiceItem extends StatelessWidget {
         DetailsItemConditions(conditions: service.status?.conditions),
         const SizedBox(height: Constants.spacingMiddle),
         DetailsItem(
-          title: 'Configuration',
+          title: t(context, 'Configuration'),
           details: [
             DetailsItemModel(
-              name: 'Selectors',
+              name: t(context, 'Selectors'),
               values: service.spec?.selector?.entries
                   .map((selector) => '${selector.key}=${selector.value}')
                   .toList(),
             ),
-            DetailsItemModel(name: 'Type', values: service.spec?.type?.value),
             DetailsItemModel(
-              name: 'Ports',
+              name: t(context, 'Type'),
+              values: service.spec?.type?.value,
+            ),
+            DetailsItemModel(
+              name: t(context, 'Ports'),
               values: service.spec?.ports
                   ?.map(
                     (port) =>
@@ -225,39 +248,39 @@ class ServiceItem extends StatelessWidget {
               },
             ),
             DetailsItemModel(
-              name: 'Session Affinity',
+              name: t(context, 'Session Affinity'),
               values: service.spec?.sessionAffinity?.value,
             ),
             DetailsItemModel(
-              name: 'External Traffic Policy',
+              name: t(context, 'External Traffic Policy'),
               values: service.spec?.externalTrafficPolicy?.value,
             ),
           ],
         ),
         const SizedBox(height: Constants.spacingMiddle),
         DetailsItem(
-          title: 'Status',
+          title: t(context, 'Status'),
           details: [
             DetailsItemModel(
-              name: 'Cluster IP',
+              name: t(context, 'Cluster IP'),
               values: service.spec?.clusterIP,
             ),
             DetailsItemModel(
-              name: 'Cluster IPs',
+              name: t(context, 'Cluster IPs'),
               values: service.spec?.clusterIPs,
             ),
             DetailsItemModel(
-              name: 'External IPs',
+              name: t(context, 'External IPs'),
               values: service.spec?.externalIPs
                   ?.map((externalIP) => externalIP)
                   .toList(),
             ),
             DetailsItemModel(
-              name: 'External Name',
+              name: t(context, 'External Name'),
               values: service.spec?.externalName,
             ),
             DetailsItemModel(
-              name: 'Load Balancer IP',
+              name: t(context, 'Load Balancer IP'),
               values: service.status!.loadBalancer?.ingress
                   ?.map((ingress) => ingress.ip ?? '-')
                   .toList(),

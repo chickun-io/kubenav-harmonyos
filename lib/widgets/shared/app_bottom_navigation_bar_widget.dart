@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:kubenav/repositories/app_repository.dart';
 import 'package:kubenav/utils/constants.dart';
 import 'package:kubenav/utils/custom_icons.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/utils/navigate.dart';
 import 'package:kubenav/widgets/home/home.dart';
 import 'package:kubenav/widgets/plugins/plugins.dart';
@@ -32,9 +33,8 @@ class AppBottomNavigationBarWidget extends StatelessWidget {
       type: BottomNavigationBarType.fixed,
       backgroundColor: Theme.of(context).colorScheme.primary,
       selectedItemColor: Theme.of(context).colorScheme.onPrimary,
-      unselectedItemColor: Theme.of(
-        context,
-      ).colorScheme.onPrimary.withValues(alpha: 0.60),
+      unselectedItemColor: Theme.of(context).colorScheme.onPrimary
+          .withValues(alpha: 0.60),
       selectedFontSize: 14,
       unselectedFontSize: 14,
       currentIndex: appRepository.currentPageIndex,
@@ -77,14 +77,23 @@ class AppBottomNavigationBarWidget extends StatelessWidget {
             break;
         }
       },
-      items: const [
-        BottomNavigationBarItem(label: 'Home', icon: Icon(Icons.home)),
+      items: [
         BottomNavigationBarItem(
-          label: 'Resources',
+          label: t(context, 'Home'),
+          icon: Icon(Icons.home),
+        ),
+        BottomNavigationBarItem(
+          label: t(context, 'Resources'),
           icon: Icon(CustomIcons.kubernetes),
         ),
-        BottomNavigationBarItem(label: 'Plugins', icon: Icon(Icons.extension)),
-        BottomNavigationBarItem(label: 'Settings', icon: Icon(Icons.settings)),
+        BottomNavigationBarItem(
+          label: t(context, 'Plugins'),
+          icon: Icon(Icons.extension),
+        ),
+        BottomNavigationBarItem(
+          label: t(context, 'Settings'),
+          icon: Icon(Icons.settings),
+        ),
       ],
     );
   }

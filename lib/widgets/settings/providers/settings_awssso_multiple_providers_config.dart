@@ -4,6 +4,7 @@ import 'package:kubenav/models/cluster_provider.dart';
 import 'package:kubenav/services/providers/aws_service.dart';
 import 'package:kubenav/utils/constants.dart';
 import 'package:kubenav/utils/helpers.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/utils/logger.dart';
 import 'package:kubenav/utils/showmodal.dart';
 import 'package:kubenav/utils/themes.dart';
@@ -31,7 +32,7 @@ class _SettingsAWSSSOMultipleProvidersState
   /// missing the validation of the form will fail.
   String? _validator(String? value) {
     if (value == null || value.isEmpty) {
-      return 'This field is required';
+      return t(context, 'This field is required');
     }
 
     return null;
@@ -55,7 +56,7 @@ class _SettingsAWSSSOMultipleProvidersState
       if (mounted) {
         showSnackbar(
           context,
-          'Sing in Completed',
+          t(context, 'Sing in Completed'),
           'You can now click on the verify button',
         );
       }
@@ -68,7 +69,7 @@ class _SettingsAWSSSOMultipleProvidersState
       if (mounted) {
         showSnackbar(
           context,
-          'Failed to Get SSO Configuration',
+          t(context, 'Failed to Get SSO Configuration'),
           err.toString(),
         );
       }
@@ -85,7 +86,11 @@ class _SettingsAWSSSOMultipleProvidersState
         err,
       );
       if (mounted) {
-        showSnackbar(context, 'Failed to Verify Device', err.toString());
+        showSnackbar(
+          context,
+          t(context, 'Failed to Verify Device'),
+          err.toString(),
+        );
       }
     }
   }
@@ -132,7 +137,7 @@ class _SettingsAWSSSOMultipleProvidersState
       if (mounted) {
         showSnackbar(
           context,
-          'Failed to Load Accounts and Roles',
+          t(context, 'Failed to Load Accounts and Roles'),
           err.toString(),
         );
       }
@@ -155,7 +160,7 @@ class _SettingsAWSSSOMultipleProvidersState
       closePressed: () {
         Navigator.pop(context);
       },
-      actionText: 'Load Accounts and Roles',
+      actionText: t(context, 'Load Accounts and Roles'),
       actionPressed: () {
         _loadAccounts();
       },
@@ -178,9 +183,9 @@ class _SettingsAWSSSOMultipleProvidersState
                   autocorrect: false,
                   enableSuggestions: false,
                   maxLines: 1,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     border: OutlineInputBorder(),
-                    labelText: 'Start URL',
+                    labelText: t(context, 'Start URL'),
                   ),
                   validator: _validator,
                 ),
@@ -201,7 +206,7 @@ class _SettingsAWSSSOMultipleProvidersState
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const Text('SSO Region'),
+                    Text(t(context, 'SSO Region')),
                     DropdownButton(
                       value: _ssoRegion,
                       underline: Container(
@@ -219,9 +224,9 @@ class _SettingsAWSSSOMultipleProvidersState
                           child: Text(
                             value,
                             style: TextStyle(
-                              color: Theme.of(
-                                context,
-                              ).extension<CustomColors>()!.textPrimary,
+                              color: Theme.of(context)
+                                  .extension<CustomColors>()!
+                                  .textPrimary,
                             ),
                           ),
                         );
@@ -243,7 +248,7 @@ class _SettingsAWSSSOMultipleProvidersState
                   ),
                   onPressed: _startSSOFlow,
                   child: Text(
-                    'Sign In',
+                    t(context, 'Sign In'),
                     style: primaryTextStyle(
                       context,
                       color: Theme.of(context).colorScheme.onPrimary,
@@ -265,7 +270,7 @@ class _SettingsAWSSSOMultipleProvidersState
                   ),
                   onPressed: _awsSSOConfig == null ? null : _verifyDevice,
                   child: Text(
-                    'Verify',
+                    t(context, 'Verify'),
                     style: primaryTextStyle(
                       context,
                       color: Theme.of(context).colorScheme.onPrimary,

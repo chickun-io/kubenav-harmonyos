@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 
 import 'package:kubenav/repositories/sponsor_repository.dart';
 import 'package:kubenav/utils/constants.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/utils/showmodal.dart';
 import 'package:kubenav/widgets/shared/app_bottom_sheet_widget.dart';
 
@@ -57,7 +58,7 @@ class _SettingsSponsorSubscribeState extends State<SettingsSponsorSubscribe> {
         _isLoading = false;
       });
       if (mounted) {
-        showSnackbar(context, 'An error occured', err.toString());
+        showSnackbar(context, t(context, 'An error occured'), err.toString());
       }
     }
   }
@@ -70,8 +71,11 @@ class _SettingsSponsorSubscribeState extends State<SettingsSponsorSubscribe> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('Notes:', style: TextStyle(fontWeight: FontWeight.bold)),
-            const Row(
+            Text(
+              t(context, 'Notes:'),
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
@@ -79,7 +83,10 @@ class _SettingsSponsorSubscribeState extends State<SettingsSponsorSubscribe> {
                 SizedBox(width: 10),
                 Expanded(
                   child: Text(
-                    'Sponsor banner is removed as long as the subscription is active',
+                    t(
+                      context,
+                      'Sponsor banner is removed as long as the subscription is active',
+                    ),
                   ),
                 ),
               ],
@@ -92,12 +99,21 @@ class _SettingsSponsorSubscribeState extends State<SettingsSponsorSubscribe> {
                 const SizedBox(width: 10),
                 Expanded(
                   child: Text(
-                    'Subscription will automatically renew for ${widget.product.price} ${periods.containsKey(widget.product.id) ? periods[widget.product.id] : ''} until automatically renew is turned off',
+                    tFmt(
+                      context,
+                      'Subscription will automatically renew for {0} {1} until automatically renew is turned off',
+                      [
+                        widget.product.price,
+                        periods.containsKey(widget.product.id)
+                            ? periods[widget.product.id]
+                            : '',
+                      ],
+                    ),
                   ),
                 ),
               ],
             ),
-            const Row(
+            Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
@@ -105,12 +121,15 @@ class _SettingsSponsorSubscribeState extends State<SettingsSponsorSubscribe> {
                 SizedBox(width: 10),
                 Expanded(
                   child: Text(
-                    'Subscription will be charged to your Apple account at confirmation of purchase',
+                    t(
+                      context,
+                      'Subscription will be charged to your Apple account at confirmation of purchase',
+                    ),
                   ),
                 ),
               ],
             ),
-            const Row(
+            Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
@@ -118,12 +137,15 @@ class _SettingsSponsorSubscribeState extends State<SettingsSponsorSubscribe> {
                 SizedBox(width: 10),
                 Expanded(
                   child: Text(
-                    'Privacy Policy: https://kubenav.io/privacy.html',
+                    t(
+                      context,
+                      'Privacy Policy: https://kubenav.io/privacy.html',
+                    ),
                   ),
                 ),
               ],
             ),
-            const Row(
+            Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
@@ -131,7 +153,10 @@ class _SettingsSponsorSubscribeState extends State<SettingsSponsorSubscribe> {
                 SizedBox(width: 10),
                 Expanded(
                   child: Text(
-                    'Terms of Use: https://www.apple.com/legal/internet-services/itunes/dev/stdeula/',
+                    t(
+                      context,
+                      'Terms of Use: https://www.apple.com/legal/internet-services/itunes/dev/stdeula/',
+                    ),
                   ),
                 ),
               ],
@@ -150,14 +175,22 @@ class _SettingsSponsorSubscribeState extends State<SettingsSponsorSubscribe> {
       title: titles.containsKey(widget.product.id)
           ? titles[widget.product.id]!
           : widget.product.title,
-      subtitle:
-          'Subscribe for ${widget.product.price} ${periods.containsKey(widget.product.id) ? periods[widget.product.id] : ''}',
+      subtitle: tFmt(context, 'Subscribe for {0} {1}', [
+        widget.product.price,
+        periods.containsKey(widget.product.id)
+            ? periods[widget.product.id]
+            : '',
+      ]),
       icon: Icons.favorite,
       closePressed: () {
         Navigator.pop(context);
       },
-      actionText:
-          'Subscribe for ${widget.product.price} ${periods.containsKey(widget.product.id) ? periods[widget.product.id] : ''}',
+      actionText: tFmt(context, 'Subscribe for {0} {1}', [
+        widget.product.price,
+        periods.containsKey(widget.product.id)
+            ? periods[widget.product.id]
+            : '',
+      ]),
       actionPressed: () {
         _subscribe();
       },
@@ -172,19 +205,28 @@ class _SettingsSponsorSubscribeState extends State<SettingsSponsorSubscribe> {
           ),
           child: Column(
             children: [
-              const Text(
-                'We believe in open source. This means that we will never put any features behind a paywall. You will always be able to use all features of kubenav for free.',
-              ),
-              const Padding(
-                padding: EdgeInsets.only(top: Constants.spacingMiddle),
-                child: Text(
-                  'With the monthly and yearly sponsoring you can remove the "Sponsor" banner in the settings screen and support the development of kubenav.',
+              Text(
+                t(
+                  context,
+                  'We believe in open source. This means that we will never put any features behind a paywall. You will always be able to use all features of kubenav for free.',
                 ),
               ),
-              const Padding(
+              Padding(
                 padding: EdgeInsets.only(top: Constants.spacingMiddle),
                 child: Text(
-                  'You can also support us by reporting bugs, submitting fixes, proposing new features or by becoming a maintainer. For more information you can have a look at the contributing guide in our GitHub repository. The repository is available at https://github.com/kubenav/kubenav.',
+                  t(
+                    context,
+                    'With the monthly and yearly sponsoring you can remove the "Sponsor" banner in the settings screen and support the development of kubenav.',
+                  ),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: Constants.spacingMiddle),
+                child: Text(
+                  t(
+                    context,
+                    'You can also support us by reporting bugs, submitting fixes, proposing new features or by becoming a maintainer. For more information you can have a look at the contributing guide in our GitHub repository. The repository is available at https://github.com/kubenav/kubenav.',
+                  ),
                 ),
               ),
               _buildIOSNotes(),

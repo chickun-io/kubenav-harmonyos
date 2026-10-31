@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import 'package:kubenav/models/kubernetes/schema.models.swagger.dart';
 import 'package:kubenav/utils/constants.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/utils/navigate.dart';
 import 'package:kubenav/utils/resources.dart';
 import 'package:kubenav/utils/showmodal.dart';
@@ -21,8 +22,7 @@ final Resource fluxResourceKustomization = Resource(
   category: FluxResourceCategories.kustomizeController,
   plural: 'Kustomizations',
   singular: 'Kustomization',
-  description:
-      'The Kustomization API defines a pipeline for fetching, decrypting, building, validating and applying Kustomize overlays or plain Kubernetes items',
+  description: 'The Kustomization API defines a pipeline for fetching, decrypting, building, validating and applying Kustomize overlays or plain Kubernetes items',
   path: '/apis/kustomize.toolkit.fluxcd.io/v1',
   resource: 'kustomizations',
   scope: ResourceScope.namespaced,
@@ -31,9 +31,8 @@ final Resource fluxResourceKustomization = Resource(
   template: resourceDefaultTemplate,
   decodeListData: (ResourcesListData data) {
     final parsed = json.decode(data.list);
-    final items = IoFluxcdToolkitKustomizeV1KustomizationList.fromJson(
-      parsed,
-    ).items;
+    final items = IoFluxcdToolkitKustomizeV1KustomizationList.fromJson(parsed)
+        .items;
 
     return items.map((e) {
       final status =
@@ -80,32 +79,65 @@ final Resource fluxResourceKustomization = Resource(
   toJson: (dynamic item) {
     return json.decode(json.encode(item));
   },
-  listItemBuilder: (BuildContext context, Resource resource, ResourceItem listItem) {
-    final item = listItem.item as IoFluxcdToolkitKustomizeV1Kustomization;
-    final status = listItem.status;
+  listItemBuilder:
+      (BuildContext context, Resource resource, ResourceItem listItem) {
+        final item = listItem.item as IoFluxcdToolkitKustomizeV1Kustomization;
+        final status = listItem.status;
 
-    return ResourcesListItem(
-      name: item.metadata?.name ?? '',
-      namespace: item.metadata?.namespace ?? '',
-      resource: resource,
-      item: item,
-      status: status,
-      details: [
-        'Namespace: ${item.metadata?.namespace ?? '-'}',
-        'Ready: ${item.status?.conditions != null && item.status!.conditions!.isNotEmpty ? item.status!.conditions!.where((e) => e.type == 'Ready').firstOrNull?.status : '-'}',
-        'Status: ${item.status?.conditions != null && item.status!.conditions!.isNotEmpty ? item.status!.conditions!.where((e) => e.type == 'Ready').firstOrNull?.message : '-'}',
-        'Age: ${getAge(item.metadata?.creationTimestamp)}',
-      ],
-    );
-  },
-  previewItemBuilder: (dynamic listItem) {
+        return ResourcesListItem(
+          name: item.metadata?.name ?? '',
+          namespace: item.metadata?.namespace ?? '',
+          resource: resource,
+          item: item,
+          status: status,
+          details: [
+            tFmt(context, 'Namespace: {0}', [item.metadata?.namespace ?? '-']),
+            tFmt(context, 'Ready: {0}', [
+              item.status?.conditions != null &&
+                      item.status!.conditions!.isNotEmpty
+                  ? item.status!.conditions!
+                        .where((e) => e.type == 'Ready')
+                        .firstOrNull
+                        ?.status
+                  : '-',
+            ]),
+            tFmt(context, 'Status: {0}', [
+              item.status?.conditions != null &&
+                      item.status!.conditions!.isNotEmpty
+                  ? item.status!.conditions!
+                        .where((e) => e.type == 'Ready')
+                        .firstOrNull
+                        ?.message
+                  : '-',
+            ]),
+            tFmt(context, 'Age: {0}', [
+              getAge(item.metadata?.creationTimestamp),
+            ]),
+          ],
+        );
+      },
+  previewItemBuilder: (BuildContext context, dynamic listItem) {
     final item = listItem as IoFluxcdToolkitKustomizeV1Kustomization;
 
     return [
-      'Namespace: ${item.metadata?.namespace ?? '-'}',
-      'Ready: ${item.status?.conditions != null && item.status!.conditions!.isNotEmpty ? item.status!.conditions!.where((e) => e.type == 'Ready').firstOrNull?.status : '-'}',
-      'Status: ${item.status?.conditions != null && item.status!.conditions!.isNotEmpty ? item.status!.conditions!.where((e) => e.type == 'Ready').firstOrNull?.message : '-'}',
-      'Age: ${getAge(item.metadata?.creationTimestamp)}',
+      tFmt(context, 'Namespace: {0}', [item.metadata?.namespace ?? '-']),
+      tFmt(context, 'Ready: {0}', [
+        item.status?.conditions != null && item.status!.conditions!.isNotEmpty
+            ? item.status!.conditions!
+                  .where((e) => e.type == 'Ready')
+                  .firstOrNull
+                  ?.status
+            : '-',
+      ]),
+      tFmt(context, 'Status: {0}', [
+        item.status?.conditions != null && item.status!.conditions!.isNotEmpty
+            ? item.status!.conditions!
+                  .where((e) => e.type == 'Ready')
+                  .firstOrNull
+                  ?.message
+            : '-',
+      ]),
+      tFmt(context, 'Age: {0}', [getAge(item.metadata?.creationTimestamp)]),
     ];
   },
   detailsItemBuilder: (BuildContext context, Resource resource, dynamic detailsItem) {
@@ -130,10 +162,10 @@ final Resource fluxResourceKustomization = Resource(
         ),
         const SizedBox(height: Constants.spacingMiddle),
         DetailsItem(
-          title: 'Configuration',
+          title: t(context, 'Configuration'),
           details: [
             DetailsItemModel(
-              name: 'Source',
+              name: t(context, 'Source'),
               values: item.spec?.sourceRef != null
                   ? '${item.spec?.sourceRef.kind} (${item.spec?.sourceRef.namespace ?? item.metadata?.namespace}/${item.spec?.sourceRef.name})'
                   : null,
@@ -161,24 +193,34 @@ final Resource fluxResourceKustomization = Resource(
                       } else {
                         showSnackbar(
                           context,
-                          'Source',
+                          t(context, 'Source'),
                           '${item.spec?.sourceRef.kind.value} (${item.spec?.sourceRef.namespace ?? item.metadata?.namespace ?? ''}/${item.spec?.sourceRef.name ?? ''})',
                         );
                       }
                     }
                   : null,
             ),
-            DetailsItemModel(name: 'Path', values: item.spec?.path),
-            DetailsItemModel(name: 'Interval', values: item.spec?.interval),
+            DetailsItemModel(name: t(context, 'Path'), values: item.spec?.path),
             DetailsItemModel(
-              name: 'Suspended',
-              values: item.spec?.suspend == true ? 'True' : 'False',
+              name: t(context, 'Interval'),
+              values: item.spec?.interval,
             ),
             DetailsItemModel(
-              name: 'Prune',
-              values: item.spec?.prune == true ? 'True' : 'False',
+              name: t(context, 'Suspended'),
+              values: item.spec?.suspend == true
+                  ? t(context, 'True')
+                  : t(context, 'False'),
             ),
-            DetailsItemModel(name: 'Timeout', values: item.spec?.timeout),
+            DetailsItemModel(
+              name: t(context, 'Prune'),
+              values: item.spec?.prune == true
+                  ? t(context, 'True')
+                  : t(context, 'False'),
+            ),
+            DetailsItemModel(
+              name: t(context, 'Timeout'),
+              values: item.spec?.timeout,
+            ),
           ],
         ),
         const SizedBox(height: Constants.spacingMiddle),

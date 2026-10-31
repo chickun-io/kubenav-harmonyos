@@ -7,6 +7,7 @@ import 'package:kubenav/repositories/app_repository.dart';
 import 'package:kubenav/repositories/clusters_repository.dart';
 import 'package:kubenav/services/kubernetes_service.dart';
 import 'package:kubenav/utils/constants.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/utils/logger.dart';
 import 'package:kubenav/utils/showmodal.dart';
 import 'package:kubenav/utils/time.dart';
@@ -68,8 +69,11 @@ class _CSRDenyState extends State<CSRDeny> {
       if (mounted) {
         showSnackbar(
           context,
-          '${widget.resource.singular} Denied',
-          'The ${widget.resource.singular} ${widget.name} was denied',
+          tFmt(context, '{0} Denied', [t(context, widget.resource.singular)]),
+          tFmt(context, 'The {0} {1} was denied', [
+            t(context, widget.resource.singular),
+            widget.name,
+          ]),
         );
         Navigator.pop(context);
       }
@@ -85,7 +89,9 @@ class _CSRDenyState extends State<CSRDeny> {
       if (mounted) {
         showSnackbar(
           context,
-          'Failed to Deny ${widget.resource.singular}',
+          tFmt(context, 'Failed to Deny {0}', [
+            t(context, widget.resource.singular),
+          ]),
           err.toString(),
         );
       }
@@ -95,13 +101,13 @@ class _CSRDenyState extends State<CSRDeny> {
   @override
   Widget build(BuildContext context) {
     return AppBottomSheetWidget(
-      title: 'Deny',
+      title: t(context, 'Deny'),
       subtitle: widget.name,
       icon: Icons.block,
       closePressed: () {
         Navigator.pop(context);
       },
-      actionText: 'Deny',
+      actionText: t(context, 'Deny'),
       actionPressed: () {
         _deny();
       },
@@ -115,7 +121,10 @@ class _CSRDenyState extends State<CSRDeny> {
             right: Constants.spacingMiddle,
           ),
           child: Text(
-            'Do you really want to deny the ${widget.resource.singular} ${widget.name}?',
+            tFmt(context, 'Do you really want to deny the {0} {1}?', [
+              t(context, widget.resource.singular),
+              widget.name,
+            ]),
           ),
         ),
       ),

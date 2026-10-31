@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:kubenav/models/kubernetes/schema.models.swagger.dart';
 import 'package:kubenav/models/plugins/prometheus.dart';
 import 'package:kubenav/utils/constants.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/utils/resources.dart';
 import 'package:kubenav/widgets/resources/helpers/details_item.dart';
 import 'package:kubenav/widgets/resources/helpers/details_item_conditions.dart';
@@ -78,36 +79,52 @@ final resourceHorizontalPodAutoscaler = Resource(
   toJson: (dynamic item) {
     return json.decode(json.encode(item));
   },
-  listItemBuilder: (BuildContext context, Resource resource, ResourceItem listItem) {
-    final item = listItem.item as IoK8sApiAutoscalingV2HorizontalPodAutoscaler;
-    final status = listItem.status;
+  listItemBuilder:
+      (BuildContext context, Resource resource, ResourceItem listItem) {
+        final item =
+            listItem.item as IoK8sApiAutoscalingV2HorizontalPodAutoscaler;
+        final status = listItem.status;
 
-    return ResourcesListItem(
-      name: item.metadata?.name ?? '',
-      namespace: item.metadata?.namespace,
-      resource: resource,
-      item: item,
-      status: status,
-      details: [
-        'Namespace: ${item.metadata?.namespace ?? '-'}',
-        'Reference: ${item.spec.scaleTargetRef.kind}/${item.spec.scaleTargetRef.name}',
-        'Replicas: ${item.status?.currentReplicas ?? 0}/${item.status?.desiredReplicas}',
-        'Min. Pods: ${item.spec.minReplicas}',
-        'Max. Pods: ${item.spec.maxReplicas}',
-        'Age: ${getAge(item.metadata?.creationTimestamp)}',
-      ],
-    );
-  },
-  previewItemBuilder: (dynamic listItem) {
+        return ResourcesListItem(
+          name: item.metadata?.name ?? '',
+          namespace: item.metadata?.namespace,
+          resource: resource,
+          item: item,
+          status: status,
+          details: [
+            tFmt(context, 'Namespace: {0}', [item.metadata?.namespace ?? '-']),
+            tFmt(context, 'Reference: {0}/{1}', [
+              item.spec.scaleTargetRef.kind,
+              item.spec.scaleTargetRef.name,
+            ]),
+            tFmt(context, 'Replicas: {0}/{1}', [
+              item.status?.currentReplicas ?? 0,
+              item.status?.desiredReplicas,
+            ]),
+            tFmt(context, 'Min. Pods: {0}', [item.spec.minReplicas]),
+            tFmt(context, 'Max. Pods: {0}', [item.spec.maxReplicas]),
+            tFmt(context, 'Age: {0}', [
+              getAge(item.metadata?.creationTimestamp),
+            ]),
+          ],
+        );
+      },
+  previewItemBuilder: (BuildContext context, dynamic listItem) {
     final item = listItem as IoK8sApiAutoscalingV2HorizontalPodAutoscaler;
 
     return [
-      'Namespace: ${item.metadata?.namespace ?? '-'}',
-      'Reference: ${item.spec.scaleTargetRef.kind}/${item.spec.scaleTargetRef.name}',
-      'Replicas: ${item.status?.currentReplicas ?? 0}/${item.status?.desiredReplicas}',
-      'Min. Pods: ${item.spec.minReplicas}',
-      'Max. Pods: ${item.spec.maxReplicas}',
-      'Age: ${getAge(item.metadata?.creationTimestamp)}',
+      tFmt(context, 'Namespace: {0}', [item.metadata?.namespace ?? '-']),
+      tFmt(context, 'Reference: {0}/{1}', [
+        item.spec.scaleTargetRef.kind,
+        item.spec.scaleTargetRef.name,
+      ]),
+      tFmt(context, 'Replicas: {0}/{1}', [
+        item.status?.currentReplicas ?? 0,
+        item.status?.desiredReplicas,
+      ]),
+      tFmt(context, 'Min. Pods: {0}', [item.spec.minReplicas]),
+      tFmt(context, 'Max. Pods: {0}', [item.spec.maxReplicas]),
+      tFmt(context, 'Age: {0}', [getAge(item.metadata?.creationTimestamp)]),
     ];
   },
   detailsItemBuilder: (BuildContext context, Resource resource, dynamic detailsItem) {
@@ -132,18 +149,18 @@ final resourceHorizontalPodAutoscaler = Resource(
         ),
         const SizedBox(height: Constants.spacingMiddle),
         DetailsItem(
-          title: 'Configuration',
+          title: t(context, 'Configuration'),
           details: [
             DetailsItemModel(
-              name: 'Min. Replicas',
+              name: t(context, 'Min. Replicas'),
               values: item.spec.minReplicas,
             ),
             DetailsItemModel(
-              name: 'Max. Replicas',
+              name: t(context, 'Max. Replicas'),
               values: item.spec.maxReplicas,
             ),
             DetailsItemModel(
-              name: 'Reference',
+              name: t(context, 'Reference'),
               values:
                   '${item.spec.scaleTargetRef.kind}/${item.spec.scaleTargetRef.name}',
               onTap: (int index) {
@@ -163,18 +180,18 @@ final resourceHorizontalPodAutoscaler = Resource(
         ),
         const SizedBox(height: Constants.spacingMiddle),
         DetailsItem(
-          title: 'Status',
+          title: t(context, 'Status'),
           details: [
             DetailsItemModel(
-              name: 'Desired Replicas',
+              name: t(context, 'Desired Replicas'),
               values: item.status?.desiredReplicas,
             ),
             DetailsItemModel(
-              name: 'Current Replicas',
+              name: t(context, 'Current Replicas'),
               values: item.status?.currentReplicas,
             ),
             DetailsItemModel(
-              name: 'Last Scale Time',
+              name: t(context, 'Last Scale Time'),
               values: formatTime(item.status?.lastScaleTime),
             ),
           ],
@@ -194,24 +211,24 @@ final resourceHorizontalPodAutoscaler = Resource(
           toJson: resource.toJson,
           defaultCharts: [
             Chart(
-              title: 'Pods',
+              title: t(context, 'Pods'),
               unit: '',
               queries: [
                 Query(
                   query: 'kube_horizontalpodautoscaler_status_desired_replicas{namespace="{{with .metadata}}{{with .namespace}}{{.}}{{end}}{{end}}", horizontalpodautoscaler="{{with .metadata}}{{with .name}}{{.}}{{end}}{{end}}"}',
-                  label: 'Desired',
+                  label: t(context, 'Desired'),
                 ),
                 Query(
                   query: 'kube_horizontalpodautoscaler_status_current_replicas{namespace="{{with .metadata}}{{with .namespace}}{{.}}{{end}}{{end}}", horizontalpodautoscaler="{{with .metadata}}{{with .name}}{{.}}{{end}}{{end}}"}',
-                  label: 'Current',
+                  label: t(context, 'Current'),
                 ),
                 Query(
                   query: 'kube_horizontalpodautoscaler_spec_min_replicas{namespace="{{with .metadata}}{{with .namespace}}{{.}}{{end}}{{end}}", horizontalpodautoscaler="{{with .metadata}}{{with .name}}{{.}}{{end}}{{end}}"}',
-                  label: 'Min',
+                  label: t(context, 'Min'),
                 ),
                 Query(
                   query: 'kube_horizontalpodautoscaler_spec_max_replicas{namespace="{{with .metadata}}{{with .namespace}}{{.}}{{end}}{{end}}", horizontalpodautoscaler="{{with .metadata}}{{with .name}}{{.}}{{end}}{{end}}"}',
-                  label: 'Max',
+                  label: t(context, 'Max'),
                 ),
               ],
             ),

@@ -7,6 +7,7 @@ import 'package:kubenav/repositories/clusters_repository.dart';
 import 'package:kubenav/utils/constants.dart';
 import 'package:kubenav/utils/custom_icons.dart';
 import 'package:kubenav/utils/helpers.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/utils/navigate.dart';
 import 'package:kubenav/utils/showmodal.dart';
 import 'package:kubenav/utils/themes.dart';
@@ -59,13 +60,13 @@ class Resources extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  resource.plural,
+                  t(context, resource.plural),
                   style: primaryTextStyle(context),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
                 Text(
-                  resource.description,
+                  t(context, resource.description),
                   style: secondaryTextStyle(context),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
@@ -109,7 +110,7 @@ class Resources extends StatelessWidget {
         return Column(
           children: [
             AppVerticalListSimpleWidget(
-              title: resourceCategory,
+              title: t(context, resourceCategory),
               items: _buildItems(context, resourceCategory),
             ),
             const SizedBox(height: Constants.spacingMiddle),
@@ -143,8 +144,8 @@ class Resources extends StatelessWidget {
         ],
         title: Column(
           children: [
-            const Text(
-              'Resources',
+            Text(
+              t(context, 'Resources'),
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 20,
@@ -153,9 +154,9 @@ class Resources extends StatelessWidget {
               ),
             ),
             Text(
-              Characters(
-                activeCluster?.name ?? 'No Active Cluster',
-              ).replaceAll(Characters(''), Characters('\u{200B}')).toString(),
+              Characters(activeCluster?.name ?? t(context, 'No Active Cluster'))
+                  .replaceAll(Characters(''), Characters('\u{200B}'))
+                  .toString(),
               textAlign: TextAlign.center,
               style: const TextStyle(
                 fontSize: 14,

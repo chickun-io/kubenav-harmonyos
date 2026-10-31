@@ -1,0 +1,4 @@
+"NSFaceIDUsageDescription" = "Protect your configured clusters from unauthorized access";
+"NSLocationWhenInUseUsageDescription" = "Required by an external library, not used by the app";
+"NSPhotoLibraryUsageDescription" = "Required by an external library, not used by the app";
+"NSCameraUsageDescription" = "Required by an external library, not used by the app";

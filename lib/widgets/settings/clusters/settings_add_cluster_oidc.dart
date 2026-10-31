@@ -7,6 +7,7 @@ import 'package:kubenav/models/cluster.dart';
 import 'package:kubenav/models/cluster_provider.dart';
 import 'package:kubenav/repositories/clusters_repository.dart';
 import 'package:kubenav/utils/constants.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/utils/showmodal.dart';
 import 'package:kubenav/widgets/shared/app_bottom_sheet_widget.dart';
 
@@ -36,7 +37,7 @@ class _SettingsAddClusterOIDCState extends State<SettingsAddClusterOIDC> {
   /// missing the validation of the form will fail.
   String? _validator(String? value) {
     if (value == null || value.isEmpty) {
-      return 'This field is required';
+      return t(context, 'This field is required');
     }
 
     return null;
@@ -92,8 +93,8 @@ class _SettingsAddClusterOIDCState extends State<SettingsAddClusterOIDC> {
           Navigator.pop(context);
           showSnackbar(
             context,
-            'Cluster Added',
-            'The cluster ${cluster.name} was added',
+            t(context, 'Cluster Added'),
+            tFmt(context, 'The cluster {0} was added', [cluster.name]),
           );
         }
       }
@@ -102,7 +103,11 @@ class _SettingsAddClusterOIDCState extends State<SettingsAddClusterOIDC> {
         _isLoadingAddCluster = false;
       });
       if (mounted) {
-        showSnackbar(context, 'Failed to Add Cluster', err.toString());
+        showSnackbar(
+          context,
+          t(context, 'Failed to Add Cluster'),
+          err.toString(),
+        );
       }
     }
   }
@@ -116,7 +121,7 @@ class _SettingsAddClusterOIDCState extends State<SettingsAddClusterOIDC> {
       closePressed: () {
         Navigator.pop(context);
       },
-      actionText: 'Add Clusters',
+      actionText: t(context, 'Add Clusters'),
       actionPressed: () {
         _addCluster();
       },
@@ -139,9 +144,9 @@ class _SettingsAddClusterOIDCState extends State<SettingsAddClusterOIDC> {
                   autocorrect: false,
                   enableSuggestions: false,
                   maxLines: null,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     border: OutlineInputBorder(),
-                    labelText: 'Name',
+                    labelText: t(context, 'Name'),
                   ),
                   validator: _validator,
                   onFieldSubmitted: (String value) {
@@ -155,9 +160,9 @@ class _SettingsAddClusterOIDCState extends State<SettingsAddClusterOIDC> {
                   autocorrect: false,
                   enableSuggestions: false,
                   maxLines: null,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     border: OutlineInputBorder(),
-                    labelText: 'Server',
+                    labelText: t(context, 'Server'),
                   ),
                   validator: _validator,
                   onFieldSubmitted: (String value) {
@@ -186,9 +191,9 @@ class _SettingsAddClusterOIDCState extends State<SettingsAddClusterOIDC> {
                   autocorrect: false,
                   enableSuggestions: false,
                   maxLines: null,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     border: OutlineInputBorder(),
-                    labelText: 'Certificate Authority Data',
+                    labelText: t(context, 'Certificate Authority Data'),
                   ),
                   onFieldSubmitted: (String value) {
                     _addCluster();
@@ -199,7 +204,7 @@ class _SettingsAddClusterOIDCState extends State<SettingsAddClusterOIDC> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const Text('Insecure Skip TLS Verify'),
+                    Text(t(context, 'Insecure Skip TLS Verify')),
                     Switch(
                       activeThumbColor: Theme.of(context).colorScheme.primary,
                       onChanged: (value) {
@@ -219,9 +224,9 @@ class _SettingsAddClusterOIDCState extends State<SettingsAddClusterOIDC> {
                   autocorrect: false,
                   enableSuggestions: false,
                   maxLines: null,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     border: OutlineInputBorder(),
-                    labelText: 'Namespace',
+                    labelText: t(context, 'Namespace'),
                   ),
                   onFieldSubmitted: (String value) {
                     _addCluster();

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:provider/provider.dart';
@@ -11,6 +12,7 @@ import 'package:kubenav/repositories/portforwarding_repository.dart';
 import 'package:kubenav/repositories/sponsor_repository.dart';
 import 'package:kubenav/repositories/terminal_repository.dart';
 import 'package:kubenav/repositories/theme_repository.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/utils/storage.dart';
 import 'package:kubenav/utils/themes.dart';
 import 'package:kubenav/widgets/home/home.dart';
@@ -63,6 +65,13 @@ class AppMaterialApp extends StatelessWidget {
         darkTheme: darkTheme,
         themeMode: themeRepository.themeMode,
         debugShowCheckedModeBanner: false,
+        localizationsDelegates: const [
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        supportedLocales: appSupportedLocales,
+        localeResolutionCallback: resolveAppLocale,
         home: const Home(),
       ),
     );

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/utils/showmodal.dart';
 import 'package:kubenav/widgets/plugins/flux/actions/plugin_flux_reconcile.dart';
 import 'package:kubenav/widgets/plugins/flux/actions/plugin_flux_resume.dart';
@@ -78,7 +79,7 @@ List<AppResourceActionsModel> fluxResourceActions(
           resource.path == fluxResourceHelmRelease.path)) {
     return [
       AppResourceActionsModel(
-        title: 'Reconcile',
+        title: t(context, 'Reconcile'),
         icon: Icons.restart_alt,
         onTap: () {
           showModal(
@@ -93,7 +94,7 @@ List<AppResourceActionsModel> fluxResourceActions(
         },
       ),
       AppResourceActionsModel(
-        title: 'Suspend',
+        title: t(context, 'Suspend'),
         icon: Icons.pause,
         onTap: () {
           showModal(
@@ -108,7 +109,7 @@ List<AppResourceActionsModel> fluxResourceActions(
         },
       ),
       AppResourceActionsModel(
-        title: 'Resume',
+        title: t(context, 'Resume'),
         icon: Icons.play_arrow,
         onTap: () {
           showModal(

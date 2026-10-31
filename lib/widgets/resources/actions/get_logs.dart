@@ -9,6 +9,7 @@ import 'package:kubenav/repositories/clusters_repository.dart';
 import 'package:kubenav/repositories/terminal_repository.dart';
 import 'package:kubenav/services/kubernetes_service.dart';
 import 'package:kubenav/utils/constants.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/utils/logger.dart';
 import 'package:kubenav/utils/showmodal.dart';
 import 'package:kubenav/utils/themes.dart';
@@ -141,7 +142,7 @@ class _GetLogsState extends State<GetLogs> {
             setState(() {
               showSnackbar(
                 context,
-                'Failed to Create Terminal',
+                t(context, 'Failed to Create Terminal'),
                 'The Internal HTTP Server is Unhealthy',
               );
               _isLoading = false;
@@ -307,9 +308,9 @@ class _GetLogsState extends State<GetLogs> {
                           child: Text(
                             value,
                             style: TextStyle(
-                              color: Theme.of(
-                                context,
-                              ).extension<CustomColors>()!.textPrimary,
+                              color: Theme.of(context)
+                                  .extension<CustomColors>()!
+                                  .textPrimary,
                             ),
                           ),
                         );
@@ -340,9 +341,9 @@ class _GetLogsState extends State<GetLogs> {
                           child: Text(
                             value,
                             style: TextStyle(
-                              color: Theme.of(
-                                context,
-                              ).extension<CustomColors>()!.textPrimary,
+                              color: Theme.of(context)
+                                  .extension<CustomColors>()!
+                                  .textPrimary,
                             ),
                           ),
                         );

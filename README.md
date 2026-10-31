@@ -1,3 +1,5 @@
+English | [简体中文](README.zh-CN.md)
+
 <div align="center">
   <img src="utils/images/repo/github-readme-logo.png" width="200" />
   <br><br>
@@ -58,6 +60,9 @@ for development.
 - **Prometheus Integration:** kubenav allows you to view your Prometheus metrics
   directly in the dashboard and to build your own dashboards via the Prometheus
   plugin.
+
+The app follows the device language. This release includes English (en-US) and
+Simplified Chinese (zh-CN). Any other language falls back to English.
 
 ## Usage
 

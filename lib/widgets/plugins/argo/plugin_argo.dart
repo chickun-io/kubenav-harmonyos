@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:kubenav/utils/constants.dart';
 import 'package:kubenav/utils/helpers.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/utils/navigate.dart';
 import 'package:kubenav/utils/themes.dart';
 import 'package:kubenav/widgets/plugins/argo/resources/plugin_argo_resources.dart';
@@ -37,13 +38,13 @@ class PluginArgo extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  resource.plural,
+                  t(context, resource.plural),
                   style: primaryTextStyle(context),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
                 Text(
-                  resource.description,
+                  t(context, resource.description),
                   style: secondaryTextStyle(context),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,

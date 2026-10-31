@@ -14,6 +14,7 @@ import 'package:kubenav/repositories/clusters_repository.dart';
 import 'package:kubenav/services/kubernetes_service.dart';
 import 'package:kubenav/utils/constants.dart';
 import 'package:kubenav/utils/helpers.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/utils/logger.dart';
 import 'package:kubenav/utils/showmodal.dart';
 import 'package:kubenav/utils/themes.dart';
@@ -155,7 +156,7 @@ class _CreateDebugContainerState extends State<CreateDebugContainer> {
       if (mounted) {
         showSnackbar(
           context,
-          'Debug Container was Created',
+          t(context, 'Debug Container was Created'),
           'The debug container was created, you can now exec into the newly created debug container.',
         );
         Navigator.pop(context);
@@ -172,7 +173,7 @@ class _CreateDebugContainerState extends State<CreateDebugContainer> {
       if (mounted) {
         showSnackbar(
           context,
-          'Failed to Create Debug Container',
+          t(context, 'Failed to Create Debug Container'),
           err.toString(),
         );
       }
@@ -194,13 +195,13 @@ class _CreateDebugContainerState extends State<CreateDebugContainer> {
   @override
   Widget build(BuildContext context) {
     return AppBottomSheetWidget(
-      title: 'Debug',
+      title: t(context, 'Debug'),
       subtitle: '${widget.namespace}/${widget.name}',
       icon: Icons.bug_report,
       closePressed: () {
         Navigator.pop(context);
       },
-      actionText: 'Create Debug Container',
+      actionText: t(context, 'Create Debug Container'),
       actionPressed: () {
         _create();
       },

@@ -7,6 +7,7 @@ import 'package:xterm/xterm.dart' as xterm;
 import 'package:kubenav/repositories/terminal_repository.dart';
 import 'package:kubenav/utils/constants.dart';
 import 'package:kubenav/utils/helpers.dart';
+import 'package:kubenav/utils/l10n.dart';
 import 'package:kubenav/utils/showmodal.dart';
 import 'package:kubenav/utils/themes.dart';
 import 'package:kubenav/widgets/shared/app_actions_widget.dart';
@@ -32,7 +33,7 @@ class AppTerminalsActionsWidget extends StatelessWidget {
         terminalRepository.terminals.length,
         (index) => AppActionsWidgetAction(
           title:
-              '${terminalRepository.terminals[index].type.toLocalizedString()}: ${terminalRepository.terminals[index].name}',
+              '${terminalRepository.terminals[index].type.toLocalizedString(context)}: ${terminalRepository.terminals[index].name}',
           color: Theme.of(context).colorScheme.primary,
           onTap: () {
             Navigator.pop(context);
@@ -62,7 +63,7 @@ class AppTerminalActionsWidget extends StatelessWidget {
     return AppActionsWidget(
       actions: [
         AppActionsWidgetAction(
-          title: 'Open',
+          title: t(context, 'Open'),
           color: Theme.of(context).colorScheme.primary,
           onTap: () {
             Navigator.pop(context);
@@ -74,7 +75,7 @@ class AppTerminalActionsWidget extends StatelessWidget {
           },
         ),
         AppActionsWidgetAction(
-          title: 'Delete',
+          title: t(context, 'Delete'),
           color: Theme.of(context).extension<CustomColors>()!.error,
           onTap: () {
             terminalRepository.deleteTerminal(terminalIndex);
@@ -178,9 +179,9 @@ class AppTerminalWidget extends StatelessWidget {
                             style: TextStyle(
                               color: getColor(
                                 e.key,
-                                Theme.of(
-                                  context,
-                                ).extension<LogColors>()!.getTheme(),
+                                Theme.of(context)
+                                    .extension<LogColors>()!
+                                    .getTheme(),
                               ),
                               fontSize: 14,
                               fontFamily: getMonospaceFontFamily(),
@@ -276,7 +277,7 @@ class AppTerminalWidget extends StatelessWidget {
                             children: [
                               Text(
                                 terminalRepository.terminals[terminalIndex].type
-                                    .toLocalizedString(),
+                                    .toLocalizedString(context),
                                 overflow: TextOverflow.ellipsis,
                                 style: primaryTextStyle(context, size: 18),
                               ),
@@ -303,9 +304,9 @@ class AppTerminalWidget extends StatelessWidget {
                   IconButton(
                     icon: Icon(
                       Icons.close_outlined,
-                      color: Theme.of(
-                        context,
-                      ).extension<CustomColors>()!.textPrimary,
+                      color: Theme.of(context)
+                          .extension<CustomColors>()!
+                          .textPrimary,
                     ),
                     onPressed: () {
                       Navigator.pop(context);
