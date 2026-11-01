@@ -73,3 +73,7 @@ The mobile version of kubenav can be downloaded from the
 For testing new features and faster feedback, we provide a **beta version** via
 [Apple Testflight](https://testflight.apple.com/join/RQUFGkHi) and
 [Google Play](https://play.google.com/apps/testing/io.kubenav.kubenav).
+
+kubenav also supports **HarmonyOS**. The HarmonyOS build requires HarmonyOS 7
+or later. It is not on AppGallery yet, so you need to compile it yourself and
+install the HAP on your device.

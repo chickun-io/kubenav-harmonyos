@@ -45,3 +45,5 @@ kubenav 是一款用来管理 Kubernetes 集群的移动应用。应用会总览
 ## 使用
 
 kubenav 移动版可以从 [App Store](https://apps.apple.com/us/app/kubenav/id1494512160) 或 [Google Play](https://play.google.com/store/apps/details?id=io.kubenav.kubenav) 下载。为了试用新功能和更快获得反馈，我们通过 [Apple TestFlight](https://testflight.apple.com/join/RQUFGkHi) 和 [Google Play](https://play.google.com/apps/testing/io.kubenav.kubenav) 提供**测试版**。
+
+kubenav 同时支持**鸿蒙版**。鸿蒙版需要 HarmonyOS 7 或更新版本。应用暂时没有上架 AppGallery，需要自行编译后安装到设备上使用。
