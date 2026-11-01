@@ -1,0 +1,14 @@
+
+{
+  "name": "entry",
+  "version": "1.0.0",
+  "description": "Please describe the basic information.",
+  "main": "",
+  "author": "",
+  "license": "",
+  "dependencies": {},
+  "devDependencies": {
+    "@types/libkubenav_ffi.so": "file:./src/main/cpp/types/libkubenav_ffi"
+  }
+}
+

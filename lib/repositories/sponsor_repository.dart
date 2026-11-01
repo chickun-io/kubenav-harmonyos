@@ -71,6 +71,10 @@ class SponsorRepository with ChangeNotifier {
   /// function).
   Future<void> _init() async {
     try {
+      if (Platform.operatingSystem == 'ohos') {
+        _isAvailable = false;
+        return;
+      }
       _isAvailable = await _iap.isAvailable();
 
       if (_isAvailable) {

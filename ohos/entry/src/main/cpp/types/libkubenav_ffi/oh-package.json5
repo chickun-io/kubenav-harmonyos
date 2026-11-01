@@ -1,0 +1,6 @@
+{
+  "name": "@types/libkubenav_ffi.so",
+  "types": "./index.d.ets",
+  "version": "1.0.0",
+  "description": "Type declarations for the kubenav NAPI bridge"
+}

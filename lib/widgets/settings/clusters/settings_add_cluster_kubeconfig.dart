@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:provider/provider.dart';
@@ -30,6 +31,9 @@ class SettingsAddClusterKubeconfig extends StatefulWidget {
 
 class _SettingsAddClusterKubeconfigState
     extends State<SettingsAddClusterKubeconfig> {
+  static const MethodChannel _ohosFilePicker = MethodChannel(
+    'kubenav.io/file_picker',
+  );
   final _addClusterKubeconfigFormKey = GlobalKey<FormState>();
   final _kubeconfigController = TextEditingController();
   bool _isLoadingAddCluster = false;
@@ -53,6 +57,16 @@ class _SettingsAddClusterKubeconfigState
   /// the `type` and `allowedExtensions` fields again.
   Future<void> _selectKubeconfigFile() async {
     try {
+      if (Platform.operatingSystem == 'ohos') {
+        final String? content = await _ohosFilePicker.invokeMethod<String>(
+          'readText',
+        );
+        if (content != null) {
+          _kubeconfigController.text = content;
+        }
+        return;
+      }
+
       final PlatformFile? result = await FilePicker.pickFile(
         // type: FileType.custom,
         // allowedExtensions: ['yaml', 'yml', 'txt', 'conf'],
